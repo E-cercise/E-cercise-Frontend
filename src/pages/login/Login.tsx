@@ -17,7 +17,7 @@ function Login() {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
-      <div className="w-[22vw] h-[330px] bg-[#E7E7E7] p-6 rounded-md">
+      <div className="w-[280px] h-[330px] bg-[#E7E7E7] p-6 rounded-md">
         <p className="text-center text-lg font-bold mt-2 mb-6">Login</p>
         <div className="flex flex-col items-center space-y-5 mb-5">
           <AutoComplete
