@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SignUp from './pages/signup/SignUp'
 import Login from './pages/login/Login'
+import Home from './pages/home/Home'
 import './App.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
+          <Route path='/home' element={<Home/>}/>
         </Routes>
       </BrowserRouter>
       {/* <div>
