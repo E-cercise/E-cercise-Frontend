@@ -918,9 +918,11 @@ function NavBar() {
                 })}
               </svg>
             </div>
-            <div className="space-x-3">
-              <Button onClick={() => clearAllClickedMuscles()}>Clear All</Button>
-              <Button>Filter</Button>
+            <div className="flow-root w-full">
+              <div className="float-right space-x-3">
+                <Button onClick={() => clearAllClickedMuscles()}>Clear All</Button>
+                <Button>Filter</Button>
+              </div>
             </div>
           </div>
         }
