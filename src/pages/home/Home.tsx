@@ -3,7 +3,7 @@ import { Button } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import NavBar from "../../components/navbar/NavBar";
-import Test from "../../assets/test/Group 32.png";
+import Test from "../../assets/test/home/Group 32.png";
 import './Home.css'
 
 function Home() {
