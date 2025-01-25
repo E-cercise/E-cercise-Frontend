@@ -4,6 +4,7 @@ import SignUp from './pages/signup/SignUp'
 import Login from './pages/login/Login'
 import Home from './pages/home/Home'
 import Detail from './pages/detail/Detail'
+import Comparison from './pages/comparison/Comparison'
 import './App.css'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/home' element={<Home/>}/>
           <Route path='/detail' element={<Detail />} />
+          <Route path='/comparison' element={<Comparison />}/>
         </Routes>
       </BrowserRouter>
       {/* <div>
