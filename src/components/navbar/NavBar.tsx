@@ -749,7 +749,7 @@ function NavBar() {
 
   const clearAllClickedMuscles = () => {
     setClickedMuscles([]);
-  }
+  };
 
   return (
     <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0">
@@ -769,36 +769,40 @@ function NavBar() {
             <div className="flex items-center space-x-2">
               <span className="">Filtered Muscles:</span>
               <div className="flex items-center flex-wrap w-[400px] space-x-2">
-              {clickedMuscles.map((id: string) => {
-                const frontIndex = frontAttributes.findIndex((obj) => obj.id === id);
-                const backIndex = backAttributes.findIndex((obj) => obj.id === id);
-
-                if (frontIndex > -1) {
-                  return (
-                    <Tag
-                      key={id}
-                      closable
-                      onClose={() => handleClickedMuscles(id)}
-                    >
-                      {frontAttributes[frontIndex].name}
-                    </Tag>
+                {clickedMuscles.map((id: string) => {
+                  const frontIndex = frontAttributes.findIndex(
+                    (obj) => obj.id === id
                   );
-                }
-
-                if (backIndex > -1) {
-                  return (
-                    <Tag
-                      key={id}
-                      closable
-                      onClose={() => handleClickedMuscles(id)}
-                    >
-                      {backAttributes[backIndex].name}
-                    </Tag>
+                  const backIndex = backAttributes.findIndex(
+                    (obj) => obj.id === id
                   );
-                }
 
-                return null; // Handle cases where the id is not found
-              })}
+                  if (frontIndex > -1) {
+                    return (
+                      <Tag
+                        key={id}
+                        closable
+                        onClose={() => handleClickedMuscles(id)}
+                      >
+                        {frontAttributes[frontIndex].name}
+                      </Tag>
+                    );
+                  }
+
+                  if (backIndex > -1) {
+                    return (
+                      <Tag
+                        key={id}
+                        closable
+                        onClose={() => handleClickedMuscles(id)}
+                      >
+                        {backAttributes[backIndex].name}
+                      </Tag>
+                    );
+                  }
+
+                  return null; // Handle cases where the id is not found
+                })}
               </div>
             </div>
             <div className="flex items-center">
@@ -849,8 +853,7 @@ function NavBar() {
                           }}
                           style={{
                             fill:
-                              activePath === id ||
-                              clickedMuscles.includes(id)
+                              activePath === id || clickedMuscles.includes(id)
                                 ? "rgba(231, 89, 99, 0.5)"
                                 : "rgb(253, 88, 88)",
                           }}
@@ -920,7 +923,9 @@ function NavBar() {
             </div>
             <div className="flow-root w-full">
               <div className="float-right space-x-3">
-                <Button onClick={() => clearAllClickedMuscles()}>Clear All</Button>
+                <Button onClick={() => clearAllClickedMuscles()}>
+                  Clear All
+                </Button>
                 <Button>Filter</Button>
               </div>
             </div>
@@ -941,11 +946,13 @@ function NavBar() {
           </div>
         </button>
       </Popover>
-      <img
-        src={ComparisonLogo}
-        alt="Comparison Logo"
-        className="absolute right-[310px] w-[60px] h-8"
-      />
+      <Link to="/comparison" className="absolute right-[310px]">
+        <img
+          src={ComparisonLogo}
+          alt="Comparison Logo"
+          className="w-[60px] h-8"
+        />
+      </Link>
       <img src={Cart} alt="Cart Logo" className="absolute right-[240px] h-8" />
       <div className="absolute right-8 space-x-6">
         <Link to="/signup">
