@@ -765,7 +765,7 @@ function Detail() {
       <div className="h-full pt-5 pb-5 pl-10 pr-10">
         <div className="h-full bg-[#E7E7E7] pt-3 pb-3 pl-3 pr-3 rounded-md">
           <div className="flex space-x-10 pl-[60px] pr-[60px] pt-5">
-            <div className="text-[20px] w-[310px] max-w-[1200px]">
+            <div className="text-[20px] w-[300px] max-w-[1200px]">
               <Carousel
                 showArrows={false}
                 infiniteLoop={true}
@@ -787,7 +787,7 @@ function Detail() {
                 Rep Fitness Rubber Hex Dumbbell(s) - Singles (55LB +) and Pairs
                 (5LB - 50LB) - Low Odor, Fully Knurled Handle
               </span>
-              <div className="flex space-x-[50px]">
+              <div className="flex space-x-[45px]">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
                     <span>4.5</span>
@@ -963,32 +963,6 @@ function Detail() {
                         }
                       })}
                     </svg>
-                  </div>
-                  <div className="flex items-center space-x-6 w-[400px]">
-                    {/* <span className="text-[13px] font-bold">Muscles Used:</span> */}
-                    {/* <div className=" flex items-center flex-wrap text-[13px] w-[400px]">
-                      {
-                        frontMusclesUsed.concat(backMusclesUsed).map((id) => {
-                          const frontIndex = frontAttributes.findIndex((obj) => obj.id === id);
-                          const backIndex = backAttributes.findIndex((obj) => obj.id === id);
-
-                          if (frontIndex > -1) {
-                            return (
-                              <div>
-                                {frontAttributes[frontIndex].name}
-                              </div>
-                            )
-                          }
-                          if (backIndex > -1) {
-                            return (
-                              <div>
-                                {backAttributes[backIndex].name}
-                              </div>
-                            )
-                          }
-                        })
-                      }
-                    </div> */}
                   </div>
                 </div>
               </div>
