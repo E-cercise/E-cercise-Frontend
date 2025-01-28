@@ -11,7 +11,7 @@ function Cart() {
     {
       id: 1,
       isSelected: false,
-      imageUrl: CrossMark,
+      imageUrl: Test,
       name: "Bodybuilding Dumbbell Kit 10 kg",
       price: 120,
       quantity: 2,
@@ -93,6 +93,10 @@ function Cart() {
     return total;
   }
 
+  const handleRemoveProductFromCart = (id: number) => {
+    setCartList((prevCartList) => prevCartList.filter(product => product.id !== id))
+  }
+
   return (
     <div>
       <NavBar />
@@ -129,7 +133,7 @@ function Cart() {
                   <input type="checkbox" onClick={() => handleIsSelectedChange(product.id)} className="w-5" checked={product.isSelected} />
                 </div>
                 <div className="flex items-center w-[500px] h-[60px] pl-4 space-x-3">
-                  <img src={Test} alt="" className="w-12 rounded-md" />
+                  <img src={product.imageUrl} alt="" className="w-12 rounded-md" />
                   <p className="text-[13px]">{product.name}</p>
                 </div>
                 <div className="flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
@@ -160,7 +164,7 @@ function Cart() {
                   ฿{product.price * product.quantity}
                 </div>
                 <div className="flex items-center justify-center w-[150px] h-[60px] text-center">
-                  <img src={CrossMark} alt="" className="w-5" />
+                  <img src={CrossMark} onClick={() => handleRemoveProductFromCart(product.id)} alt="" className="w-5" />
                 </div>
               </div>
             ))}
