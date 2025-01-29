@@ -6,6 +6,7 @@ import Home from './pages/home/Home'
 import Detail from './pages/detail/Detail'
 import Comparison from './pages/comparison/Comparison'
 import Cart from './pages/cart/Cart'
+import Purchase from './pages/purchase/Purchase'
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path='/detail' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
           <Route path='/cart' element={<Cart />}/>
+          <Route path='/purchase' element={<Purchase />}/>
         </Routes>
       </BrowserRouter>
       {/* <div>
