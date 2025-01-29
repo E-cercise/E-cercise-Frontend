@@ -75,7 +75,7 @@ function Purchase() {
             </button>
           </div>
         </div>
-        <div className="w-full h-[420px] bg-[#E7E7E7] space-y-3 rounded-md">
+        <div className="w-full h-[430px] bg-[#E7E7E7] space-y-3 rounded-md">
           <div className="p-2 space-y-3">
             <div className="flex w-full h-[60px] bg-gray-300 rounded-md">
               <div className="grow flex items-center justify-center w-[600px] font-bold text-[14px]">
@@ -120,7 +120,7 @@ function Purchase() {
           </div>
           <div className="flex items-center">
             <div className="flex items-center justify-center w-[750px] h-[80px] border-y-2 border-dashed border-[#ACACAC] px-5 space-x-3">
-              <p className="text-[14px]">Message for Sellers: </p>
+              <p className="text-[13px]">Message for Sellers: </p>
               <Input
                 placeholder="Please leave a message..."
                 className="w-[250px] h-8"
@@ -129,26 +129,26 @@ function Purchase() {
             <div className="h-[80px] border-r-2 border-dashed border-[#ACACAC]"></div>
             <div className="w-full h-[80px] border-y-2 border-dashed border-[#ACACAC] p-4">
               <div className="w-full flex items-center space-x-4">
-                <label className="text-[14px]">Shipping Option:</label>
-                <p className="grow text-[14px]">
+                <label className="text-[13px]">Shipping Option:</label>
+                <p className="grow text-[13px]">
                   Standard Delivery - deliver inside the country
                 </p>
-                <button className="flex-none text-[14px] text-blue-500 hover:text-blue-600 px-3">
+                <button className="flex-none text-[13px] text-blue-500 hover:text-blue-600 px-3">
                   Change
                 </button>
-                <p className="text-[14px]">฿29</p>
+                <p className="text-[13px]">฿29</p>
               </div>
             </div>
           </div>
           <div className="float-right flex items-center pr-5 space-x-5">
-            <p className="text-[14px]">
+            <p className="text-[13px]">
               Order Total ({totalQuantity()} Item
               {totalQuantity() > 1 ? "s" : ""}):{" "}
             </p>
             <p className="font-semibold">฿{totalPrice() + 29}</p>
           </div>
         </div>
-        <div className="w-full h-[260px] bg-[#E7E7E7] rounded-md">
+        <div className="w-full h-[270px] bg-[#E7E7E7] rounded-md">
           <div className="flex items-center border-b-2 border-[#ACACAC] px-6 py-4 space-x-10">
             <p className="text-[14px]">Payment Method</p>
             <div className="space-x-10">
