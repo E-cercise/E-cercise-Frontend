@@ -149,8 +149,13 @@ function Purchase() {
           </div>
         </div>
         <div className="w-full h-[260px] bg-[#E7E7E7] rounded-md">
-          <div className="border-b-2 border-[#ACACAC] px-6 py-4">
+          <div className="flex items-center border-b-2 border-[#ACACAC] px-6 py-4 space-x-10">
             <p className="text-[14px]">Payment Method</p>
+            <div className="space-x-10">
+              <button className="text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md">QR Promptpay</button>
+              <button className="text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md">Cash on Delivery</button>
+              <button className="text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md">Credit/ Debit Card</button>
+            </div>
           </div>
           <div className="h-[150px] border-b-2 border-dashed border-[#ACACAC] px-6 py-4">
             <div className="float-right space-y-5">
