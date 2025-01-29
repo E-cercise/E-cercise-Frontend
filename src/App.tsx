@@ -5,6 +5,7 @@ import Login from './pages/login/Login'
 import Home from './pages/home/Home'
 import Detail from './pages/detail/Detail'
 import Comparison from './pages/comparison/Comparison'
+import Cart from './pages/cart/Cart'
 import './App.css'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path='/home' element={<Home/>}/>
           <Route path='/detail' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
+          <Route path='/cart' element={<Cart />}/>
         </Routes>
       </BrowserRouter>
       {/* <div>

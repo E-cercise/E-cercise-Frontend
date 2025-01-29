@@ -953,7 +953,9 @@ function NavBar() {
           className="w-[60px] h-8"
         />
       </Link>
-      <img src={Cart} alt="Cart Logo" className="absolute right-[240px] h-8" />
+      <Link to="/cart" className="absolute right-[240px]">
+        <img src={Cart} alt="Cart Logo" className="h-8" />
+      </Link>
       <div className="absolute right-8 space-x-6">
         <Link to="/signup">
           <Button className="text-[13px] font-bold">Sign Up</Button>
