@@ -48,9 +48,7 @@ function Cart() {
   const handleIsSelectedChange = (id: number) => {
     setCartList((prevCartList) =>
       prevCartList.map((product) =>
-        product.id === id
-          ? { ...product, isSelected: !product.isSelected }
-          : product
+        product.id === id ? { ...product, isSelected: !product.isSelected } : product
       )
     );
   };
@@ -65,14 +63,23 @@ function Cart() {
     return total;
   };
 
-  const setIsSelected = () => {
-    setCartList((prevCartList) =>
-      prevCartList.map((product) => ({
-        ...product,
-        isSelected: !product.isSelected,
-      }))
-    );
-  };
+    const setIsSelected = () => {
+      setCartList((prevCartList) =>
+        prevCartList.map((product) => {
+          if (totalIsSelected() != cartList.length) {
+              return {
+                  ...product,
+                  isSelected: true,
+                }
+          } else {
+              return {
+                  ...product,
+                  isSelected: false,
+                }
+          }
+        })
+      );
+    };
 
   const totalIsSelected = () => {
     let total = 0;
@@ -215,7 +222,7 @@ function Cart() {
             <button
               onClick={() => {
                 if (!totalPrice()) {
-                    setIsModalOpen(true);
+                  setIsModalOpen(true);
                 }
               }}
               className="bg-green-500 hover:bg-green-600 text-[13px] text-white w-[120px] h-8 rounded-md"
@@ -229,7 +236,12 @@ function Cart() {
           open={isModalOpen}
           onCancel={() => setIsModalOpen(false)}
           footer={[
-            <button className="bg-green-500 hover:bg-green-600 text-white w-10 h-8 rounded-md" onClick={() => setIsModalOpen(false)}>OK</button>
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white w-10 h-8 rounded-md"
+              onClick={() => setIsModalOpen(false)}
+            >
+              OK
+            </button>,
           ]}
           centered
         >
