@@ -33,6 +33,7 @@ function Purchase() {
       quantity: 1,
     },
   ]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
 
   const totalPrice = () => {
     let total = 0;
@@ -152,9 +153,9 @@ function Purchase() {
           <div className="flex items-center border-b-2 border-[#ACACAC] px-6 py-4 space-x-10">
             <p className="text-[14px]">Payment Method</p>
             <div className="space-x-10">
-              <button className="text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md">QR Promptpay</button>
-              <button className="text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md">Cash on Delivery</button>
-              <button className="text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md">Credit/ Debit Card</button>
+              <button className={`text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517] ${selectedPaymentMethod === 0 ? "border-[#2BC517] text-[#2BC517]" : ""}`} onClick={() => setSelectedPaymentMethod(0)}>QR Promptpay</button>
+              <button className={`text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517] ${selectedPaymentMethod === 1 ? "border-[#2BC517] text-[#2BC517]" : ""}`} onClick={() => setSelectedPaymentMethod(1)}>Cash on Delivery</button>
+              <button className={`text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517] ${selectedPaymentMethod === 2 ? "border-[#2BC517] text-[#2BC517]" : ""}`} onClick={() => setSelectedPaymentMethod(2)}>Credit/ Debit Card</button>
             </div>
           </div>
           <div className="h-[150px] border-b-2 border-dashed border-[#ACACAC] px-6 py-4">
