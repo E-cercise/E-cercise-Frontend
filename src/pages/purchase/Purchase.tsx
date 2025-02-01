@@ -76,8 +76,8 @@ function Purchase() {
             </button>
           </div>
         </div>
-        <div className="w-full h-[430px] bg-[#E7E7E7] space-y-3 rounded-md">
-          <div className="p-2 space-y-3">
+        <div className="w-full max-h-[82vh] bg-[#E7E7E7] space-y-3 rounded-md">
+          <div className="p-3 space-y-3">
             <div className="flex w-full h-[60px] bg-gray-300 rounded-md">
               <div className="grow flex items-center justify-center w-[600px] font-bold text-[14px]">
                 Product Ordered
@@ -92,7 +92,7 @@ function Purchase() {
                 Subtotal Price
               </div>
             </div>
-            <div className="space-y-3">
+            <div className={`space-y-3 max-h-[44vh] ${cartList.length > 4 ? "overflow-y-scroll" : ""}`}>
               {cartList.map((product) => (
                 <div
                   key={product.id}
@@ -120,7 +120,7 @@ function Purchase() {
             </div>
           </div>
           <div className="flex items-center">
-            <div className="flex items-center justify-center w-[750px] h-[80px] border-y-2 border-dashed border-[#ACACAC] px-5 space-x-3">
+            <div className="flex items-center justify-center w-[750px] h-[80px] border-y-2 border-dashed border-[#ACACAC] px-3 space-x-3">
               <p className="text-[13px]">Message for Sellers: </p>
               <Input
                 placeholder="Please leave a message..."
@@ -141,7 +141,7 @@ function Purchase() {
               </div>
             </div>
           </div>
-          <div className="float-right flex items-center pr-5 space-x-5">
+          <div className="flex items-center justify-end pb-4 pr-5 space-x-5">
             <p className="text-[13px]">
               Order Total ({totalQuantity()} Item
               {totalQuantity() > 1 ? "s" : ""}):{" "}
@@ -153,24 +153,13 @@ function Purchase() {
           <div className="flex items-center border-b-2 border-[#ACACAC] px-6 py-4 space-x-10">
             <p className="text-[14px]">Payment Method</p>
             <div className="space-x-10">
-              <button className={`text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517] ${selectedPaymentMethod === 0 ? "border-[#2BC517] text-[#2BC517]" : ""}`} onClick={() => setSelectedPaymentMethod(0)}>QR Promptpay</button>
-              <button className={`text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517] ${selectedPaymentMethod === 1 ? "border-[#2BC517] text-[#2BC517]" : ""}`} onClick={() => setSelectedPaymentMethod(1)}>Cash on Delivery</button>
-              <button className={`text-[13px] border-2 border-[#B6B6B6] px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517] ${selectedPaymentMethod === 2 ? "border-[#2BC517] text-[#2BC517]" : ""}`} onClick={() => setSelectedPaymentMethod(2)}>Credit/ Debit Card</button>
+              <button className={`text-[13px] border-2 ${selectedPaymentMethod === 0 ? "border-[#2BC517] text-[#2BC517]" : "border-[#B6B6B6]"} px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517]`} onClick={() => setSelectedPaymentMethod(0)}>QR Promptpay</button>
+              <button className={`text-[13px] border-2 ${selectedPaymentMethod === 1 ? "border-[#2BC517] text-[#2BC517]" : "border-[#B6B6B6]"} px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517]`} onClick={() => setSelectedPaymentMethod(1)}>Cash on Delivery</button>
+              <button className={`text-[13px] border-2 ${selectedPaymentMethod === 2 ? "border-[#2BC517] text-[#2BC517]" : "border-[#B6B6B6]"} px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517]`} onClick={() => setSelectedPaymentMethod(2)}>Credit/ Debit Card</button>
             </div>
           </div>
           <div className="h-[150px] border-b-2 border-dashed border-[#ACACAC] px-6 py-4">
             <div className="float-right space-y-5">
-              {/* <div className="flex items-center">
-                <p className="text-[13px]">Merchandise Subtotal</p>
-                <p className="text-[13px]">฿</p>
-              </div>
-              <div className="flex items-center">
-                <p className="text-[13px]">Shipping Subtotal</p>
-                <p className="text-[13px]">฿</p>
-              </div>
-              <div className="flex items-center">
-                <p className="text-[13px]">Total Payment: </p>
-              </div> */}
               <div className="grid grid-cols-2 gap-y-6">
                 <p className="text-[13px] text-[#767676]">Merchandise Subtotal</p>
                 <p className="text-[13px] text-right">฿{totalPrice()}</p>
