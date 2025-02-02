@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import NavBar from "../../components/navbar/NavBar";
 import Test from "../../assets/test/home/Group 32.png";
@@ -54,7 +55,9 @@ function Purchase() {
   return (
     <div>
       <NavBar />
-      <div className="px-[75px] py-10 space-y-4">
+      {
+        cartList.length > 0 ?
+        <div className="px-[75px] py-10 space-y-4">
         <div className="w-full h-[120px] bg-[#E7E7E7] px-8 py-5 space-y-5 rounded-md">
           <div className="flex items-center space-x-3">
             <FaLocationDot />
@@ -180,6 +183,14 @@ function Purchase() {
           </div>
         </div>
       </div>
+      :
+      <div className="flex flex-col items-center justify-center h-[500px] space-y-4">
+        <div>Your shopping cart is empty</div>
+        <Link to="/home">
+          <button className="bg-[#EAEAEA] px-3 py-2 rounded-md">Go Shopping Now</button>
+        </Link>
+      </div>
+      }
     </div>
   );
 }
