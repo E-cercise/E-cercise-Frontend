@@ -70,7 +70,7 @@ function Purchase() {
   const [isEditAddressModalOpen, setIsEditAddressModalOpen] =
     useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<number>(1);
-  const [selectEditAddress, setSelectEditAddress] = useState<number>(1);
+  const [selectedEditAddress, setSelectedEditAddress] = useState<number>(1);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
   const [fullName, setFullName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -80,6 +80,16 @@ function Purchase() {
     provinceDistrictSubDistrictPostalCode,
     setProvinceDistrictSubDistrictPostalCode,
   ] = useState<string>("");
+  const [isModalShippingOptionOpen, setIsModalShippingOptionOpen] =
+    useState<boolean>(false);
+  const [selectedShippingOption, setSelectedShippingOption] =
+    useState<number>(29);
+  const [tempSelectedShippingOption, setTempSelectedShippingOption] =
+    useState<number>(29);
+  const shippingOption = [
+    { value: 29, label: "Standard Delivery - deliver inside the country" },
+    { value: 100, label: "Standard Delivery Bulky - deliver big product" },
+  ];
 
   const handleIsAddressModalOpen = (value: boolean) => {
     setIsAddressModalOpen(value);
@@ -98,7 +108,7 @@ function Purchase() {
   };
 
   const handleSetSelectedEditAddress = (value: number) => {
-    setSelectEditAddress(value);
+    setSelectedEditAddress(value);
   };
 
   const handleAddAddress = (adrObj: any) => {
@@ -108,7 +118,7 @@ function Purchase() {
   const handleEditAddress = () => {
     setAddressList((prevAddressList) =>
       prevAddressList.map((adrObj) =>
-        selectEditAddress === adrObj.id
+        selectedEditAddress === adrObj.id
           ? {
               ...adrObj,
               fullName,
@@ -119,6 +129,10 @@ function Purchase() {
           : adrObj
       )
     );
+  };
+
+  const handleisModalShippingOptionOpen = (value: boolean) => {
+    setIsModalShippingOptionOpen(value);
   };
 
   const totalPrice = () => {
@@ -139,7 +153,7 @@ function Purchase() {
 
   useEffect(() => {
     const selectedAddressObj = addressList.find(
-      (adr) => adr.id === selectEditAddress
+      (adr) => adr.id === selectedEditAddress
     );
     if (selectedAddressObj) {
       setFullName(selectedAddressObj.fullName);
@@ -149,7 +163,7 @@ function Purchase() {
       );
       setStreetNameBuldingHouseNo(selectedAddressObj.streetNameBuldingHouseNo);
     }
-  }, [selectEditAddress]);
+  }, [selectedEditAddress]);
 
   return (
     <div>
@@ -168,7 +182,11 @@ function Purchase() {
               </div>
               <div className="grow">
                 <p className="text-[12px]">
-                  {addressList[selectedAddress - 1].streetNameBuldingHouseNo} {addressList[selectedAddress - 1].provinceDistrictSubDistrictPostalCode}
+                  {addressList[selectedAddress - 1].streetNameBuldingHouseNo}{" "}
+                  {
+                    addressList[selectedAddress - 1]
+                      .provinceDistrictSubDistrictPostalCode
+                  }
                 </p>
               </div>
               <button
@@ -394,7 +412,7 @@ function Purchase() {
                 <Input
                   placeholder="Please leave a message..."
                   className="w-[250px] h-8"
-                  style={{ fontWeight : 'normal' }}
+                  style={{ fontWeight: "normal" }}
                 />
               </div>
               <div className="h-[80px] border-r-2 border-dashed border-[#ACACAC]"></div>
@@ -402,12 +420,36 @@ function Purchase() {
                 <div className="w-full flex items-center space-x-4">
                   <label className="text-[13px]">Shipping Option:</label>
                   <p className="grow text-[13px]">
-                    Standard Delivery - deliver inside the country
+                    {
+                      shippingOption.find(
+                        (obj) => obj.value === selectedShippingOption
+                      )?.label
+                    }
                   </p>
-                  <button className="flex-none text-[13px] text-blue-500 hover:text-blue-600 px-3">
+                  <button
+                    className="flex-none text-[13px] text-blue-500 hover:text-blue-600 px-3"
+                    onClick={() => handleisModalShippingOptionOpen(true)}
+                  >
                     Change
                   </button>
-                  <p className="text-[13px]">฿29</p>
+                  <Modal
+                    title={"Select Shipping Option"}
+                    open={isModalShippingOptionOpen}
+                    onOk={() => {
+                      setSelectedShippingOption(tempSelectedShippingOption);
+                      handleisModalShippingOptionOpen(false);
+                    }}
+                    onCancel={() => handleisModalShippingOptionOpen(false)}
+                  >
+                    <Radio.Group
+                      value={tempSelectedShippingOption}
+                      onChange={(e) =>
+                        setTempSelectedShippingOption(e.target.value)
+                      }
+                      options={shippingOption}
+                    ></Radio.Group>
+                  </Modal>
+                  <p className="text-[13px]">฿{selectedShippingOption}</p>
                 </div>
               </div>
             </div>
@@ -416,7 +458,9 @@ function Purchase() {
                 Order Total ({totalQuantity()} Item
                 {totalQuantity() > 1 ? "s" : ""}):{" "}
               </p>
-              <p className="font-semibold">฿{totalPrice() + 29}</p>
+              <p className="font-semibold">
+                ฿{totalPrice() + selectedShippingOption}
+              </p>
             </div>
           </div>
           <div className="w-full h-[270px] bg-[#E7E7E7] rounded-md">
@@ -465,10 +509,10 @@ function Purchase() {
                   <p className="text-[13px] text-[#767676]">
                     Shipping Subtotal
                   </p>
-                  <p className="text-[13px] text-right">฿29</p>
+                  <p className="text-[13px] text-right">฿{selectedShippingOption}</p>
                   <p className="text-[13px] text-[#767676]">Total Payment:</p>
                   <p className="text-[17px] text-right font-semibold">
-                    ฿{totalPrice() + 29}
+                    ฿{totalPrice() + selectedShippingOption}
                   </p>
                 </div>
               </div>
