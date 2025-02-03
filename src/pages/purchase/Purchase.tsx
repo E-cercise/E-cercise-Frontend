@@ -28,15 +28,15 @@ function Purchase() {
       streetNameBuldingHouseNo:
         "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Nong Khang Phlu",
     },
-    {
-      id: 2,
-      fullName: "Thanadol Udomsirinanchai",
-      phoneNumber: "(+66) XXXXXXXXX",
-      provinceDistrictSubDistrictPostalCode:
-        "Bangkok, Bangkok Yai, Wat ThaPhra, 10600",
-      streetNameBuldingHouseNo:
-        "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Wat Thaphra",
-    },
+    // {
+    //   id: 2,
+    //   fullName: "Thanadol Udomsirinanchai",
+    //   phoneNumber: "(+66) XXXXXXXXX",
+    //   provinceDistrictSubDistrictPostalCode:
+    //     "Bangkok, Bangkok Yai, Wat ThaPhra, 10600",
+    //   streetNameBuldingHouseNo:
+    //     "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Wat Thaphra",
+    // },
   ]);
   const [cartList] = useState<CartList[]>([
     {
@@ -64,76 +64,76 @@ function Purchase() {
       quantity: 1,
     },
   ]);
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
-  const [isAddAddressModalOpen, setIsAddAddressModalOpen] =
-    useState<boolean>(false);
-  const [isEditAddressModalOpen, setIsEditAddressModalOpen] =
-    useState<boolean>(false);
+  // const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
+  // const [isAddAddressModalOpen, setIsAddAddressModalOpen] =
+    // useState<boolean>(false);
+  // const [isEditAddressModalOpen, setIsEditAddressModalOpen] =
+    // useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<number>(1);
-  const [selectedEditAddress, setSelectedEditAddress] = useState<number>(1);
+  // const [selectedEditAddress, setSelectedEditAddress] = useState<number>(1);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
-  const [fullName, setFullName] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [streetNameBuldingHouseNo, setStreetNameBuldingHouseNo] =
-    useState<string>("");
-  const [
-    provinceDistrictSubDistrictPostalCode,
-    setProvinceDistrictSubDistrictPostalCode,
-  ] = useState<string>("");
-  const [isModalShippingOptionOpen, setIsModalShippingOptionOpen] =
-    useState<boolean>(false);
-  const [selectedShippingOption, setSelectedShippingOption] =
-    useState<number>(29);
-  const [tempSelectedShippingOption, setTempSelectedShippingOption] =
-    useState<number>(29);
-  const shippingOption = [
-    { value: 29, label: "Standard Delivery - deliver inside the country" },
-    { value: 100, label: "Standard Delivery Bulky - deliver big product" },
-  ];
+  // const [fullName, setFullName] = useState<string>("");
+  // const [phoneNumber, setPhoneNumber] = useState<string>("");
+  // const [streetNameBuldingHouseNo, setStreetNameBuldingHouseNo] =
+  //   useState<string>("");
+  // const [
+  //   provinceDistrictSubDistrictPostalCode,
+  //   setProvinceDistrictSubDistrictPostalCode,
+  // ] = useState<string>("");
+  // const [isModalShippingOptionOpen, setIsModalShippingOptionOpen] =
+  //   useState<boolean>(false);
+  // const [selectedShippingOption, setSelectedShippingOption] =
+  //   useState<number>(29);
+  // const [tempSelectedShippingOption, setTempSelectedShippingOption] =
+  //   useState<number>(29);
+  // const shippingOption = [
+  //   { value: 29, label: "Standard Delivery - deliver inside the country" },
+  //   { value: 100, label: "Standard Delivery Bulky - deliver big product" },
+  // ];
 
-  const handleIsAddressModalOpen = (value: boolean) => {
-    setIsAddressModalOpen(value);
-  };
+  // const handleIsAddressModalOpen = (value: boolean) => {
+  //   setIsAddressModalOpen(value);
+  // };
 
-  const handleIsAddAddressModalOpen = (value: boolean) => {
-    setIsAddAddressModalOpen(value);
-  };
+  // const handleIsAddAddressModalOpen = (value: boolean) => {
+  //   setIsAddAddressModalOpen(value);
+  // };
 
-  const handleIsEditAddressModalOpen = (value: boolean) => {
-    setIsEditAddressModalOpen(value);
-  };
+  // const handleIsEditAddressModalOpen = (value: boolean) => {
+  //   setIsEditAddressModalOpen(value);
+  // };
 
-  const handleSetSelectedAddress = (value: number) => {
-    setSelectedAddress(value);
-  };
+  // const handleSetSelectedAddress = (value: number) => {
+  //   setSelectedAddress(value);
+  // };
 
-  const handleSetSelectedEditAddress = (value: number) => {
-    setSelectedEditAddress(value);
-  };
+  // const handleSetSelectedEditAddress = (value: number) => {
+  //   setSelectedEditAddress(value);
+  // };
 
-  const handleAddAddress = (adrObj: any) => {
-    setAddressList((prevAddressList) => [...prevAddressList, adrObj]);
-  };
+  // const handleAddAddress = (adrObj: any) => {
+  //   setAddressList((prevAddressList) => [...prevAddressList, adrObj]);
+  // };
 
-  const handleEditAddress = () => {
-    setAddressList((prevAddressList) =>
-      prevAddressList.map((adrObj) =>
-        selectedEditAddress === adrObj.id
-          ? {
-              ...adrObj,
-              fullName,
-              phoneNumber,
-              streetNameBuldingHouseNo,
-              provinceDistrictSubDistrictPostalCode,
-            }
-          : adrObj
-      )
-    );
-  };
+  // const handleEditAddress = () => {
+  //   setAddressList((prevAddressList) =>
+  //     prevAddressList.map((adrObj) =>
+  //       selectedEditAddress === adrObj.id
+  //         ? {
+  //             ...adrObj,
+  //             fullName,
+  //             phoneNumber,
+  //             streetNameBuldingHouseNo,
+  //             provinceDistrictSubDistrictPostalCode,
+  //           }
+  //         : adrObj
+  //     )
+  //   );
+  // };
 
-  const handleisModalShippingOptionOpen = (value: boolean) => {
-    setIsModalShippingOptionOpen(value);
-  };
+  // const handleisModalShippingOptionOpen = (value: boolean) => {
+  //   setIsModalShippingOptionOpen(value);
+  // };
 
   const totalPrice = () => {
     let total = 0;
@@ -151,19 +151,19 @@ function Purchase() {
     return total;
   };
 
-  useEffect(() => {
-    const selectedAddressObj = addressList.find(
-      (adr) => adr.id === selectedEditAddress
-    );
-    if (selectedAddressObj) {
-      setFullName(selectedAddressObj.fullName);
-      setPhoneNumber(selectedAddressObj.phoneNumber);
-      setProvinceDistrictSubDistrictPostalCode(
-        selectedAddressObj.provinceDistrictSubDistrictPostalCode
-      );
-      setStreetNameBuldingHouseNo(selectedAddressObj.streetNameBuldingHouseNo);
-    }
-  }, [selectedEditAddress]);
+  // useEffect(() => {
+  //   const selectedAddressObj = addressList.find(
+  //     (adr) => adr.id === selectedEditAddress
+  //   );
+  //   if (selectedAddressObj) {
+  //     setFullName(selectedAddressObj.fullName);
+  //     setPhoneNumber(selectedAddressObj.phoneNumber);
+  //     setProvinceDistrictSubDistrictPostalCode(
+  //       selectedAddressObj.provinceDistrictSubDistrictPostalCode
+  //     );
+  //     setStreetNameBuldingHouseNo(selectedAddressObj.streetNameBuldingHouseNo);
+  //   }
+  // }, [selectedEditAddress]);
 
   return (
     <div>
@@ -177,25 +177,29 @@ function Purchase() {
             </div>
             <div className="flex items-center space-x-3">
               <div className="w-[200px] text-[12px] font-bold">
-                <p>{addressList[selectedAddress - 1].fullName}</p>
-                <p>{addressList[selectedAddress - 1].phoneNumber}</p>
+                {/* <p>{addressList[selectedAddress - 1].fullName}</p>
+                <p>{addressList[selectedAddress - 1].phoneNumber}</p> */}
+                {addressList[0].fullName}
+                {addressList[0].phoneNumber}
               </div>
               <div className="grow">
                 <p className="text-[12px]">
-                  {addressList[selectedAddress - 1].streetNameBuldingHouseNo}{" "}
+                  {/* {addressList[selectedAddress - 1].streetNameBuldingHouseNo}{" "}
                   {
                     addressList[selectedAddress - 1]
                       .provinceDistrictSubDistrictPostalCode
-                  }
+                  } */}
+                  {addressList[0].streetNameBuldingHouseNo}{" "}
+                  {addressList[0].provinceDistrictSubDistrictPostalCode}
                 </p>
               </div>
-              <button
+              {/* <button
                 className="flex-none text-[12px] text-blue-500 hover:text-blue-600 px-3"
-                onClick={() => handleIsAddressModalOpen(true)}
+                // onClick={() => handleIsAddressModalOpen(true)}
               >
                 Change
-              </button>
-              <Modal
+              </button> */}
+              {/* <Modal
                 title={
                   <div>
                     <h3>My Address</h3>
@@ -356,7 +360,7 @@ function Purchase() {
                     </div>
                   </div>
                 </Modal>
-              </Modal>
+              </Modal> */}
             </div>
           </div>
           <div className="w-full max-h-[82vh] bg-[#E7E7E7] space-y-3 rounded-md">
@@ -417,7 +421,7 @@ function Purchase() {
               </div>
               <div className="h-[80px] border-r-2 border-dashed border-[#ACACAC]"></div>
               <div className="w-full h-[80px] border-y-2 border-dashed border-[#ACACAC] p-4">
-                <div className="w-full flex items-center space-x-4">
+                {/* <div className="w-full flex items-center space-x-4">
                   <label className="text-[13px]">Shipping Option:</label>
                   <p className="grow text-[13px]">
                     {
@@ -450,7 +454,7 @@ function Purchase() {
                     ></Radio.Group>
                   </Modal>
                   <p className="text-[13px]">฿{selectedShippingOption}</p>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="flex items-center justify-end pb-4 pr-5 space-x-5">
@@ -459,7 +463,8 @@ function Purchase() {
                 {totalQuantity() > 1 ? "s" : ""}):{" "}
               </p>
               <p className="font-semibold">
-                ฿{totalPrice() + selectedShippingOption}
+                {/* ฿{totalPrice() + selectedShippingOption} */}
+                ฿{totalPrice()}
               </p>
             </div>
           </div>
@@ -506,13 +511,14 @@ function Purchase() {
                     Merchandise Subtotal
                   </p>
                   <p className="text-[13px] text-right">฿{totalPrice()}</p>
-                  <p className="text-[13px] text-[#767676]">
+                  {/* <p className="text-[13px] text-[#767676]">
                     Shipping Subtotal
-                  </p>
-                  <p className="text-[13px] text-right">฿{selectedShippingOption}</p>
+                  </p> */}
+                  {/* <p className="text-[13px] text-right">฿{selectedShippingOption}</p> */}
                   <p className="text-[13px] text-[#767676]">Total Payment:</p>
                   <p className="text-[17px] text-right font-semibold">
-                    ฿{totalPrice() + selectedShippingOption}
+                    {/* ฿{totalPrice() + selectedShippingOption} */}
+                    ฿{totalPrice()}
                   </p>
                 </div>
               </div>
