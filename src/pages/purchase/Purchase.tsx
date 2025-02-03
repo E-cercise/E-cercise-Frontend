@@ -18,7 +18,7 @@ interface CartList {
 }
 
 function Purchase() {
-  const [addressList, setAddressList] = useState([
+  const [addressList] = useState([
     {
       id: 1,
       fullName: "Thanadol Udomsirinanchai",
@@ -69,7 +69,7 @@ function Purchase() {
     // useState<boolean>(false);
   // const [isEditAddressModalOpen, setIsEditAddressModalOpen] =
     // useState<boolean>(false);
-  const [selectedAddress, setSelectedAddress] = useState<number>(1);
+  // const [selectedAddress, setSelectedAddress] = useState<number>(1);
   // const [selectedEditAddress, setSelectedEditAddress] = useState<number>(1);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
   // const [fullName, setFullName] = useState<string>("");
