@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { Modal } from "antd";
 import NavBar from "../../components/navbar/NavBar";
 import Test from "../../assets/test/home/Group 32.png";
 import CrossMark from "../../assets/test/cart/image 36.png";
 import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 import Dumbbells3 from "../../assets/test/comparison/image 18.png";
-import { Button, Modal } from "antd";
 
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
