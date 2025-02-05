@@ -7,6 +7,7 @@ import Detail from './pages/detail/Detail'
 import Comparison from './pages/comparison/Comparison'
 import Cart from './pages/cart/Cart'
 import Purchase from './pages/purchase/Purchase'
+import OrderTracking from './pages/tracking/OrderTracking'
 import './App.css'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path='/comparison' element={<Comparison />}/>
           <Route path='/cart' element={<Cart />}/>
           <Route path='/purchase' element={<Purchase />}/>
+          <Route path='/order-tracking' element={<OrderTracking />}/>
         </Routes>
       </BrowserRouter>
       {/* <div>
