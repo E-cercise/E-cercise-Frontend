@@ -64,6 +64,14 @@ function OrderTracking() {
     },
   ]);
 
+  const totalPrice = () => {
+    let total = 0;
+    cartList.forEach((product) => {
+      total += product.price * product.quantity;
+    });
+    return total;
+  };
+
   return (
     <div>
       <NavBar />
@@ -95,7 +103,7 @@ function OrderTracking() {
               },
               {
                 title: "Order Shipped Out",
-                status: "finish",
+                status: "wait",
                 icon: <RiTruckLine size={30} />,
               },
               {
@@ -114,7 +122,7 @@ function OrderTracking() {
           </div>
         </div>
         <div className="w-full flex bg-[#E7E7E7] rounded-md px-6 py-4 space-x-[20px]">
-          <div className="w-[28vw] h-[33vh] bg-white space-y-2 rounded-md p-5">
+          <div className="w-[28vw] h-[30vh] bg-white space-y-2 rounded-md p-5">
             <h3 className="text-[17px] font-semibold">Delivery Address</h3>
             <div className="space-y-1">
               <p className="text-[13px]">{addressList[0].fullName}</p>
@@ -125,7 +133,7 @@ function OrderTracking() {
               </p>
             </div>
           </div>
-          <div className="grow w-[500px] space-y-2">
+          <div className="grow w-[500px] bg-white p-3 rounded-md space-y-2">
             <div className="flex h-[60px] bg-gray-300 rounded-md">
               <div className="grow flex items-center justify-center w-[600px] font-bold text-[13px]">
                 Product Ordered
@@ -169,6 +177,14 @@ function OrderTracking() {
                   </div>
                 </div>
               ))}
+              <div>
+                <div className="flex items-center px-2 space-x-2 float-right">
+                  <p className="text-[14px]">Net Total :</p>
+                  <p className="text-[15px] font-semibold">
+                    ฿{totalPrice()}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
