@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Divider, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../api/Login";
+import { AES }from "crypto-ts";
 import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleOnChangeEmail = (e: string) => {
     setEmail(e);
@@ -16,7 +18,18 @@ function Login() {
     setPassword(e);
   }
 
-  
+  const receivedToken = async (email: string, password: string) => {
+    try {
+      const encryptedEmail = AES.encrypt(email, JSON.stringify(process.env.SECRET_KEY)).toString();
+      const encryptedPassword = AES.encrypt(password, JSON.stringify(process.env.SECRET_KEY)).toString();
+      const tokenObject = await login(encryptedEmail, encryptedPassword);
+      localStorage.setItem("accessToken", tokenObject.access_token);
+      navigate("/home");
+    } catch(err) {
+      console.error(err);
+      navigate("/login");
+    }
+  }
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
@@ -45,7 +58,7 @@ function Login() {
             className="w-full text-[12px] font-bold"
             color="default"
             variant="solid"
-            onClick={async () => await login(email, password)}
+            onClick={async () => await receivedToken(email, password)}
           >
             Login
           </Button>

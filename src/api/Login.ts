@@ -7,6 +7,10 @@ export const login = async (email: string, password: string) => {
             {
                 "email": email,
                 "password": password
+            },
+            { 
+                method: "POST",
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             }
         );
         return response.data;
