@@ -1,12 +1,11 @@
 import axios from "axios";
 
 
-export const login = async (email: string, password: string) => {
+export const login = async (encryptedLoginBody: string) => {
     try {
         const response = await axios.post(`${process.env.API_BASE_URL}api/auth/login`,
             {
-                "email": email,
-                "password": password
+                "login_body": encryptedLoginBody
             },
             { 
                 method: "POST",

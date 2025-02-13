@@ -2,8 +2,17 @@ import React, { useState } from "react";
 import { Button, Divider, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../api/Login";
-import { AES }from "crypto-ts";
+import { AES } from "crypto-ts";
+import { jwtDecode } from "jwt-decode";
 import "./Login.css";
+
+const ENCRYPT_SECRET_KEY = JSON.stringify(process.env.ENCRYPT_SECRET_KEY);
+
+if (!ENCRYPT_SECRET_KEY) {
+  throw new Error(
+    "Encryption key is missing! Ensure ENCRYPT_SECRET_KEY is set."
+  );
+}
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -14,22 +23,39 @@ function Login() {
     setEmail(e);
   };
 
-  const handleOnChangePassword = (e:string) => {
+  const handleOnChangePassword = (e: string) => {
     setPassword(e);
-  }
+  };
 
   const receivedToken = async (email: string, password: string) => {
     try {
-      const encryptedEmail = AES.encrypt(email, JSON.stringify(process.env.SECRET_KEY)).toString();
-      const encryptedPassword = AES.encrypt(password, JSON.stringify(process.env.SECRET_KEY)).toString();
-      const tokenObject = await login(encryptedEmail, encryptedPassword);
+      // Encrypt entire request body
+      const encryptedBody = AES.encrypt(
+        JSON.stringify({ email, password }),
+        ENCRYPT_SECRET_KEY
+      ).toString();
+
+      // Fetch token
+      const tokenObject = await login(encryptedBody);
+
+      // Store token in local storage
       localStorage.setItem("accessToken", tokenObject.access_token);
-      navigate("/home");
-    } catch(err) {
+
+      // Decode token
+      const decoded: {
+        user_id: string;
+        name: string;
+        exp: number;
+        role: string;
+      } = jwtDecode(tokenObject.access_token);
+
+      // Navigate based on role
+      navigate(decoded.role === "USER" ? "/home" : "");
+    } catch (err) {
       console.error(err);
       navigate("/login");
     }
-  }
+  };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
