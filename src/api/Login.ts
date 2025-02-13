@@ -9,7 +9,10 @@ export const login = async (encryptedLoginBody: string) => {
             },
             { 
                 method: "POST",
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': true
+                },
             }
         );
         return response.data;
