@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 
 const ENCRYPT_SECRET_KEY = JSON.stringify(process.env.ENCRYPT_SECRET_KEY);
-const ENCRYPT_IV = JSON.stringify(process.env.ENCRYPT_IV);
+// const ENCRYPT_IV = JSON.stringify(process.env.ENCRYPT_IV);
 
 if (!ENCRYPT_SECRET_KEY) {
   throw new Error(
@@ -15,11 +15,11 @@ if (!ENCRYPT_SECRET_KEY) {
   );
 }
 
-if (!ENCRYPT_IV) {
-  throw new Error(
-    "Encryption key is missing! Ensure ENCRYPT_IV is set."
-  );
-}
+// if (!ENCRYPT_IV) {
+//   throw new Error(
+//     "Encryption key is missing! Ensure ENCRYPT_IV is set."
+//   );
+// }
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -37,22 +37,22 @@ function Login() {
   const receivedToken = async (email: string, password: string) => {
     try {
       // Encrypt entire request body
-      const encryptedBody = CryptoJS.AES.encrypt(
-        JSON.stringify({ email, password }),
-        ENCRYPT_SECRET_KEY,
-        {
-          iv: CryptoJS.enc.Base64.parse('9bgfCQBDJ1kl5YEv+xrCPQ=='),
-          mode: CryptoJS.mode.CBC,
-          padding: CryptoJS.pad.Pkcs7,
-        }
-      ).toString();
+      // const encryptedBody = CryptoJS.AES.encrypt(
+      //   JSON.stringify({ email, password }),
+      //   ENCRYPT_SECRET_KEY,
+      //   {
+      //     iv: CryptoJS.enc.Base64.parse('9bgfCQBDJ1kl5YEv+xrCPQ=='),
+      //     mode: CryptoJS.mode.CBC,
+      //     padding: CryptoJS.pad.Pkcs7,
+      //   }
+      // ).toString();
 
       // Fetch token
-      const tokenObject = await login(encryptedBody);
+      const tokenObject = await login(email, password);
 
       // Store token in local storage
       localStorage.setItem("accessToken", tokenObject.access_token);
-
+      
       // Decode token
       const decoded: {
         user_id: string;

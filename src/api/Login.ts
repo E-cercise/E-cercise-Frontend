@@ -1,18 +1,15 @@
 import axios from "axios";
 
-
-export const login = async (encryptedLoginBody: string) => {
+export const login = async (email: string, password: string) => {
     try {
         const response = await axios.post(`${process.env.API_BASE_URL}api/auth/login`,
             {
-                "login_body": encryptedLoginBody
+                "email": email,
+                "password": password
             },
             { 
                 method: "POST",
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': true
-                },
+                headers: { 'Content-Type': 'application/json' },
             }
         );
         return response.data;
