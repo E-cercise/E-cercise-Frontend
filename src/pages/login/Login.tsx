@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Divider, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../api/Login";
-import CryptoJS from "crypto-js";
+// import CryptoJS from "crypto-js";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 
@@ -52,7 +52,7 @@ function Login() {
 
       // Store token in local storage
       localStorage.setItem("accessToken", tokenObject.access_token);
-      
+
       // Decode token
       const decoded: {
         user_id: string;
