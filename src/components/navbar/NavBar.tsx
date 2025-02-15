@@ -9,9 +9,9 @@ import Cart from "../../assets/navbar/Cart.png";
 import { frontAttributes, backAttributes } from "../muscles/muscles";
 import "./NavBar.css";
 
-function NavBar() {
+function NavBar({ searchKeyword, setSearchKeyword, setMuscleGroup }:{ searchKeyword: string; setSearchKeyword: React.Dispatch<React.SetStateAction<string>> ; setMuscleGroup: React.Dispatch<React.SetStateAction<string>> }) {
   const [activePath, setActivePath] = useState<string>("");
-  const [showPopOver, setShowPopOver] = useState<boolean>(false);
+  const [, setShowPopOver] = useState<boolean>(false);
   const [, setShowMusclesPopover] = useState<boolean>(false);
   const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
 
@@ -24,6 +24,10 @@ function NavBar() {
   const handleMouseLeave = () => {
     setActivePath("");
   };
+
+  const handleKeywordOnChange = (keyword: string) => {
+    setSearchKeyword(keyword);
+  }
 
   const handleShowPopOver = (value: boolean) => {
     setShowPopOver(value);
@@ -42,6 +46,10 @@ function NavBar() {
     }
   };
 
+  const handleMuscleGroup = (value: string) => {
+    setMuscleGroup(value);
+  };
+
   const clearAllClickedMuscles = () => {
     setClickedMuscles([]);
   };
@@ -53,8 +61,10 @@ function NavBar() {
       </div>
       <Input.Search
         allowClear
+        value={searchKeyword}
         placeholder="Search"
         className="absolute left-[180px] w-[35vw]"
+        onChange={(e) => handleKeywordOnChange(e.target.value)}
       />
       <Popover
         onOpenChange={() => handleShowMusclesPopover(true)}
@@ -221,7 +231,7 @@ function NavBar() {
                 <Button onClick={() => clearAllClickedMuscles()}>
                   Clear All
                 </Button>
-                <Button>Filter</Button>
+                <Button onClick={() => handleMuscleGroup(clickedMuscles.join(","))}>Filter</Button>
               </div>
             </div>
           </div>

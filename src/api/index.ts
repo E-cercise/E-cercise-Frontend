@@ -1,7 +1,4 @@
 import axios from "axios";
-// import * as dotenv from "dotenv";
-
-// dotenv.config()
 
 const API = axios.create({
     baseURL: process.env.API_BASE_URL,
@@ -11,9 +8,9 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((config) => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("accessToken");
     if (token) {
-        config.headers.Authorization = `Bearer {token}`
+        config.headers.Authorization = `Bearer ${token}`
     }
     return config;
 })

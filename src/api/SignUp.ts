@@ -10,7 +10,7 @@ export const signUp = async (
 ) => {
   try {
     const response = await axios.post(
-      `${process.env.API_BASE_URL}api/auth/register`,
+      `${process.env.API_BASE_URL}/api/auth/register`,
       {
         "email": email,
         "password": password,
