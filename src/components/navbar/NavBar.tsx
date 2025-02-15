@@ -9,10 +9,17 @@ import Cart from "../../assets/navbar/Cart.png";
 import { frontAttributes, backAttributes } from "../muscles/muscles";
 import "./NavBar.css";
 
-function NavBar() {
+function NavBar({
+  setSearchKeyword,
+  setMuscleGroup,
+}: {
+  setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
+  setMuscleGroup: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const [activePath, setActivePath] = useState<string>("");
-  const [showPopOver, setShowPopOver] = useState<boolean>(false);
+  const [, setShowPopOver] = useState<boolean>(false);
   const [, setShowMusclesPopover] = useState<boolean>(false);
+  const [tempKeyword, setTempKeyword] = useState<string>("");
   const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
 
   console.log(clickedMuscles);
@@ -23,6 +30,14 @@ function NavBar() {
 
   const handleMouseLeave = () => {
     setActivePath("");
+  };
+
+  const handleKeywordOnChange = (keyword: string) => {
+    setTempKeyword(keyword); // Store typed input but don't trigger search yet
+  };
+
+  const handleSearchClick = () => {
+    setSearchKeyword(tempKeyword);
   };
 
   const handleShowPopOver = (value: boolean) => {
@@ -42,6 +57,10 @@ function NavBar() {
     }
   };
 
+  const handleMuscleGroup = (value: string) => {
+    setMuscleGroup(value);
+  };
+
   const clearAllClickedMuscles = () => {
     setClickedMuscles([]);
   };
@@ -53,8 +72,11 @@ function NavBar() {
       </div>
       <Input.Search
         allowClear
+        value={tempKeyword}
         placeholder="Search"
         className="absolute left-[180px] w-[35vw]"
+        onChange={(e) => handleKeywordOnChange(e.target.value)}
+        onSearch={handleSearchClick}
       />
       <Popover
         onOpenChange={() => handleShowMusclesPopover(true)}
@@ -221,7 +243,11 @@ function NavBar() {
                 <Button onClick={() => clearAllClickedMuscles()}>
                   Clear All
                 </Button>
-                <Button>Filter</Button>
+                <Button
+                  onClick={() => handleMuscleGroup(clickedMuscles.join(","))}
+                >
+                  Filter
+                </Button>
               </div>
             </div>
           </div>
