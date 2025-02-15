@@ -189,7 +189,7 @@ function Home() {
           </div>
           <p className="text-xs text-[#31A421]">(1,046)</p>
         </div>
-        <p>฿{equipment.price}</p>
+        <p>${equipment.price}</p>
         <button className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg">
           Add to Cart
         </button>
@@ -205,7 +205,6 @@ function Home() {
   return (
     <div>
       <NavBar
-        searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
         setMuscleGroup={setMuscleGroup}
       />
