@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Popover, Select } from 'antd';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Popover, Select } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
+import { equipmentDetail } from "../../api/EquipmentDetail";
 import NavBar from "../../components/navbar/NavBar";
 import Image24 from "../../assets/test/detail/61B23FTbldL._AC_SX679_.jpg";
 import Image25 from "../../assets/test/detail/81MibHuZ-2L._AC_SX679_.jpg";
@@ -12,18 +14,63 @@ import Image28 from "../../assets/test/detail/714Ok8Q27iL._AC_SX679_.jpg";
 import Image29 from "../../assets/test/detail/71FgyakEiQL._AC_SX679_.jpg";
 import Image30 from "../../assets/test/detail/91HJDUO53iL._AC_SX679_.jpg";
 import Cart from "../../assets/test/detail/+ Cart.png";
-import { frontAttributes, backAttributes } from "../../components/muscles/muscles";
+import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
+import BackMuscle from "../../assets/navbar/muscles-back-image.png";
+import {
+  frontAttributes,
+  backAttributes,
+} from "../../components/muscles/muscles";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Detail.css";
+
+interface Image {
+  id: string;
+  url: string;
+  is_primary: boolean;
+}
+
+interface Option {
+  id: string;
+  name: string;
+  available: string;
+  price: number;
+  weight: number;
+  images: Image[];
+}
+
+interface Feature {
+  id: string;
+  description: string;
+}
+
+interface AdditionalField {
+  id: string;
+  key: string;
+  value: string;
+}
+
+interface EquipmentDetailResponse {
+  brand: string;
+  color: string;
+  material: string;
+  model: string;
+  muscle_group_used: string[];
+  name: string;
+  option: Option[];
+  feature: Feature[];
+  additional_field: AdditionalField[];
+}
 
 function Detail() {
   const [activePath, setActivePath] = useState<string>("");
   const [showPopOver, setShowPopOver] = useState<boolean>(false);
   const [, setShowMusclesPopover] = useState<boolean>(false);
   const [clickedMuscles, _] = useState<string[]>([]);
+  const [detail, setDetail] = useState<EquipmentDetailResponse>();
+  const [hidefilterButton, setHideFilterButton] = useState<boolean>();
 
-  const frontMusclesUsed = ['ft_5', 'ft_6', 'ft_14', 'ft_15'];
-  const backMusclesUsed = ['bk_8', 'bk_9', 'bk_10', 'bk_11']
+  // const frontMusclesUsed = ['ft_5', 'ft_6', 'ft_14', 'ft_15'];
+  // const backMusclesUsed = ['bk_8', 'bk_9', 'bk_10', 'bk_11'];
 
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
@@ -54,34 +101,63 @@ function Detail() {
     }
   };
 
+  const equipment_id = useParams<{ equipment_id: string | undefined }>();
+  console.log(equipment_id.equipment_id);
+
+  const getEquipmentDetail = async (id: string | undefined) => {
+    try {
+      const detail = await equipmentDetail(id);
+      setDetail(detail);
+      console.log(detail);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getEquipmentDetail(equipment_id.equipment_id);
+  }, []);
+
   return (
     <div>
       <NavBar />
       <div className="h-full pt-5 pb-5 pl-10 pr-10">
-        <div className="h-full bg-[#E7E7E7] pt-3 pb-3 pl-3 pr-3 rounded-md">
+        <div className="h-full bg-[#E7E7E7] pt-3 pb-6 pl-3 pr-3 rounded-md">
           <div className="flex space-x-10 pl-[60px] pr-[60px] pt-5">
             <div className="text-[20px] w-[300px] max-w-[1200px]">
               <Carousel
+                dynamicHeight
                 showArrows={false}
                 infiniteLoop={true}
                 showIndicators={false}
                 showStatus={false}
                 thumbWidth={72}
               >
-                <img src={Image24} className="rounded-lg" />
+                {/* <img src={Image24} className="rounded-lg" />
                 <img src={Image25} className="rounded-lg" />
                 <img src={Image26} className="rounded-lg" />
                 <img src={Image27} className="rounded-lg" />
                 <img src={Image28} className="rounded-lg" />
                 <img src={Image29} className="rounded-lg" />
-                <img src={Image30} className="rounded-lg" />
+                <img src={Image30} className="rounded-lg" /> */}
+                {/* {detail?.option[0].images.map((image, index) => {
+                  // if ()
+                  return <img src={image.url} className="rounded-lg" />;
+                })} */}
+                {detail?.option[0].images
+                  ?.slice() // Create a shallow copy to avoid mutating original data
+                  .sort((a, b) => (b.is_primary ? 0 : 1) - (a.is_primary ? 0 : 1)) // Sort: primary image first
+                  .map((image, index) => {
+                    if (index == 0) {
+                      return <img key={index} src={image.url} className="rounded-lg" />
+                    } else {
+                      return <img key={index} src={image.url} className="rounded-lg" />
+                    }
+                })}
               </Carousel>
             </div>
             <div className="space-y-3">
-              <span className="text-[22px] font-semibold">
-                Rep Fitness Rubber Hex Dumbbell(s) - Singles (55LB +) and Pairs
-                (5LB - 50LB) - Low Odor, Fully Knurled Handle
-              </span>
+              <span className="text-[22px] font-semibold">{detail?.name}</span>
               <div className="flex space-x-[45px]">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
@@ -98,11 +174,16 @@ function Detail() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span>฿</span>
-                    <p>XXXX</p>
+                    <p>{detail?.option[0].price}</p>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-[12px] font-bold">Style</span>
-                    <Select
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[12px] font-bold">Style</span>
+                      <span className="text-[12px]">
+                        {detail?.option[0].name}
+                      </span>
+                    </div>
+                    {/* <Select
                       defaultValue="10 LB Pair"
                       onChange={(e: any) => handleChange(e.value)}
                       className="w-[110px] h-6"
@@ -113,27 +194,52 @@ function Detail() {
                         { value: 40, label: "40 LB Pair" },
                         { value: 50, label: "50 LB Pair" },
                       ]}
-                    />
+                    /> */}
+                    {detail?.option.length !== 1 ? (
+                      // detail?.option.map((option) => {
+                      //   return (
+                      //     <div className="border-2 border-[#565656] rounded-md p-2">
+                      //       <p className="text-[12px] font-semibold">
+                      //         {option.name}
+                      //       </p>
+                      //       {/* <img src={option.images[0].url} alt="" /> */}
+                      //       <p className="text-[12px]">1 option from</p>
+                      //       <p className="text-[12px]">฿ {option.price}</p>
+                      //     </div>
+                      //   );
+                      // })
+                      <></>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Brand</span>
+                    <span className="text-[12px]">{detail?.additional_field.filter((field) => field["key"] === "Brand Name")[0].value}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Color</span>
+                    <span className="text-[12px]">{detail?.color}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Material</span>
+                    <span className="text-[12px]">{detail?.material}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Item Weight</span>
+                    <span className="text-[12px]">
+                      {detail?.option[0].weight} Pounds
+                    </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Model</span>
+                    <span className="text-[12px]">{detail?.model}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">
                       Special Feature
                     </span>
+                    <span className="text-[12px]">{detail?.additional_field.length !== 0 ? detail?.additional_field[0].value : ""}</span>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -147,34 +253,38 @@ function Detail() {
                       xmlSpace="preserve"
                     >
                       <image
-                        href="src\assets\navbar\muscles-front-image.png"
+                        href={FrontMuscle}
                         width="600"
                         height="980"
                       ></image>
-                      {frontAttributes.map((element, index) => {
-                        const id = `ft_${index + 1}`;
+                      {frontAttributes.map((element) => {
+                        // const id = `ft_${index + 1}`;
                         // console.log(showPopOver);
-                        if (frontMusclesUsed.includes(id)) {
+                        if (detail?.muscle_group_used.includes(element.id)) {
+                          console.log(element.id);
                           return (
                             <React.Fragment>
                               <Popover title={element.name}>
                                 <path
-                                  key={id}
-                                  id={id}
+                                  key={element.id}
+                                  id={element.id}
                                   fill="#FF0000"
                                   // stroke={activePath === id ? "#0000FF" : "#ff8080"} // Change stroke color on hover
                                   stroke={"#ff8080"} // Change stroke color on hover
                                   vectorEffect="non-scaling-stroke"
                                   d={element.d} // Replace with actual path data for each path
                                   fillOpacity={
-                                    activePath === id || frontMusclesUsed.includes(id)
+                                    activePath === element.id ||
+                                    detail?.muscle_group_used.includes(
+                                      element.id
+                                    )
                                       ? "1"
                                       : "0"
                                   }
                                   strokeOpacity="1"
                                   cursor="pointer"
                                   onMouseEnter={() => {
-                                    handleMouseEnter(id);
+                                    handleMouseEnter(element.id);
                                     handleShowPopOver(true);
                                   }}
                                   onMouseLeave={() => {
@@ -182,12 +292,14 @@ function Detail() {
                                     handleShowPopOver(false);
                                   }}
                                   onClick={() => {
-                                    handleClickedMuscles(id);
+                                    handleClickedMuscles(element.id);
                                   }}
                                   style={{
                                     fill:
-                                      activePath === id ||
-                                      frontMusclesUsed.includes(id)
+                                      activePath === element.id ||
+                                      detail?.muscle_group_used.includes(
+                                        element.id
+                                      )
                                         ? "rgba(231, 89, 99, 0.5)"
                                         : "rgb(253, 88, 88)",
                                   }}
@@ -206,35 +318,34 @@ function Detail() {
                       viewBox="0 0 600 980"
                       xmlSpace="preserve"
                     >
-                      <image
-                        href="src\assets\navbar\muscles-back-image.png"
-                        width="600"
-                        height="980"
-                      ></image>
-                      {backAttributes.map((element, index) => {
-                        const id = `bk_${index + 1}`;
+                      <image href={BackMuscle} width="600" height="980"></image>
+                      {backAttributes.map((element) => {
+                        // const id = `bk_${index + 1}`;
                         // console.log(showPopOver);
-                        if (backMusclesUsed.includes(id)) {
+                        if (detail?.muscle_group_used.includes(element.id)) {
                           return (
                             <React.Fragment>
                               <Popover title={element.name}>
                                 <path
-                                  key={id}
-                                  id={id}
+                                  key={element.id}
+                                  id={element.id}
                                   fill="#FF0000"
                                   // stroke={activePath === id ? "#0000FF" : "#ff8080"} // Change stroke color on hover
                                   stroke={"#ff8080"} // Change stroke color on hover
                                   vectorEffect="non-scaling-stroke"
                                   d={element.d} // Replace with actual path data for each path
                                   fillOpacity={
-                                    activePath === id || backMusclesUsed.includes(id)
+                                    activePath === element.id ||
+                                    detail?.muscle_group_used.includes(
+                                      element.id
+                                    )
                                       ? "1"
                                       : "0"
                                   }
                                   strokeOpacity="1"
                                   cursor="pointer"
                                   onMouseEnter={() => {
-                                    handleMouseEnter(id);
+                                    handleMouseEnter(element.id);
                                     handleShowPopOver(true);
                                   }}
                                   onMouseLeave={() => {
@@ -242,12 +353,14 @@ function Detail() {
                                     handleShowPopOver(false);
                                   }}
                                   onClick={() => {
-                                    handleClickedMuscles(id);
+                                    handleClickedMuscles(element.id);
                                   }}
                                   style={{
                                     fill:
-                                      activePath === id ||
-                                      backMusclesUsed.includes(id)
+                                      activePath === element.id ||
+                                      detail?.muscle_group_used.includes(
+                                        element.id
+                                      )
                                         ? "rgba(231, 89, 99, 0.5)"
                                         : "rgb(253, 88, 88)",
                                   }}

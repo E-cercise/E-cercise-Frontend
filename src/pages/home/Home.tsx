@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Pagination } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { filteredEquipment } from "../../api/FilteredEquipment";
 import NavBar from "../../components/navbar/NavBar";
 import SearchIcon from "../../assets/home/search.png";
@@ -159,7 +160,7 @@ function Home() {
           key={index}
           className="w-[200px] bg-[#F2EFEF] p-4 space-y-2 rounded-md"
         >
-          <img src={Dumbbells1} alt="" className="w-full" />
+          <img src={equipment.image_path} alt="" className="w-full rounded-md" />
           <p
             className={`cursor-pointer  text-sm ${
               titleHover && equipmentId === index
@@ -175,7 +176,9 @@ function Home() {
               setTitleHover(false);
             }}
           >
-            {equipment.name}
+            <Link to={`/equipment/${equipment.ID}`}>
+              {equipment.name}
+            </Link>
           </p>
           <div className="flex items-center space-x-2">
             <div className="cursor-pointer flex items-center space-x-1">
@@ -190,7 +193,7 @@ function Home() {
             </div>
             <p className="text-xs text-[#31A421]">(1,046)</p>
           </div>
-          <p>${equipment.price}</p>
+          <p>฿{equipment.price}</p>
           <button className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg">
             Add to Cart
           </button>
