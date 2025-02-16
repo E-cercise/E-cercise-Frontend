@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Popover, Select } from "antd";
+import { Modal, Popover, Select } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { equipmentDetail } from "../../api/EquipmentDetail";
+import { addEquipmentToCart } from "../../api/AddEquipmentToCart";
 import NavBar from "../../components/navbar/NavBar";
-import Image24 from "../../assets/test/detail/61B23FTbldL._AC_SX679_.jpg";
-import Image25 from "../../assets/test/detail/81MibHuZ-2L._AC_SX679_.jpg";
-import Image26 from "../../assets/test/detail/81fe9+bCwnL._AC_SX679_.jpg";
-import Image27 from "../../assets/test/detail/71jHa14xWRL._AC_SX679_.jpg";
-import Image28 from "../../assets/test/detail/714Ok8Q27iL._AC_SX679_.jpg";
-import Image29 from "../../assets/test/detail/71FgyakEiQL._AC_SX679_.jpg";
-import Image30 from "../../assets/test/detail/91HJDUO53iL._AC_SX679_.jpg";
+// import Image24 from "../../assets/test/detail/61B23FTbldL._AC_SX679_.jpg";
+// import Image25 from "../../assets/test/detail/81MibHuZ-2L._AC_SX679_.jpg";
+// import Image26 from "../../assets/test/detail/81fe9+bCwnL._AC_SX679_.jpg";
+// import Image27 from "../../assets/test/detail/71jHa14xWRL._AC_SX679_.jpg";
+// import Image28 from "../../assets/test/detail/714Ok8Q27iL._AC_SX679_.jpg";
+// import Image29 from "../../assets/test/detail/71FgyakEiQL._AC_SX679_.jpg";
+// import Image30 from "../../assets/test/detail/91HJDUO53iL._AC_SX679_.jpg";
 import Cart from "../../assets/test/detail/+ Cart.png";
 import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
 import BackMuscle from "../../assets/navbar/muscles-back-image.png";
+import RightMark from "../../assets/detail/checkmark.png";
 import {
   frontAttributes,
   backAttributes,
@@ -67,14 +69,14 @@ function Detail() {
   const [, setShowMusclesPopover] = useState<boolean>(false);
   const [clickedMuscles, _] = useState<string[]>([]);
   const [detail, setDetail] = useState<EquipmentDetailResponse>();
-  const [hidefilterButton, setHideFilterButton] = useState<boolean>();
+  const [open, setOpen] = useState<boolean>(false);
 
   // const frontMusclesUsed = ['ft_5', 'ft_6', 'ft_14', 'ft_15'];
   // const backMusclesUsed = ['bk_8', 'bk_9', 'bk_10', 'bk_11'];
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
+  // const handleChange = (value: string) => {
+  //   console.log(`selected ${value}`);
+  // };
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -92,6 +94,15 @@ function Detail() {
     setShowMusclesPopover(value);
   };
 
+  const handleOk = () => {
+    // setModalText('The modal will be closed after two seconds');
+    // setConfirmLoading(true);
+    setTimeout(() => {
+      setOpen(false);
+      // setConfirmLoading(false);
+    }, 1500);
+  };
+
   const handleClickedMuscles = (id: string) => {
     if (!clickedMuscles.includes(id)) {
       clickedMuscles.push(id);
@@ -102,7 +113,7 @@ function Detail() {
   };
 
   const equipment_id = useParams<{ equipment_id: string | undefined }>();
-  console.log(equipment_id.equipment_id);
+  // console.log(equipment_id.equipment_id);
 
   const getEquipmentDetail = async (id: string | undefined) => {
     try {
@@ -111,6 +122,18 @@ function Detail() {
       console.log(detail);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const addToCart = async (
+    equipment_id: string | undefined,
+    equipment_option_id: string | undefined,
+    quantity: number
+  ) => {
+    try {
+      await addEquipmentToCart(equipment_id, equipment_option_id, quantity);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -146,14 +169,28 @@ function Detail() {
                 })} */}
                 {detail?.option[0].images
                   ?.slice() // Create a shallow copy to avoid mutating original data
-                  .sort((a, b) => (b.is_primary ? 0 : 1) - (a.is_primary ? 0 : 1)) // Sort: primary image first
+                  .sort(
+                    (a, b) => (b.is_primary ? 0 : 1) - (a.is_primary ? 0 : 1)
+                  ) // Sort: primary image first
                   .map((image, index) => {
                     if (index == 0) {
-                      return <img key={index} src={image.url} className="rounded-lg" />
+                      return (
+                        <img
+                          key={index}
+                          src={image.url}
+                          className="rounded-lg"
+                        />
+                      );
                     } else {
-                      return <img key={index} src={image.url} className="rounded-lg" />
+                      return (
+                        <img
+                          key={index}
+                          src={image.url}
+                          className="rounded-lg"
+                        />
+                      );
                     }
-                })}
+                  })}
               </Carousel>
             </div>
             <div className="space-y-3">
@@ -215,7 +252,13 @@ function Detail() {
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Brand</span>
-                    <span className="text-[12px]">{detail?.additional_field.filter((field) => field["key"] === "Brand Name")[0].value}</span>
+                    <span className="text-[12px]">
+                      {
+                        detail?.additional_field.filter(
+                          (field) => field["key"] === "Brand Name"
+                        )[0].value
+                      }
+                    </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Color</span>
@@ -239,7 +282,11 @@ function Detail() {
                     <span className="text-[12px] font-bold">
                       Special Feature
                     </span>
-                    <span className="text-[12px]">{detail?.additional_field.length !== 0 ? detail?.additional_field[0].value : ""}</span>
+                    <span className="text-[12px]">
+                      {detail?.additional_field.length !== 0
+                        ? detail?.additional_field[0].value
+                        : ""}
+                    </span>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -375,10 +422,33 @@ function Detail() {
                 </div>
               </div>
               <div className="flex items-center space-x-10 pl-8 pt-3">
-                <button className="flex items-center bg-[#D9D9D9] font-bold border-2 border-[#565656] rounded w-[170px] pl-5 pr-5 pt-3 pb-3 space-x-3">
+                <button
+                  className="flex items-center bg-[#D9D9D9] font-bold border-2 border-[#565656] rounded w-[170px] pl-5 pr-5 pt-3 pb-3 space-x-3"
+                  onClick={async () => {
+                    await addToCart(equipment_id?.equipment_id, detail?.option[0].id, 1);
+                    setOpen(true);
+                  }}
+                >
                   <img src={Cart} className="w-7 h-6" />
                   <span className="text-[14px]">Add To Cart</span>
                 </button>
+                <Modal
+                  open={open}
+                  closeIcon={false}
+                  footer={
+                    <button
+                      className="text-white bg-[#555555] font-bold border-2 border-[#565656] rounded w-[100px] pl-2 pr-2 pt-2 pb-2"
+                      onClick={handleOk}
+                    >
+                      <span className="text-[14px]">OK</span>
+                    </button>
+                  }
+                >
+                  <div className="flex flex-col items-center space-y-4">
+                    <img src={RightMark} alt="" className="w-[80px]" />
+                    <p className="text-[16px]">Item has been added to cart</p>
+                  </div>
+                </Modal>
                 <button className="text-white bg-[#555555] font-bold border-2 border-[#565656] rounded w-[170px] pl-10 pr-10 pt-3 pb-3">
                   <span className="text-[14px]">Buy Now</span>
                 </button>
