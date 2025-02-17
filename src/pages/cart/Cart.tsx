@@ -119,7 +119,7 @@ function Cart() {
 
   const totalQuantity = () => {
       const initialValue = 0;
-      return lineEquipment!.line_equipments.reduce((accumulator, equipment) => accumulator + equipment.quantity,
+      return lineEquipment?.line_equipments.reduce((accumulator, equipment) => accumulator + equipment.quantity,
       initialValue,
     );
   };
@@ -142,7 +142,7 @@ function Cart() {
 
   useEffect(() => {
     getLineEquipments();
-  });
+  }, []);
 
   return (
     <div>
