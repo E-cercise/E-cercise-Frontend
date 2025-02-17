@@ -34,6 +34,7 @@ function Home() {
   const [muscleGroup, setMuscleGroup] = useState<string>("");
   const [filteredEquipments, setfilteredEquipments] =
     useState<FilteredEquipmentResponse>();
+  const [tempState, setTempState] = useState<boolean>(false);
   const pageSize = 50;
 
   const equipments = async (
@@ -48,6 +49,7 @@ function Home() {
         currentPage
       );
       setfilteredEquipments(getAllEquipments);
+      setTempState(!tempState);
       console.log(getAllEquipments);
     } catch (err) {
       console.error(err);
@@ -160,7 +162,11 @@ function Home() {
           key={index}
           className="w-[200px] bg-[#F2EFEF] p-4 space-y-2 rounded-md"
         >
-          <img src={equipment.image_path} alt="" className="w-full rounded-md" />
+          <img
+            src={equipment.image_path}
+            alt=""
+            className="w-full rounded-md"
+          />
           <p
             className={`cursor-pointer  text-sm ${
               titleHover && equipmentId === index
@@ -176,9 +182,7 @@ function Home() {
               setTitleHover(false);
             }}
           >
-            <Link to={`/equipment/${equipment.ID}`}>
-              {equipment.name}
-            </Link>
+            <Link to={`/equipment/${equipment.ID}`}>{equipment.name}</Link>
           </p>
           <div className="flex items-center space-x-2">
             <div className="cursor-pointer flex items-center space-x-1">
@@ -214,15 +218,21 @@ function Home() {
       />
       <div className="h-full pt-3 pb-3 pl-5 pr-5">
         {cards.length === 0 ? (
-          <div className="flex flex-col items-center justify-center w-full h-[84.5vh] bg-[#D9D9D9] rounded-md space-y-2">
-            <img src={SearchIcon} alt="Search icon" width={80} />
-            <p className="text-lg font-semibold">No equipments match your search</p>
-            <p className="text-md font-semibold">
-              Nothing found for {"<<"}
-              {searchKeyword}
-              {">>"}
-            </p>
-          </div>
+          tempState ? (
+            <div className="flex flex-col items-center justify-center w-full h-[84.5vh] bg-[#D9D9D9] rounded-md space-y-2">
+              <img src={SearchIcon} alt="Search icon" width={80} />
+              <p className="text-lg font-semibold">
+                No equipments match your search
+              </p>
+              <p className="text-md font-semibold">
+                Nothing found for {"<<"}
+                {searchKeyword}
+                {">>"}
+              </p>
+            </div>
+          ) : (
+            <React.Fragment></React.Fragment>
+          )
         ) : (
           <React.Fragment>
             <p className="text-[17px] font-bold ml-5 mb-3">
