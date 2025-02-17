@@ -6,7 +6,8 @@ export const addEquipmentToCart = async (equipment_id: string | undefined, equip
             "equipment_id": equipment_id,
             "equipment_option_id": equipment_option_id,
             "quantity": quantity,
-        })
+        });
+        return response.data;
     } catch(err) {
         console.error(err);
     }

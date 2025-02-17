@@ -254,9 +254,7 @@ function Detail() {
                     <span className="text-[12px] font-bold">Brand</span>
                     <span className="text-[12px]">
                       {
-                        detail?.additional_field.filter(
-                          (field) => field["key"] === "Brand Name"
-                        )[0].value
+                        detail?.brand
                       }
                     </span>
                   </div>
