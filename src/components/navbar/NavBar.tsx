@@ -12,9 +12,11 @@ import "./NavBar.css";
 function NavBar({
   setSearchKeyword,
   setMuscleGroup,
+  setTempState,
 }: {
   setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
   setMuscleGroup: React.Dispatch<React.SetStateAction<string>>;
+  setTempState: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [activePath, setActivePath] = useState<string>("");
   const [, setShowPopOver] = useState<boolean>(false);
@@ -69,9 +71,11 @@ function NavBar({
 
   return (
     <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-5">
+      <Link to="/home">
       <div className="flex items-center space-x-4 ml-4">
         <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4" />
       </div>
+      </Link>
       <Input.Search
         allowClear
         value={tempKeyword}

@@ -49,7 +49,7 @@ function Home() {
         currentPage
       );
       setfilteredEquipments(getAllEquipments);
-      setTempState(!tempState);
+      setTempState(true);
       console.log(getAllEquipments);
     } catch (err) {
       console.error(err);
