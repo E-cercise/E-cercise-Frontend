@@ -40,13 +40,15 @@ function Home() {
   const equipments = async (
     searchKeyword: string,
     muscleGroup: string,
-    currentPage: number
+    currentPage: number,
+    pageSize: number,
   ) => {
     try {
       const getAllEquipments = await filteredEquipment(
         searchKeyword,
         muscleGroup,
-        currentPage
+        currentPage,
+        pageSize,
       );
       setfilteredEquipments(getAllEquipments);
       setTempState(true);
@@ -57,8 +59,8 @@ function Home() {
   };
 
   useEffect(() => {
-    equipments(searchKeyword, muscleGroup, currentPage);
-  }, [searchKeyword, muscleGroup, currentPage]);
+    equipments(searchKeyword, muscleGroup, currentPage, pageSize);
+  }, [searchKeyword, muscleGroup, currentPage, currentPage]);
 
   // const Cards = () => {
   // let cards = [];
@@ -205,16 +207,14 @@ function Home() {
       ))
     : [];
 
-  const paginatedCards = cards.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const paginatedCards = cards.slice(0, pageSize);
 
   return (
     <div>
       <NavBar
         setSearchKeyword={setSearchKeyword}
         setMuscleGroup={setMuscleGroup}
+        setCurrentPage={setCurrentPage}
       />
       <div className="h-full pt-3 pb-3 pl-5 pr-5">
         {cards.length === 0 ? (
@@ -245,7 +245,7 @@ function Home() {
               <Pagination
                 showSizeChanger={false}
                 defaultCurrent={1}
-                total={cards.length}
+                total={filteredEquipments!.total_rows}
                 pageSize={pageSize}
                 current={currentPage}
                 onChange={(page) => setCurrentPage(page)}

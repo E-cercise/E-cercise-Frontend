@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Popover, Tag } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
@@ -12,11 +12,11 @@ import "./NavBar.css";
 function NavBar({
   setSearchKeyword,
   setMuscleGroup,
-  setTempState,
+  setCurrentPage,
 }: {
   setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
   setMuscleGroup: React.Dispatch<React.SetStateAction<string>>;
-  setTempState: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [activePath, setActivePath] = useState<string>("");
   const [, setShowPopOver] = useState<boolean>(false);
@@ -26,7 +26,7 @@ function NavBar({
   const location = useLocation(); // Get the current location
   const isHomePage = location.pathname === "/home";
 
-  console.log(clickedMuscles);
+  // console.log(clickedMuscles);
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -69,6 +69,10 @@ function NavBar({
     setClickedMuscles([]);
   };
 
+  const handleCurrentPage = (value: number) => {
+    setCurrentPage(value);
+  }
+
   return (
     <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-5">
       <Link to="/home">
@@ -82,7 +86,10 @@ function NavBar({
         placeholder="Search"
         className="absolute left-[180px] w-[35vw]"
         onChange={(e) => handleKeywordOnChange(e.target.value)}
-        onSearch={handleSearchClick}
+        onSearch={() => {
+          handleSearchClick();
+          handleCurrentPage(1);
+        }}
       />
       {isHomePage && (
         <Popover
