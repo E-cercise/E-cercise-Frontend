@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Pagination } from "antd";
+import { Button, Pagination, Spin } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -231,7 +231,9 @@ function Home() {
               </p>
             </div>
           ) : (
-            <React.Fragment></React.Fragment>
+            <div className=" w-full h-[85vh] flex items-center justify-center ">
+              <Spin size="large"></Spin>
+            </div>
           )
         ) : (
           <React.Fragment>

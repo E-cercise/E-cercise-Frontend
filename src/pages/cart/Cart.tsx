@@ -254,12 +254,12 @@ function Cart() {
                       alt=""
                       className="w-12 rounded-md"
                     />
-                    <p className="text-[13px]">{equipment.equipment_name}</p>
+                    <p className="text-[12px]">{equipment.equipment_name}</p>
                   </div>
-                  <div className="flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
+                  <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
                     ฿{equipment.total}
                   </div>
-                  <div className="flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
+                  <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
                     <div className="flex">
                       <button
                         className="w-6 hover:bg-gray-300 border-2 border-[#A5A5A5] rounded-s-md"
@@ -280,7 +280,7 @@ function Cart() {
                       </button>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
+                  <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
                     {/* ฿{product.price * product.quantity} */}฿
                     {equipment.total}
                   </div>

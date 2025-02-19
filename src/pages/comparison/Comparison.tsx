@@ -22,7 +22,7 @@ function Comparison() {
           options={[
             { value: 1, label: "Dumbbells" },
             { value: 2, label: "Kettlebells" },
-            { value: 3, label: "Treamill" },
+            { value: 3, label: "Treadmill" },
           ]}
         />
         <p className="text-[#0B8AE5]">Shop Equipments {">"}</p>
