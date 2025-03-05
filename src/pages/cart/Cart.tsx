@@ -117,12 +117,11 @@ function Cart() {
   //   return total;
   // };
 
-  const totalQuantity = () => {
-      const initialValue = 0;
-      return lineEquipment?.line_equipments.reduce((accumulator, equipment) => accumulator + equipment.quantity,
-      initialValue,
+  const totalQuantity = 
+      lineEquipment?.line_equipments.reduce((accumulator, equipment) => accumulator + equipment.quantity,
+      0,
     );
-  };
+
 
   // const handleRemoveProductFromCart = (id: number) => {
   //   setCartList((prevCartList) =>
@@ -147,7 +146,7 @@ function Cart() {
   return (
     <div>
       <NavBar />
-      <div className="pl-10 pr-10 pt-6">
+      <div className="pl-10 pr-10 pt-6 pb-6">
         <h1 className="text-[18px] font-bold mb-5">My Carts</h1>
         <div className="w-full space-y-3">
           <div className="w-full flex h-[50px] bg-[#BFBFBF] rounded-lg">
@@ -257,7 +256,7 @@ function Cart() {
                     <p className="text-[12px]">{equipment.equipment_name}</p>
                   </div>
                   <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
-                    ฿{equipment.total}
+                    ฿{equipment.per_unit_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                   <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
                     <div className="flex">
@@ -282,7 +281,7 @@ function Cart() {
                   </div>
                   <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
                     {/* ฿{product.price * product.quantity} */}฿
-                    {equipment.total}
+                    {equipment.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                   <div className="flex items-center justify-center w-[150px] h-[60px] text-center">
                     <img
@@ -314,8 +313,8 @@ function Cart() {
           </div>
           <div className="flex items-center w-[470px] h-[60px] pr-3">
             <p className="w-full text-[14px] text-right">
-              Total ({totalQuantity()} item{totalQuantity() > 1 ? "s" : ""}): ฿
-              {lineEquipment?.total_price}
+              Total ({totalQuantity} item{totalQuantity !== undefined ? totalQuantity > 1 ? "s" : "" : ""}): ฿
+              {lineEquipment?.total_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
           <div className="flex items-center justify-center w-[150px] h-[60px]">
