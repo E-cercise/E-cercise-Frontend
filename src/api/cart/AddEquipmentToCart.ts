@@ -1,4 +1,4 @@
-import API from "./index";
+import API from "../index";
 
 export const addEquipmentToCart = async (equipment_id: string | undefined, equipment_option_id: string | undefined, quantity: number) => {
     try {

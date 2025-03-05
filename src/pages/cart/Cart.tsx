@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
-import { getEquipmentsInCart } from "../../api/GetEquipmentsInCart";
+import { getEquipmentsInCart } from "../../api/cart/GetEquipmentsInCart";
+import { modidyEquipmentInCart } from "../../api/cart/ModifyEquipmentInCart";
 import NavBar from "../../components/navbar/NavBar";
 import Test from "../../assets/test/home/Group 32.png";
 import CrossMark from "../../assets/test/cart/image 36.png";
@@ -24,6 +25,7 @@ interface Cart {
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [lineEquipment, setLineEquipment] = useState<Cart>();
+  const [modifyQuantity, setModifyQuantity] = useState<{ lineEquipmentId: string; quantity: number }>({ lineEquipmentId: "", quantity: 0 });
   // const [cartList, setCartList] = useState([
   //   {
   //     id: 1,
@@ -60,6 +62,10 @@ function Cart() {
   //     )
   //   );
   // };
+
+  const handleModifyItemQuantityOnCart = (lineEquipmentId: string, quantity: number) => {
+    setModifyQuantity({lineEquipmentId: lineEquipmentId, quantity: quantity})
+  }
 
   // const handleIsSelectedChange = (id: number) => {
   //   setCartList((prevCartList) =>
@@ -139,9 +145,21 @@ function Cart() {
     }
   };
 
+  const modifyItemInCart = async (object: { lineEquipmentId: string; quantity: number }) => {
+    try {
+      await modidyEquipmentInCart(object);
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
-    getLineEquipments();
-  }, []);
+    if (modifyQuantity.lineEquipmentId) {
+      modifyItemInCart(modifyQuantity).then(() => getLineEquipments());
+    } else {
+      getLineEquipments();
+    }
+  }, [modifyQuantity]);
 
   return (
     <div>
@@ -263,6 +281,9 @@ function Cart() {
                       <button
                         className="w-6 hover:bg-gray-300 border-2 border-[#A5A5A5] rounded-s-md"
                         // onClick={() => handleQuantityChange(product.id, -1)}
+                        onClick={() => {
+                          handleModifyItemQuantityOnCart(equipment.line_equipment_id, equipment.quantity - 1);
+                        }}
                       >
                         -
                       </button>
@@ -274,6 +295,9 @@ function Cart() {
                       <button
                         className="w-6 hover:bg-gray-300 border-2 border-[#A5A5A5] rounded-e-md"
                         // onClick={() => handleQuantityChange(product.id, 1)}
+                        onClick={() => {
+                          handleModifyItemQuantityOnCart(equipment.line_equipment_id, equipment.quantity + 1)
+                        }}
                       >
                         +
                       </button>

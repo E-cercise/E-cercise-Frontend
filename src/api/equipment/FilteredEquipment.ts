@@ -1,4 +1,4 @@
-import API from './index'
+import API from '../index'
 
 export const filteredEquipment = async (searchKeyword: string, muscleGroup: string, page: number, limit: number) => {
     try {

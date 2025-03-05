@@ -3,7 +3,7 @@ import { Button, Pagination, Spin } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { filteredEquipment } from "../../api/FilteredEquipment";
+import { filteredEquipment } from "../../api/equipment/FilteredEquipment";
 import NavBar from "../../components/navbar/NavBar";
 import SearchIcon from "../../assets/home/search.png";
 import Test from "../../assets/test/home/Group 32.png";
