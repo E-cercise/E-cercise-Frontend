@@ -1,6 +1,6 @@
 import API from "../index";
 
-export const modidyEquipmentInCart = async (object: { lineEquipmentId: string; quantity: number }) => {
+export const modifyEquipmentInCart = async (object: { lineEquipmentId: string; quantity: number }) => {
     try {
         const response = await API.put("/api/cart/items", {
             "items" : [{

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import { getEquipmentsInCart } from "../../api/cart/GetEquipmentsInCart";
-import { modidyEquipmentInCart } from "../../api/cart/ModifyEquipmentInCart";
+import { modifyEquipmentInCart } from "../../api/cart/ModifyEquipmentInCart";
+import { deleteEquipmentInCart } from "../../api/cart/DeleteEquipmentInCart";
 import NavBar from "../../components/navbar/NavBar";
 import Test from "../../assets/test/home/Group 32.png";
 import CrossMark from "../../assets/test/cart/image 36.png";
@@ -147,7 +148,16 @@ function Cart() {
 
   const modifyItemInCart = async (object: { lineEquipmentId: string; quantity: number }) => {
     try {
-      await modidyEquipmentInCart(object);
+      await modifyEquipmentInCart(object);
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  const deleteItemInCart = async (lineEquipmentId: string) => {
+    try {
+      await deleteEquipmentInCart(lineEquipmentId);
+      getLineEquipments();
     } catch(err) {
       console.error(err);
     }
@@ -311,6 +321,7 @@ function Cart() {
                     <img
                       src={CrossMark}
                       // onClick={() => handleRemoveProductFromCart(product.id)}
+                      onClick={async() => await deleteItemInCart(equipment.line_equipment_id)}
                       alt=""
                       className="w-5"
                     />
