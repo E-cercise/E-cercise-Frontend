@@ -4,25 +4,12 @@ import { getEquipmentsInCart } from "../../api/cart/GetEquipmentsInCart";
 import { modifyEquipmentInCart } from "../../api/cart/ModifyEquipmentInCart";
 import { deleteEquipmentInCart } from "../../api/cart/DeleteEquipmentInCart";
 import NavBar from "../../components/navbar/NavBar";
+import { CartResponse } from "../../interfaces/Cart";
 import CrossMark from "../../assets/test/cart/image 36.png";
-
-interface LineEquipment {
-  line_equipment_id: string;
-  equipment_name: string;
-  per_unit_price: number;
-  img_url: string;
-  quantity: number;
-  total: number;
-}
-
-interface Cart {
-  line_equipments: LineEquipment[];
-  total_price: number;
-}
 
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [lineEquipment, setLineEquipment] = useState<Cart>();
+  const [lineEquipment, setLineEquipment] = useState<CartResponse>();
   const [modifyQuantity, setModifyQuantity] = useState<{ lineEquipmentId: string; quantity: number }>({ lineEquipmentId: "", quantity: 0 });
   // const [cartList, setCartList] = useState([
   //   {

@@ -7,13 +7,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart";
 import NavBar from "../../components/navbar/NavBar";
-// import Image24 from "../../assets/test/detail/61B23FTbldL._AC_SX679_.jpg";
-// import Image25 from "../../assets/test/detail/81MibHuZ-2L._AC_SX679_.jpg";
-// import Image26 from "../../assets/test/detail/81fe9+bCwnL._AC_SX679_.jpg";
-// import Image27 from "../../assets/test/detail/71jHa14xWRL._AC_SX679_.jpg";
-// import Image28 from "../../assets/test/detail/714Ok8Q27iL._AC_SX679_.jpg";
-// import Image29 from "../../assets/test/detail/71FgyakEiQL._AC_SX679_.jpg";
-// import Image30 from "../../assets/test/detail/91HJDUO53iL._AC_SX679_.jpg";
 import Cart from "../../assets/test/detail/+ Cart.png";
 import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
 import BackMuscle from "../../assets/navbar/muscles-back-image.png";
@@ -22,51 +15,14 @@ import {
   frontAttributes,
   backAttributes,
 } from "../../components/muscles/muscles";
+import { EquipmentDetailResponse } from "../../interfaces/Equipment";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Detail.css";
-
-interface Image {
-  id: string;
-  url: string;
-  is_primary: boolean;
-}
-
-interface Option {
-  id: string;
-  name: string;
-  available: string;
-  price: number;
-  weight: number;
-  images: Image[];
-}
-
-interface Feature {
-  id: string;
-  description: string;
-}
-
-interface AdditionalField {
-  id: string;
-  key: string;
-  value: string;
-}
-
-interface EquipmentDetailResponse {
-  brand: string;
-  color: string;
-  material: string;
-  model: string;
-  muscle_group_used: string[];
-  name: string;
-  option: Option[];
-  feature: Feature[];
-  additional_field: AdditionalField[];
-}
 
 function Detail() {
   const [activePath, setActivePath] = useState<string>("");
   const [showPopOver, setShowPopOver] = useState<boolean>(false);
-  const [, setShowMusclesPopover] = useState<boolean>(false);
+  // const [, setShowMusclesPopover] = useState<boolean>(false);
   const [clickedMuscles, _] = useState<string[]>([]);
   const [detail, setDetail] = useState<EquipmentDetailResponse>();
   const [open, setOpen] = useState<boolean>(false);
@@ -90,9 +46,9 @@ function Detail() {
     setShowPopOver(value);
   };
 
-  const handleShowMusclesPopover = (value: boolean) => {
-    setShowMusclesPopover(value);
-  };
+  // const handleShowMusclesPopover = (value: boolean) => {
+  //   setShowMusclesPopover(value);
+  // };
 
   const handleOk = () => {
     // setModalText('The modal will be closed after two seconds');
@@ -156,17 +112,6 @@ function Detail() {
                 showStatus={false}
                 thumbWidth={72}
               >
-                {/* <img src={Image24} className="rounded-lg" />
-                <img src={Image25} className="rounded-lg" />
-                <img src={Image26} className="rounded-lg" />
-                <img src={Image27} className="rounded-lg" />
-                <img src={Image28} className="rounded-lg" />
-                <img src={Image29} className="rounded-lg" />
-                <img src={Image30} className="rounded-lg" /> */}
-                {/* {detail?.option[0].images.map((image, index) => {
-                  // if ()
-                  return <img src={image.url} className="rounded-lg" />;
-                })} */}
                 {detail?.option[0].images
                   ?.slice() // Create a shallow copy to avoid mutating original data
                   .sort(

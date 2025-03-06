@@ -4,27 +4,11 @@ import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment";
+import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart";
 import NavBar from "../../components/navbar/NavBar";
+import { FilteredEquipmentResponse } from "../../interfaces/Equipment";
 import SearchIcon from "../../assets/home/search.png";
-import Test from "../../assets/test/home/Group 32.png";
-import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 import "./Home.css";
-
-interface Equipment {
-  ID: string;
-  name: string;
-  price: number;
-  image_path: string;
-  muscles_group_used: string[];
-}
-
-interface FilteredEquipmentResponse {
-  equipments: { equipments: Equipment[] };
-  page: number;
-  limit: number;
-  total_pages: number;
-  total_rows: number;
-}
 
 function Home() {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
@@ -55,6 +39,18 @@ function Home() {
       console.log(getAllEquipments);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const addToCart = async (
+    equipment_id: string | undefined,
+    equipment_option_id: string | undefined,
+    quantity: number
+  ) => {
+    try {
+      await addEquipmentToCart(equipment_id, equipment_option_id, quantity);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -200,7 +196,10 @@ function Home() {
             <p className="text-xs text-[#31A421]">(1,046)</p>
           </div>
           <p>฿{equipment.price}</p>
-          <button className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg">
+          <button 
+            className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
+            // onClick={() => addEquipmentToCart(equipment.ID, equipment.ID, equipment.)}
+          >
             Add to Cart
           </button>
         </div>
