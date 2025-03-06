@@ -4,10 +4,7 @@ import { getEquipmentsInCart } from "../../api/cart/GetEquipmentsInCart";
 import { modifyEquipmentInCart } from "../../api/cart/ModifyEquipmentInCart";
 import { deleteEquipmentInCart } from "../../api/cart/DeleteEquipmentInCart";
 import NavBar from "../../components/navbar/NavBar";
-import Test from "../../assets/test/home/Group 32.png";
 import CrossMark from "../../assets/test/cart/image 36.png";
-import Dumbbells1 from "../../assets/test/comparison/image 16.png";
-import Dumbbells3 from "../../assets/test/comparison/image 18.png";
 
 interface LineEquipment {
   line_equipment_id: string;
@@ -76,16 +73,6 @@ function Cart() {
   //   );
   // };
 
-  // const totalPrice = () => {
-  //   let total = 0;
-  //   cartList.forEach((product) => {
-  //     if (product.isSelected) {
-  //       total += product.price * product.quantity;
-  //     }
-  //   });
-  //   return total;
-  // };
-
   // const setIsSelected = () => {
   //   setCartList((prevCartList) =>
   //     prevCartList.map((product) => {
@@ -114,27 +101,19 @@ function Cart() {
   //   return total;
   // };
 
-  // const totalQuantity = () => {
-  //   let total = 0;
-  //   cartList.forEach((product) => {
-  //     if (product.isSelected) {
-  //       total += product.quantity;
-  //     }
-  //   });
-  //   return total;
-  // };
+  const splitString = (equipmentName: string) => {
+    if (equipmentName.includes(" - ")) {
+      return equipmentName.split(" - ");
+    } else if (equipmentName.includes(", ")) {
+      return equipmentName.split(", ");
+    }
+    return [equipmentName];
+  }
 
   const totalQuantity = 
       lineEquipment?.line_equipments.reduce((accumulator, equipment) => accumulator + equipment.quantity,
       0,
     );
-
-
-  // const handleRemoveProductFromCart = (id: number) => {
-  //   setCartList((prevCartList) =>
-  //     prevCartList.filter((product) => product.id !== id)
-  //   );
-  // };
 
   const getLineEquipments = async () => {
     try {
@@ -281,7 +260,7 @@ function Cart() {
                       alt=""
                       className="w-12 rounded-md"
                     />
-                    <p className="text-[12px]">{equipment.equipment_name}</p>
+                    <p className="text-[12px]">{splitString(equipment.equipment_name)[0]}</p>
                   </div>
                   <div className="flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
                     ฿{equipment.per_unit_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
