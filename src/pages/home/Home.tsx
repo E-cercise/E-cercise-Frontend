@@ -4,9 +4,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment";
+import { equipmentDetail } from "../../api/equipment/EquipmentDetail";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart";
 import NavBar from "../../components/navbar/NavBar";
-import { FilteredEquipmentResponse } from "../../interfaces/Equipment";
+import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../interfaces/Equipment";
 import SearchIcon from "../../assets/home/search.png";
 import "./Home.css";
 
@@ -19,6 +20,7 @@ function Home() {
   const [filteredEquipments, setfilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempState, setTempState] = useState<boolean>(false);
+  const [detail, setDetail] = useState<EquipmentDetailResponse>();
   const pageSize = 50;
 
   const equipments = async (
@@ -42,15 +44,13 @@ function Home() {
     }
   };
 
-  const addToCart = async (
-    equipment_id: string | undefined,
-    equipment_option_id: string | undefined,
-    quantity: number
-  ) => {
+  const getEquipmentDetail = async (id: string | undefined) => {
     try {
-      await addEquipmentToCart(equipment_id, equipment_option_id, quantity);
+      const detail = await equipmentDetail(id);
+      setDetail(detail);
+      console.log(detail);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -196,12 +196,23 @@ function Home() {
             <p className="text-xs text-[#31A421]">(1,046)</p>
           </div>
           <p>฿{equipment.price}</p>
-          <button 
-            className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
-            // onClick={() => addEquipmentToCart(equipment.ID, equipment.ID, equipment.)}
-          >
-            Add to Cart
-          </button>
+          {/* {
+            cart?.line_equipments.filter((lineEquipment) => lineEquipment.equipment_name.includes(equipment.name)) !== undefined ?
+              <div className="text-[12px] font-bold">
+                In cart
+              </div>
+            : */}
+              <button 
+                className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
+                onClick={async () => {
+                  await getEquipmentDetail(equipment.ID);
+                  // console.log(cart?.line_equipments.filter((lineEquipment) => lineEquipment.equipment_name.includes(equipment.name)))
+                  await addEquipmentToCart(equipment.ID, detail?.option[0].id, 1);
+                }}
+              >
+                Add to Cart
+              </button>
+          {/* } */}
         </div>
       ))
     : [];
