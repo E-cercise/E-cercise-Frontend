@@ -20,7 +20,6 @@ function Home() {
   const [filteredEquipments, setfilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempState, setTempState] = useState<boolean>(false);
-  const [detail, setDetail] = useState<EquipmentDetailResponse>();
   const pageSize = 50;
 
   const equipments = async (
@@ -46,9 +45,7 @@ function Home() {
 
   const getEquipmentDetail = async (id: string | undefined) => {
     try {
-      const detail = await equipmentDetail(id);
-      setDetail(detail);
-      console.log(detail);
+      return await equipmentDetail(id);
     } catch (err) {
       console.error(err);
     }
@@ -205,9 +202,11 @@ function Home() {
               <button 
                 className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
                 onClick={async () => {
-                  await getEquipmentDetail(equipment.ID);
-                  // console.log(cart?.line_equipments.filter((lineEquipment) => lineEquipment.equipment_name.includes(equipment.name)))
-                  await addEquipmentToCart(equipment.ID, detail?.option[0].id, 1);
+                  const equipmentDetail: EquipmentDetailResponse = await getEquipmentDetail(equipment.ID);
+                  // console.log(equipmentDetail);
+                  if (equipmentDetail?.option?.length > 0) {
+                    await addEquipmentToCart(equipment.ID, equipmentDetail?.option[0].id, 1);
+                  }
                 }}
               >
                 Add to Cart
