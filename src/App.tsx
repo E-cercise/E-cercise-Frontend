@@ -16,9 +16,10 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+          <Route index element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
-          <Route path='/home' element={<Home/>}/>
+          <Route path='/' element={<Home/>}/>
           <Route path='/equipment/:equipment_id' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
           <Route path='/cart' element={<Cart />}/>

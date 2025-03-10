@@ -266,7 +266,7 @@ function Cart() {
                 <div>
                   Your shopping cart is empty
                 </div>
-                <Link to="/home">
+                <Link to="/">
                   <button className="bg-green-500 hover:bg-green-600 text-[13px] text-white w-[160px] h-8 rounded-md px-5">
                     Go Shopping Now
                   </button>

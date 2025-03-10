@@ -24,7 +24,7 @@ function NavBar({
   const [tempKeyword, setTempKeyword] = useState<string>("");
   const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
   const location = useLocation(); // Get the current location
-  const isHomePage = location.pathname === "/home";
+  const isHomePage = location.pathname === "/";
 
   // console.log(clickedMuscles);
 
@@ -75,7 +75,7 @@ function NavBar({
 
   return (
     <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-5">
-      <Link to="/home">
+      <Link to="/">
       <div className="flex items-center space-x-4 ml-4">
         <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4" />
       </div>

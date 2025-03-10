@@ -538,7 +538,7 @@ function Purchase() {
       ) : (
         <div className="flex flex-col items-center justify-center h-[500px] space-y-4">
           <div>Your shopping cart is empty</div>
-          <Link to="/home">
+          <Link to="/">
             <button className="bg-[#EAEAEA] px-3 py-2 rounded-md">
               Go Shopping Now
             </button>
