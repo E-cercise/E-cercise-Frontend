@@ -3,11 +3,11 @@ import { Pagination, Spin } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { filteredEquipment } from "../../api/equipment/FilteredEquipment";
-import { equipmentDetail } from "../../api/equipment/EquipmentDetail";
-import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart";
-import NavBar from "../../components/navbar/NavBar";
-import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../interfaces/Equipment";
+import { filteredEquipment } from "../../../api/equipment/FilteredEquipment";
+import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
+import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
+import NavBar from "../../../components/navbar/NavBar";
+import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../../interfaces/Equipment";
 import SearchIcon from "../../assets/home/search.png";
 import "./Home.css";
 
