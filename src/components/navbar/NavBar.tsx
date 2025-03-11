@@ -9,6 +9,7 @@ import ComparisonLogo from "../../assets/navbar/Comparison-Logo.png";
 import Cart from "../../assets/navbar/Cart.png";
 import { frontAttributes, backAttributes } from "../muscles/muscles";
 import "./NavBar.css";
+import useUserRole from "../../hook/UseUserRole.tsx";
 
 function NavBar({
   setSearchKeyword,
@@ -27,6 +28,8 @@ function NavBar({
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
   const isHomePage = location.pathname === "/";
+  const userRole = useUserRole()
+  //TODO: make navbar for admin role
 
   // console.log(clickedMuscles);
 

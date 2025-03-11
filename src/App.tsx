@@ -23,16 +23,18 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={
-            userRole === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>: <UserHome/>
+            userRole === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>: <ProtectedRoute allowedRoles={["USER"]}><UserHome/></ProtectedRoute>
           } />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
-          <Route path='/' element={<UserHome/>}/>
+          <Route path='/' element={
+            userRole === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>: <ProtectedRoute allowedRoles={["USER"]}><UserHome/></ProtectedRoute>
+          }/>
           <Route path='/equipment/:equipment_id' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
-          <Route path='/cart' element={<Cart />}/>
-          <Route path='/purchase' element={<Purchase />}/>
-          <Route path='/order-tracking' element={<OrderTracking />}/>
+          <Route path='/cart' element={<ProtectedRoute><Cart /></ProtectedRoute>}/>
+          <Route path='/purchase' element={<ProtectedRoute><Purchase /></ProtectedRoute>}/>
+          <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking /></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </div>
