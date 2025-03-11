@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pagination, Spin } from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart";
@@ -20,6 +20,7 @@ function Home() {
   const [filteredEquipments, setfilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempState, setTempState] = useState<boolean>(false);
+  const navigate = useNavigate();
   const pageSize = 50;
 
   const equipments = async (
@@ -107,9 +108,8 @@ function Home() {
                 className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
                 onClick={async () => {
                   const equipmentDetail: EquipmentDetailResponse = await getEquipmentDetail(equipment.ID);
-                  // console.log(equipmentDetail);
                   if (equipmentDetail?.option?.length > 0) {
-                    await addEquipmentToCart(equipment.ID, equipmentDetail?.option[0].id, 1);
+                    await addEquipmentToCart(equipment.ID, equipmentDetail?.option[0].id, 1, navigate);
                   }
                 }}
               >

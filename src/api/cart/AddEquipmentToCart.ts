@@ -1,6 +1,6 @@
 import API from "../index";
 
-export const addEquipmentToCart = async (equipment_id: string | undefined, equipment_option_id: string | undefined, quantity: number) => {
+export const addEquipmentToCart = async (equipment_id: string | undefined, equipment_option_id: string | undefined, quantity: number, navigate: (path: string) => void) => {
     try {
         const response = await API.post('/api/cart/item', {
             "equipment_id": equipment_id,
@@ -8,7 +8,11 @@ export const addEquipmentToCart = async (equipment_id: string | undefined, equip
             "quantity": quantity,
         });
         return response.data;
-    } catch(err) {
-        console.error(err);
+    } catch(err: any) {
+        if (err.response?.status === 401) {
+            navigate("/login"); // Redirect to login page
+        } else {
+            console.error(err);
+        }
     }
 }
