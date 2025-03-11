@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Divider, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../../api/auth/Login";

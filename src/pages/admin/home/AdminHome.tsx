@@ -11,7 +11,7 @@ import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../../int
 import SearchIcon from "../../assets/home/search.png";
 import "./Home.css";
 
-function Home() {
+function AdminHome() {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
   const [titleHover, setTitleHover] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -174,4 +174,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default AdminHome;
