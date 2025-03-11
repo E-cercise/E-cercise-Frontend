@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Modal, Popover, Select } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
@@ -26,6 +26,7 @@ function Detail() {
   const [clickedMuscles, _] = useState<string[]>([]);
   const [detail, setDetail] = useState<EquipmentDetailResponse>();
   const [open, setOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // const frontMusclesUsed = ['ft_5', 'ft_6', 'ft_14', 'ft_15'];
   // const backMusclesUsed = ['bk_8', 'bk_9', 'bk_10', 'bk_11'];
@@ -87,7 +88,7 @@ function Detail() {
     quantity: number
   ) => {
     try {
-      await addEquipmentToCart(equipment_id, equipment_option_id, quantity);
+      await addEquipmentToCart(equipment_id, equipment_option_id, quantity, navigate);
     } catch (err) {
       console.log(err);
     }
