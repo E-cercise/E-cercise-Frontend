@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Divider, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../api/Login";
+import { login } from "../../api/auth/Login";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 
@@ -9,8 +9,8 @@ function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [
-    showIncorrectUsernamePasswordMessage,
-    setShowIncorrectUsernamePasswordMessage,
+    showIncorrectEmailPasswordMessage,
+    setShowIncorrectEmailPasswordMessage,
   ] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -39,17 +39,17 @@ function Login() {
       } = jwtDecode(tokenObject.access_token);
 
       // Navigate based on role
-      navigate(decoded.role === "USER" ? "/home" : "");
+      navigate(decoded.role === "USER" ? "/" : "");
     } catch (err) {
       console.error(err);
-      setShowIncorrectUsernamePasswordMessage(true);
+      setShowIncorrectEmailPasswordMessage(true);
       navigate("/login");
     }
   };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
-      <div className={`w-[280px] ${showIncorrectUsernamePasswordMessage ? "h-[60vh]": "h-[54vh]"} bg-[#E7E7E7] p-6 rounded-md`}>
+      <div className={`w-[280px] ${showIncorrectEmailPasswordMessage ? "h-[60vh]": "h-[54vh]"} bg-[#E7E7E7] p-6 rounded-md`}>
         <p className="text-center text-lg font-bold mt-2 mb-6">Login</p>
         <div className="flex flex-col items-center space-y-5 mb-5">
           <Form className="w-full">
@@ -61,7 +61,7 @@ function Login() {
                 placeholder="Email"
                 style={{ height: 30 }}
                 className="w-full"
-                onClick={() => setShowIncorrectUsernamePasswordMessage(false)}
+                onClick={() => setShowIncorrectEmailPasswordMessage(false)}
                 onChange={(e) => handleOnChangeEmail(e.target.value)}
                 value={email}
               />
@@ -77,13 +77,13 @@ function Login() {
                 type="password"
                 style={{ height: 30 }}
                 className="w-full"
-                onClick={() => setShowIncorrectUsernamePasswordMessage(false)}
+                onClick={() => setShowIncorrectEmailPasswordMessage(false)}
                 onChange={(e) => handleOnChangePassword(e.target.value)}
                 value={password}
               />
             </Form.Item>
-            {showIncorrectUsernamePasswordMessage && (
-              <div className="text-red-500">* Incorrect username or password</div>
+            {showIncorrectEmailPasswordMessage && (
+              <div className="text-red-500">* Incorrect email or password</div>
             )}
             <Divider style={{ borderColor: "black", fontSize: 12 }}>
               Or With

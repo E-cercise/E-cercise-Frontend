@@ -1,4 +1,4 @@
-import API from "../api/index";
+import API from "../index";
 
 export const equipmentDetail = async (id: string | undefined) => {
     try {

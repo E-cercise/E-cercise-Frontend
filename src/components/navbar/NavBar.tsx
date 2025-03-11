@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Popover, Tag } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import { FiFilter } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import ECerciseLogo from "../../assets/navbar/E-Cercise-Logo.png";
@@ -12,19 +13,22 @@ import "./NavBar.css";
 function NavBar({
   setSearchKeyword,
   setMuscleGroup,
+  setCurrentPage,
 }: {
   setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
   setMuscleGroup: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [activePath, setActivePath] = useState<string>("");
   const [, setShowPopOver] = useState<boolean>(false);
   const [, setShowMusclesPopover] = useState<boolean>(false);
   const [tempKeyword, setTempKeyword] = useState<string>("");
   const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
+  const navigate = useNavigate();
   const location = useLocation(); // Get the current location
-  const isHomePage = location.pathname === "/home";
+  const isHomePage = location.pathname === "/";
 
-  console.log(clickedMuscles);
+  // console.log(clickedMuscles);
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -67,18 +71,49 @@ function NavBar({
     setClickedMuscles([]);
   };
 
+  const handleCurrentPage = (value: number) => {
+    setCurrentPage(value);
+  }
+
+  const handleCartClick = () => {
+    const token = localStorage.getItem("accessToken")
+    if (token) {
+      try {
+        const decode: {user_id: string, expires: string} = jwtDecode(token);
+        if (new Date() >= new Date(decode.expires) ) {
+          localStorage.removeItem('accessToken');
+          navigate('/login');
+        } else {
+          navigate("/cart")
+          console.log('token is not expired');
+        }
+      } catch(err) {
+        console.error("Invalid token", err);
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
+    } else {
+      navigate("/login")
+    }
+  }
+
   return (
     <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-5">
+      <Link to="/">
       <div className="flex items-center space-x-4 ml-4">
         <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4" />
       </div>
+      </Link>
       <Input.Search
         allowClear
         value={tempKeyword}
         placeholder="Search"
         className="absolute left-[180px] w-[35vw]"
         onChange={(e) => handleKeywordOnChange(e.target.value)}
-        onSearch={handleSearchClick}
+        onSearch={() => {
+          handleSearchClick();
+          handleCurrentPage(1);
+        }}
       />
       {isHomePage && (
         <Popover
@@ -278,9 +313,10 @@ function NavBar({
           className="w-[60px] h-8"
         />
       </Link>
-      <Link to="/cart" className="absolute right-[240px]">
+      {/* <Link to="/cart" className="absolute right-[240px]">
         <img src={Cart} alt="Cart Logo" className="h-8" />
-      </Link>
+      </Link> */}
+      <img src={Cart} alt="Cart Logo" className="absolute right-[240px] h-8" onClick={handleCartClick} />
       <div className="absolute right-8 space-x-6">
         <Link to="/signup">
           <Button className="text-[13px] font-bold">Sign Up</Button>
