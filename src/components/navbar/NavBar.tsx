@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Input, Popover, Tag } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import { FiFilter } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import ECerciseLogo from "../../assets/navbar/E-Cercise-Logo.png";
@@ -23,6 +24,7 @@ function NavBar({
   const [, setShowMusclesPopover] = useState<boolean>(false);
   const [tempKeyword, setTempKeyword] = useState<string>("");
   const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
+  const navigate = useNavigate();
   const location = useLocation(); // Get the current location
   const isHomePage = location.pathname === "/";
 
@@ -71,6 +73,28 @@ function NavBar({
 
   const handleCurrentPage = (value: number) => {
     setCurrentPage(value);
+  }
+
+  const handleCartClick = () => {
+    const token = localStorage.getItem("accessToken")
+    if (token) {
+      try {
+        const decode: {user_id: string, expires: string} = jwtDecode(token);
+        if (new Date() >= new Date(decode.expires) ) {
+          localStorage.removeItem('accessToken');
+          navigate('/login');
+        } else {
+          navigate("/cart")
+          console.log('token is not expired');
+        }
+      } catch(err) {
+        console.error("Invalid token", err);
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
+    } else {
+      navigate("/login")
+    }
   }
 
   return (
@@ -289,9 +313,10 @@ function NavBar({
           className="w-[60px] h-8"
         />
       </Link>
-      <Link to="/cart" className="absolute right-[240px]">
+      {/* <Link to="/cart" className="absolute right-[240px]">
         <img src={Cart} alt="Cart Logo" className="h-8" />
-      </Link>
+      </Link> */}
+      <img src={Cart} alt="Cart Logo" className="absolute right-[240px] h-8" onClick={handleCartClick} />
       <div className="absolute right-8 space-x-6">
         <Link to="/signup">
           <Button className="text-[13px] font-bold">Sign Up</Button>

@@ -39,7 +39,7 @@ function Login() {
       } = jwtDecode(tokenObject.access_token);
 
       // Navigate based on role
-      navigate(decoded.role === "USER" ? "/home" : "");
+      navigate(decoded.role === "USER" ? "/" : "");
     } catch (err) {
       console.error(err);
       setShowIncorrectEmailPasswordMessage(true);
