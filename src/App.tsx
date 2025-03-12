@@ -24,14 +24,10 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route index element={
-            role === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>:<ProtectedRoute allowedRoles={["USER"]}> <UserHome/> </ProtectedRoute>
-          } />
+          <Route index element={<UserHome/> } />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
-          <Route path='/' element={
-            role === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>: <ProtectedRoute allowedRoles={["USER"]}> <UserHome/> </ProtectedRoute>
-          }/>
+          <Route path='/' element={<UserHome/> }/>
           <Route path='/equipment/:equipment_id' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
           <Route path='/cart' element={<ProtectedRoute><Cart /></ProtectedRoute>}/>

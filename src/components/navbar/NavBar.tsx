@@ -9,6 +9,9 @@ import ComparisonLogo from "../../assets/navbar/Comparison-Logo.png";
 import Cart from "../../assets/navbar/Cart.png";
 import { frontAttributes, backAttributes } from "../muscles/muscles";
 import "./NavBar.css";
+import {useAuth} from "../../hook/UseAuth.tsx";
+import BottomNavBar from "./BottomNavBar.tsx";
+import {Role} from "../../enum/Role.ts";
 // import useUserRole from "../../hook/UseAuth.tsx";
 
 function NavBar({
@@ -28,10 +31,7 @@ function NavBar({
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
   const isHomePage = location.pathname === "/";
-  // const userRole = useUserRole()
-  //TODO: make navbar for admin role
-
-  // console.log(clickedMuscles);
+  const { role } = useAuth()
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -328,6 +328,7 @@ function NavBar({
           <Button className="text-[13px] font-bold">Login</Button>
         </Link>
       </div>
+      {role===Role.Admin?<BottomNavBar/>:<></>}
     </div>
   );
 }

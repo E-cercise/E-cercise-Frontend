@@ -10,6 +10,8 @@ import NavBar from "../../../components/navbar/NavBar";
 import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../../interfaces/Equipment";
 import SearchIcon from "../../../assets/home/search.png";
 import "./Home.css";
+import {useAuth} from "../../../hook/UseAuth.tsx";
+import {Role} from "../../../enum/Role.ts";
 
 function UserHome() {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
@@ -20,6 +22,7 @@ function UserHome() {
   const [filteredEquipments, setfilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempState, setTempState] = useState<boolean>(false);
+  const { role } = useAuth()
   const navigate = useNavigate();
   const pageSize = 50;
 
@@ -103,19 +106,23 @@ function UserHome() {
               <div className="text-[12px] font-bold">
                 In cart
               </div>
-            : */}
-              <button 
-                className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
-                onClick={async () => {
-                  const equipmentDetail: EquipmentDetailResponse = await getEquipmentDetail(equipment.ID);
-                  if (equipmentDetail?.option?.length > 0) {
-                    await addEquipmentToCart(equipment.ID, equipmentDetail?.option[0].id, 1, navigate);
-                  }
-                }}
-              >
-                Add to Cart
-              </button>
-          {/* } */}
+            : */}{role === Role.Admin?
+          <button
+              className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
+              onClick={async () => {
+                const equipmentDetail: EquipmentDetailResponse = await getEquipmentDetail(equipment.ID);
+                if (equipmentDetail?.option?.length > 0) {
+                  await addEquipmentToCart(equipment.ID, equipmentDetail?.option[0].id, 1, navigate);
+                }
+              }}
+          >
+            Add to Cart
+          </button>:
+            <div className="inline-flex items-center px-2 py-1 border border-gray-300 bg-gray-100 rounded-full text-sm whitespace-nowrap">
+              <span className="mr-2">Remaining Products</span>
+              <span className="font-bold">{equipment.remaining_product}</span>
+            </div>
+          }
         </div>
       ))
     : [];

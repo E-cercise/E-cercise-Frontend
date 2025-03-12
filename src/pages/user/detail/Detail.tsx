@@ -28,13 +28,6 @@ function Detail() {
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // const frontMusclesUsed = ['ft_5', 'ft_6', 'ft_14', 'ft_15'];
-  // const backMusclesUsed = ['bk_8', 'bk_9', 'bk_10', 'bk_11'];
-
-  // const handleChange = (value: string) => {
-  //   console.log(`selected ${value}`);
-  // };
-
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
   };
@@ -70,7 +63,6 @@ function Detail() {
   };
 
   const equipment_id = useParams<{ equipment_id: string | undefined }>();
-  // console.log(equipment_id.equipment_id);
 
   const getEquipmentDetail = async (id: string | undefined) => {
     try {
