@@ -6,7 +6,7 @@ import { modifyEquipmentInCart } from "../../../api/cart/ModifyEquipmentInCart";
 import { deleteEquipmentInCart } from "../../../api/cart/DeleteEquipmentInCart";
 import NavBar from "../../../components/navbar/NavBar";
 import { CartResponse } from "../../../interfaces/Cart";
-import CrossMark from "../../assets/test/cart/image 36.png";
+import CrossMark from "../../../assets/test/cart/image 36.png";
 
 function Cart() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

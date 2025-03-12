@@ -8,10 +8,12 @@ import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
 import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
 import NavBar from "../../../components/navbar/NavBar";
 import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../../interfaces/Equipment";
-import SearchIcon from "../../assets/home/search.png";
+import SearchIcon from "../../../assets/home/search.png";
 import "./Home.css";
+import useUserRole from "../../../hook/UseUserRole.tsx";
 
 function UserHome() {
+  const userRole = useUserRole();
   const [equipmentId, setEquipmentId] = useState<number>(-1);
   const [titleHover, setTitleHover] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -129,6 +131,7 @@ function UserHome() {
         setMuscleGroup={setMuscleGroup}
         setCurrentPage={setCurrentPage}
       />
+      <text > {userRole}</text>
       <div className="h-full pt-3 pb-3 pl-5 pr-5">
         {cards.length === 0 ? (
           tempState ? (

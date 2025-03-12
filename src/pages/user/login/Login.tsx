@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Divider, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../../api/auth/Login";
-import { jwtDecode } from "jwt-decode";
+import { fetchToken } from "../../../api/auth/Login";
 import "./Login.css";
+import {useAuth} from "../../../hook/UseAuth.tsx";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -13,6 +13,7 @@ function Login() {
     setShowIncorrectEmailPasswordMessage,
   ] = useState<boolean>(false);
   const navigate = useNavigate();
+  const {login} = useAuth()
 
   const handleOnChangeEmail = (e: string) => {
     setEmail(e);
@@ -24,22 +25,9 @@ function Login() {
 
   const receivedToken = async (email: string, password: string) => {
     try {
-      // Fetch token
-      const tokenObject = await login(email, password);
-
-      // Store token in local storage
-      localStorage.setItem("accessToken", tokenObject.access_token);
-
-      // Decode token
-      const decoded: {
-        user_id: string;
-        name: string;
-        exp: number;
-        role: string;
-      } = jwtDecode(tokenObject.access_token);
-
-      // Navigate based on role
-      navigate(decoded.role === "USER" ? "/" : "");
+      const tokenObject = await fetchToken(email, password);
+      login(tokenObject);
+      navigate("/");
     } catch (err) {
       console.error(err);
       setShowIncorrectEmailPasswordMessage(true);

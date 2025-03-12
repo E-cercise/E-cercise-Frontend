@@ -8,7 +8,7 @@ import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
 import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
 import NavBar from "../../../components/navbar/NavBar";
 import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../../interfaces/Equipment";
-import SearchIcon from "../../assets/home/search.png";
+import SearchIcon from "../../../assets/home/search.png"
 import "./Home.css";
 
 function AdminHome() {

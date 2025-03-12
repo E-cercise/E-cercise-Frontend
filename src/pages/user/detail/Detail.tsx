@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Popover, Select } from "antd";
+import { Modal, Popover} from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
 import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
 import NavBar from "../../../components/navbar/NavBar";
-import Cart from "../../assets/test/detail/+ Cart.png";
-import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
-import BackMuscle from "../../assets/navbar/muscles-back-image.png";
-import RightMark from "../../assets/detail/checkmark.png";
+import Cart from "../../../assets/test/detail/+ Cart.png";
+import FrontMuscle from "../../../assets/navbar/muscles-front-image.png";
+import BackMuscle from "../../../assets/navbar/muscles-back-image.png";
+import RightMark from "../../../assets/detail/checkmark.png";
 import {
   frontAttributes,
   backAttributes,

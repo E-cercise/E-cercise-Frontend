@@ -34,13 +34,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
   }, []);
 
   if (!user.isValid) {
-    return <Navigate to="/" />;
+    // alert("invalid credentials")
+    return <Navigate to="/login" />;
   }
+  console.log(user.role);
+  console.log(allowedRoles);
 
   if (
     allowedRoles.length > 0 &&
     (!user.role || !allowedRoles.includes(user.role))
   ) {
+
     return <UnauthorizedPage/>
   }
 
@@ -49,7 +53,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
 
 
 function isTokenValid(): UserState {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
+
   if (token) {
     try {
       const decoded = jwtDecode<TokenPayload>(token);
