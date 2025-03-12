@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Spin } from "antd";
+import {Pagination, Spin, Tag} from "antd";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { filteredEquipment } from "../../../api/equipment/FilteredEquipment";
 import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
-import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
 import NavBar from "../../../components/navbar/NavBar";
 import { EquipmentDetailResponse, FilteredEquipmentResponse } from "../../../interfaces/Equipment";
 import SearchIcon from "../../../assets/home/search.png"
@@ -20,7 +19,6 @@ function AdminHome() {
   const [filteredEquipments, setfilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempState, setTempState] = useState<boolean>(false);
-  const navigate = useNavigate();
   const pageSize = 50;
 
   const equipments = async (
@@ -38,15 +36,6 @@ function AdminHome() {
       );
       setfilteredEquipments(getAllEquipments);
       setTempState(true);
-      console.log(getAllEquipments);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getEquipmentDetail = async (id: string | undefined) => {
-    try {
-      return await equipmentDetail(id);
     } catch (err) {
       console.error(err);
     }
@@ -104,18 +93,10 @@ function AdminHome() {
                 In cart
               </div>
             : */}
-              <button 
-                className="text-[12px] bg-[#F2DF09] hover:bg-[#FDDA0D] pl-3 pr-3 pt-2 pb-2 rounded-lg"
-                onClick={async () => {
-                  const equipmentDetail: EquipmentDetailResponse = await getEquipmentDetail(equipment.ID);
-                  if (equipmentDetail?.option?.length > 0) {
-                    await addEquipmentToCart(equipment.ID, equipmentDetail?.option[0].id, 1, navigate);
-                  }
-                }}
-              >
-                Add to Cart
-              </button>
-          {/* } */}
+          <Tag className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md">
+            <span className="mr-2 text-black">Remaining Products</span>
+            <span className="font-bold text-black">{equipment.remaining_product}</span>
+          </Tag>
         </div>
       ))
     : [];

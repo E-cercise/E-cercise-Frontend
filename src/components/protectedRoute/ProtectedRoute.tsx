@@ -33,8 +33,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     };
   }, []);
 
-  console.log(user);
-
   if (!user.isValid) {
     // alert("invalid credentials")
     return <Navigate to="/login" />;
@@ -55,12 +53,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
 
 function isTokenValid(): UserState {
   const token = localStorage.getItem("accessToken");
-  console.log(token)
 
   if (token) {
     try {
       const decoded = jwtDecode<TokenPayload>(token);
-      console.log(decoded);
       const expDate = new Date(decoded.exp * 1000);
       const currentDate = new Date();
 
