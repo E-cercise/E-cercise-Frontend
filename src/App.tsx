@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import SignUp from './pages/user/signup/SignUp'
 import Login from './pages/user/login/Login'
-import UserHome from './pages/user/home/UserHome.tsx'
 import Detail from './pages/user/detail/Detail'
 import Comparison from './pages/user/comparison/Comparison'
 import Cart from './pages/user/cart/Cart'
@@ -12,6 +11,7 @@ import AdminHome from "./pages/admin/home/AdminHome.tsx";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.tsx";
 import {Role} from "./enum/Role.ts";
 import {useAuth} from "./hook/UseAuth.tsx";
+import UserHome from "./pages/user/home/UserHome.tsx";
 
 function App() {
   const {role, isLoading} = useAuth()
@@ -20,18 +20,17 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  console.log(role == Role.Admin)
   return (
     <div>
       <BrowserRouter>
         <Routes>
           <Route index element={
-            role == Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>:<ProtectedRoute> <UserHome/> </ProtectedRoute>
+            role === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>:<ProtectedRoute allowedRoles={["USER"]}> <UserHome/> </ProtectedRoute>
           } />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/' element={
-            role == Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>: <ProtectedRoute> <UserHome/> </ProtectedRoute>
+            role === Role.Admin ? <ProtectedRoute allowedRoles={["ADMIN"]}> <AdminHome /></ProtectedRoute>: <ProtectedRoute allowedRoles={["USER"]}> <UserHome/> </ProtectedRoute>
           }/>
           <Route path='/equipment/:equipment_id' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>

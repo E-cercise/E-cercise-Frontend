@@ -26,7 +26,7 @@ function Login() {
   const receivedToken = async (email: string, password: string) => {
     try {
       const tokenObject = await fetchToken(email, password);
-      login(tokenObject);
+      login(tokenObject.access_token);
       navigate("/");
     } catch (err) {
       console.error(err);

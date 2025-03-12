@@ -14,7 +14,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [name, setName] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
         if (token) {
@@ -52,12 +51,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     const login = (token: string) => {
-        localStorage.setItem('token', token);
+        localStorage.setItem('accessToken', token);
         parseAndStoreToken(token);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
         setRole(null);
         setUserId(null);
     };
