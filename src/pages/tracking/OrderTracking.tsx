@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "../../../components/navbar/NavBar";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import { Divider, Steps } from "antd";
 import {
   LoadingOutlined,
@@ -11,9 +11,9 @@ import { RiFileList2Line } from "react-icons/ri";
 import { MdOutlinePaid } from "react-icons/md";
 import { RiTruckLine } from "react-icons/ri";
 import { TiDownload } from "react-icons/ti";
-import Test from "../../../assets/test/home/Group 32.png";
-import Dumbbells1 from "../../../assets/test/comparison/image 16.png";
-import Dumbbells3 from "../../../assets/test/comparison/image 18.png";
+import Test from "../../assets/test/home/Group 32.png";
+import Dumbbells1 from "../../assets/test/comparison/image 16.png";
+import Dumbbells3 from "../../assets/test/comparison/image 18.png";
 import "./OrderTracking.css";
 
 interface CartList {

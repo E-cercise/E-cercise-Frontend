@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Divider, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchToken } from "../../../api/auth/Login";
+import { fetchToken } from "../../api/auth/Login.ts";
 import "./Login.css";
-import {useAuth} from "../../../hook/UseAuth.tsx";
+import {useAuth} from "../../hook/UseAuth.tsx";
 
 function Login() {
   const [email, setEmail] = useState<string>("");

@@ -4,18 +4,18 @@ import { Modal, Popover} from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
-import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
-import NavBar from "../../../components/navbar/NavBar";
-import Cart from "../../../assets/test/detail/+ Cart.png";
-import FrontMuscle from "../../../assets/navbar/muscles-front-image.png";
-import BackMuscle from "../../../assets/navbar/muscles-back-image.png";
-import RightMark from "../../../assets/detail/checkmark.png";
+import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
+import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";
+import NavBar from "../../components/navbar/NavBar.tsx";
+import Cart from "../../assets/test/detail/+ Cart.png";
+import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
+import BackMuscle from "../../assets/navbar/muscles-back-image.png";
+import RightMark from "../../assets/detail/checkmark.png";
 import {
   frontAttributes,
   backAttributes,
-} from "../../../components/muscles/muscles";
-import { EquipmentDetailResponse } from "../../../interfaces/Equipment";
+} from "../../components/muscles/muscles.ts";
+import { EquipmentDetailResponse } from "../../interfaces/Equipment.ts";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Detail.css";
 

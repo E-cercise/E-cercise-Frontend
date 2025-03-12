@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Divider, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { signUp } from "../../../api/auth/SignUp";
+import { signUp } from "../../api/auth/SignUp.ts";
 import "./SignUp.css";
 
 function SignUp() {

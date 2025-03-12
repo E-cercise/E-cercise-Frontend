@@ -1,17 +1,16 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import SignUp from './pages/user/signup/SignUp'
-import Login from './pages/user/login/Login'
-import Detail from './pages/user/detail/Detail'
-import Comparison from './pages/user/comparison/Comparison'
-import Cart from './pages/user/cart/Cart'
-import Purchase from './pages/user/purchase/Purchase'
-import OrderTracking from './pages/user/tracking/OrderTracking'
+import SignUp from './pages/signup/SignUp'
+import Login from './pages/login/Login'
+import Detail from './pages/detail/Detail'
+import Comparison from './pages/comparison/Comparison'
+import Cart from './pages/cart/Cart'
+import Purchase from './pages/purchase/Purchase'
+import OrderTracking from './pages/tracking/OrderTracking'
 import './App.css'
-import AdminHome from "./pages/admin/home/AdminHome.tsx";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.tsx";
 import {Role} from "./enum/Role.ts";
 import {useAuth} from "./hook/UseAuth.tsx";
-import UserHome from "./pages/user/home/UserHome.tsx";
+import UserHome from "./pages/home/UserHome.tsx";
 
 function App() {
   const {role, isLoading} = useAuth()
