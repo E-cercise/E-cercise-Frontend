@@ -101,6 +101,7 @@ function NavBar({
   }
 
   return (
+      <>
     <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-5">
       <Link to="/">
       <div className="flex items-center space-x-4 ml-4">
@@ -328,9 +329,10 @@ function NavBar({
           <Button className="text-[13px] font-bold">Login</Button>
         </Link>
       </div>
-      {role===Role.Admin?<BottomNavBar/>:<></>}
     </div>
-  );
+  {role===Role.Admin?<BottomNavBar/>:<></>}
+      </>
+);
 }
 
 export default NavBar;
