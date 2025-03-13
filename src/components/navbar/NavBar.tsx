@@ -12,7 +12,6 @@ import "./NavBar.css";
 import {useAuth} from "../../hook/UseAuth.tsx";
 import BottomNavBar from "./BottomNavBar.tsx";
 import {Role} from "../../enum/Role.ts";
-// import useUserRole from "../../hook/UseAuth.tsx";
 
 function NavBar({
   setSearchKeyword,
@@ -29,7 +28,7 @@ function NavBar({
   const [tempKeyword, setTempKeyword] = useState<string>("");
   const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
   const isHomePage = location.pathname === "/";
   const { role } = useAuth()
 

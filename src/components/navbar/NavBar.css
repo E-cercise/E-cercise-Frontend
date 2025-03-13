@@ -2,3 +2,12 @@
     font-size: 12px;
     font-weight: bold;
 }
+
+
+.invert {
+    filter: invert(100%);
+}
+
+.blue-icon {
+    filter: brightness(0) saturate(100%) invert(38%) sepia(96%) saturate(2495%) hue-rotate(207deg) brightness(94%) contrast(96%);
+}
