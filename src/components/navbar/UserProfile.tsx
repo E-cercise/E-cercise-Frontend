@@ -9,10 +9,12 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
 
+    const firstLetter =
+        (name && name.length > 0) ? name.charAt(0).toUpperCase() : null;
+
     const menuItems = [
         ...(userId === null
             ? [
-                {label: "Sign Up", key: "signup"},
                 {label: "Login", key: "login"},
             ]
             : [
@@ -45,9 +47,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
             case "logout":
                 logout();
                 break;
-            case "signup":
-                navigate("/signup");
-                break;
+
             case "login":
                 navigate("/login");
                 break;
@@ -66,8 +66,10 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
         >
             <Avatar
                 style={{backgroundColor: "#87d068", cursor: "pointer"}}
-                icon={<UserOutlined/>}
-            />
+            >
+                {userId && firstLetter ? firstLetter : <UserOutlined />}
+
+            </Avatar>
         </Dropdown>
     );
 };
