@@ -19,7 +19,7 @@ function BottomNavBar() {
 
     return (
         <div className="sticky top-[64px] bg-gray-300 p-3 shadow-md z-50">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-sm">
                 {navItems.map((item) => (
                     <NavItem
                         key={item.to}

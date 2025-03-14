@@ -3,7 +3,6 @@
     font-weight: bold;
 }
 
-
 .stroke-black {
     stroke: black;
 }
@@ -22,4 +21,9 @@
 
 .stroke-white {
     stroke: white;
+}
+
+.noHoverItem:hover {
+    background-color: transparent !important;
+    cursor: default !important;
 }
