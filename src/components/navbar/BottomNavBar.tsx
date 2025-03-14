@@ -1,45 +1,20 @@
 import { useLocation } from "react-router-dom";
-import DashBoardBlackLogo from "../../assets/navbar/dashboard-black.svg";
-import DashBoardWhiteLogo from "../../assets/navbar/dashboard-white.svg";
-import AllProductBlackLogo from "../../assets/navbar/all-product-black.svg";
-import AllProductWhiteLogo from "../../assets/navbar/all-product-white.svg";
-import OrderListBlackLogo from "../../assets/navbar/document-black.svg";
-import OrderListWhiteLogo from "../../assets/navbar/document-white.svg";
-import ChevlonUpBlackLogo from "../../assets/navbar/chevron_up_black.svg";
-import ChevlonUpWhiteLogo from "../../assets/navbar/chevron_up_white.svg";
 import NavItem from "./NavItem.tsx";
+import DashboardIcon from "../Icon/DashboardIcon.tsx";
+import AllProductIcon from "../Icon/AllProductIcon.tsx";
+import DocumentIcon from "../Icon/DocumentIcon.tsx";
+import ChevlonUpIcon from "../Icon/ChevlonUpIcon.tsx";
 
 function BottomNavBar() {
     const location = useLocation();
 
     const isActive = (path: string) => location.pathname === path;
 
-    // Define navigation items
     const navItems = [
-        {
-            to: "/dashboard",
-            label: "Dashboard",
-            blackIcon: DashBoardBlackLogo,
-            whiteIcon: DashBoardWhiteLogo,
-        },
-        {
-            to: "/",
-            label: "All Products",
-            blackIcon: AllProductBlackLogo,
-            whiteIcon: AllProductWhiteLogo,
-        },
-        {
-            to: "/order-list",
-            label: "Order List",
-            blackIcon: OrderListBlackLogo,
-            whiteIcon: OrderListWhiteLogo,
-        },
-        {
-            to: "/categories",
-            label: "Categories",
-            blackIcon: ChevlonUpBlackLogo,
-            whiteIcon: ChevlonUpWhiteLogo,
-        },
+        { to: "/dashboard", label: "Dashboard", Icon: DashboardIcon },
+        { to: "/", label: "All Products", Icon: AllProductIcon },
+        { to: "/orders", label: "Order List", Icon: DocumentIcon },
+        { to: "/categories", label: "Categories", Icon: ChevlonUpIcon },
     ];
 
     return (
@@ -50,8 +25,7 @@ function BottomNavBar() {
                         key={item.to}
                         to={item.to}
                         label={item.label}
-                        blackIcon={item.blackIcon}
-                        whiteIcon={item.whiteIcon}
+                        Icon={item.Icon}
                         isActive={isActive(item.to)}
                     />
                 ))}

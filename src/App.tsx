@@ -10,10 +10,11 @@ import './App.css'
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.tsx";
 import {Role} from "./enum/Role.ts";
 import {useAuth} from "./hook/UseAuth.tsx";
-import UserHome from "./pages/home/UserHome.tsx";
+import Home from "./pages/home/Home.tsx";
+import OrderList from "./pages/OrderList/OrderList.tsx";
 
 function App() {
-  const {role, isLoading} = useAuth()
+  const {isLoading} = useAuth()
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -23,15 +24,16 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route index element={<UserHome/> } />
+          <Route index element={<Home/> } />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
-          <Route path='/' element={<UserHome/> }/>
+          <Route path='/' element={<Home/> }/>
           <Route path='/equipment/:equipment_id' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
           <Route path='/cart' element={<ProtectedRoute><Cart /></ProtectedRoute>}/>
           <Route path='/purchase' element={<ProtectedRoute><Purchase /></ProtectedRoute>}/>
           <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking /></ProtectedRoute>}/>
+          <Route path='/orders' element={<ProtectedRoute allowedRoles={[Role.Admin]}><OrderList/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </div>

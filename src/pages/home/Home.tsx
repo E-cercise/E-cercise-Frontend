@@ -13,7 +13,7 @@ import "./Home.css";
 import {useAuth} from "../../hook/UseAuth.tsx";
 import {Role} from "../../enum/Role.ts";
 
-function UserHome() {
+function Home() {
     const [equipmentId, setEquipmentId] = useState<number>(-1);
     const [titleHover, setTitleHover] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -183,4 +183,4 @@ function UserHome() {
     );
 }
 
-export default UserHome;
+export default Home;

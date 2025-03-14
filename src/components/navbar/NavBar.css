@@ -4,10 +4,22 @@
 }
 
 
-.invert {
-    filter: invert(100%);
+.stroke-black {
+    stroke: black;
 }
 
-.blue-icon {
-    filter: brightness(0) saturate(100%) invert(38%) sepia(96%) saturate(2495%) hue-rotate(207deg) brightness(94%) contrast(96%);
+.fill-blue-500 {
+    fill: #3b82f6;
+}
+
+.stroke-blue-500 {
+    stroke: #3b82f6;
+}
+
+.fill-white {
+    fill: white;
+}
+
+.stroke-white {
+    stroke: white;
 }
