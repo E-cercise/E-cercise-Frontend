@@ -28,7 +28,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, label, Icon, isActive }) => {
                                 : "fill-black stroke-black"
                     }`}
                 />
-                <span>{label}</span>
+                <span className="text-[13px]">{label}</span>
             </Button>
         </Link>
     );
