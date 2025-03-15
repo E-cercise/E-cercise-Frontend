@@ -20,7 +20,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, label, Icon, isActive }) => {
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <Icon
-                    className={`w-5 h-5 ${
+                    className={`w-4 h-4 ${
                         isActive
                             ? "fill-white stroke-white"
                             : isHovered
