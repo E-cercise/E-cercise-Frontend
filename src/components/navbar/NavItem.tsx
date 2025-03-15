@@ -9,7 +9,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, label, Icon, isActive }) => {
     return (
         <Link to={to}>
             <Button
-                className={`text-sm font-bold flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                className={`h-7 text-sm font-bold flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
                     isActive
                         ? "bg-blue-500 text-white"
                         : isHovered
