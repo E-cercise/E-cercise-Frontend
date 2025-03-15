@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "../../../components/navbar/NavBar";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import { Divider, Steps } from "antd";
 import {
   LoadingOutlined,

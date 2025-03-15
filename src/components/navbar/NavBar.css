@@ -2,3 +2,28 @@
     font-size: 12px;
     font-weight: bold;
 }
+
+.stroke-black {
+    stroke: black;
+}
+
+.fill-blue-500 {
+    fill: #3b82f6;
+}
+
+.stroke-blue-500 {
+    stroke: #3b82f6;
+}
+
+.fill-white {
+    fill: white;
+}
+
+.stroke-white {
+    stroke: white;
+}
+
+.noHoverItem:hover {
+    background-color: transparent !important;
+    cursor: default !important;
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Divider, Input, Modal, Radio } from "antd";
 import { FaLocationDot } from "react-icons/fa6";
-import NavBar from "../../../components/navbar/NavBar";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import Plus from "../../assets/test/purchase/Group 119.png";
 import Test from "../../assets/test/home/Group 32.png";
 import Dumbbells1 from "../../assets/test/comparison/image 16.png";

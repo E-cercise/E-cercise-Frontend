@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import { Link } from "react-router-dom";
-import { getEquipmentsInCart } from "../../../api/cart/GetEquipmentsInCart";
-import { modifyEquipmentInCart } from "../../../api/cart/ModifyEquipmentInCart";
-import { deleteEquipmentInCart } from "../../../api/cart/DeleteEquipmentInCart";
-import NavBar from "../../../components/navbar/NavBar";
-import { CartResponse } from "../../../interfaces/Cart";
+import { getEquipmentsInCart } from "../../api/cart/GetEquipmentsInCart.ts";
+import { modifyEquipmentInCart } from "../../api/cart/ModifyEquipmentInCart.ts";
+import { deleteEquipmentInCart } from "../../api/cart/DeleteEquipmentInCart.ts";
+import NavBar from "../../components/navbar/NavBar.tsx";
+import { CartResponse } from "../../interfaces/Cart.ts";
 import CrossMark from "../../assets/test/cart/image 36.png";
 
 function Cart() {

@@ -4,6 +4,7 @@ interface Equipment {
   price: number;
   image_path: string;
   muscles_group_used: string[];
+  remaining_product: number
 }
 
 export interface FilteredEquipmentResponse {

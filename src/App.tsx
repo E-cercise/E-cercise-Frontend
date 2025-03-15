@@ -1,52 +1,41 @@
-import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import SignUp from './pages/user/signup/SignUp'
-import Login from './pages/user/login/Login'
-import Home from './pages/user/home/Home'
-import Detail from './pages/user/detail/Detail'
-import Comparison from './pages/user/comparison/Comparison'
-import Cart from './pages/user/cart/Cart'
-import Purchase from './pages/user/purchase/Purchase'
-import OrderTracking from './pages/user/tracking/OrderTracking'
+import SignUp from './pages/signup/SignUp'
+import Login from './pages/login/Login'
+import Detail from './pages/detail/Detail'
+import Comparison from './pages/comparison/Comparison'
+import Cart from './pages/cart/Cart'
+import Purchase from './pages/purchase/Purchase'
+import OrderTracking from './pages/tracking/OrderTracking'
 import './App.css'
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.tsx";
+import {Role} from "./enum/Role.ts";
+import {useAuth} from "./hook/UseAuth.tsx";
+import Home from "./pages/home/Home.tsx";
+import OrderList from "./pages/OrderList/OrderList.tsx";
 
 function App() {
+  const {isLoading} = useAuth()
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route index element={<Home />} />
+          <Route index element={<Home/> } />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
-          <Route path='/' element={<Home/>}/>
+          <Route path='/' element={<Home/> }/>
           <Route path='/equipment/:equipment_id' element={<Detail />} />
           <Route path='/comparison' element={<Comparison />}/>
-          <Route path='/cart' element={<Cart />}/>
-          <Route path='/purchase' element={<Purchase />}/>
-          <Route path='/order-tracking' element={<OrderTracking />}/>
+          <Route path='/cart' element={<ProtectedRoute><Cart /></ProtectedRoute>}/>
+          <Route path='/purchase' element={<ProtectedRoute><Purchase /></ProtectedRoute>}/>
+          <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking /></ProtectedRoute>}/>
+          <Route path='/orders' element={<ProtectedRoute allowedRoles={[Role.Admin]}><OrderList/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
     </div>
   )
 }

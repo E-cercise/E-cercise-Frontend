@@ -1,6 +1,5 @@
-import React from "react";
 import { Divider, Select } from "antd";
-import NavBar from "../../../components/navbar/NavBar";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 import Dumbbells2 from "../../assets/test/comparison/image 17.png";
 import Dumbbells3 from "../../assets/test/comparison/image 18.png";

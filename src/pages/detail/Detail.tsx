@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Popover, Select } from "antd";
+import { Modal, Popover} from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-import { equipmentDetail } from "../../../api/equipment/EquipmentDetail";
-import { addEquipmentToCart } from "../../../api/cart/AddEquipmentToCart";
-import NavBar from "../../../components/navbar/NavBar";
+import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
+import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import Cart from "../../assets/test/detail/+ Cart.png";
 import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
 import BackMuscle from "../../assets/navbar/muscles-back-image.png";
@@ -14,8 +14,8 @@ import RightMark from "../../assets/detail/checkmark.png";
 import {
   frontAttributes,
   backAttributes,
-} from "../../../components/muscles/muscles";
-import { EquipmentDetailResponse } from "../../../interfaces/Equipment";
+} from "../../components/muscles/muscles.ts";
+import { EquipmentDetailResponse } from "../../interfaces/Equipment.ts";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Detail.css";
 
@@ -27,13 +27,6 @@ function Detail() {
   const [detail, setDetail] = useState<EquipmentDetailResponse>();
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  // const frontMusclesUsed = ['ft_5', 'ft_6', 'ft_14', 'ft_15'];
-  // const backMusclesUsed = ['bk_8', 'bk_9', 'bk_10', 'bk_11'];
-
-  // const handleChange = (value: string) => {
-  //   console.log(`selected ${value}`);
-  // };
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -70,7 +63,6 @@ function Detail() {
   };
 
   const equipment_id = useParams<{ equipment_id: string | undefined }>();
-  // console.log(equipment_id.equipment_id);
 
   const getEquipmentDetail = async (id: string | undefined) => {
     try {
