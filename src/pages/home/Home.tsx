@@ -108,7 +108,7 @@ function Home() {
               </div>
             : */}{role === Role.Admin ?
                 <div
-                    className="inline-flex items-center px-2 py-1 border border-gray-300 bg-gray-100 rounded-full text-sm whitespace-nowrap">
+<div className="inline-flex items-center px-2 py-1 border border-gray-300 bg-gray-100 rounded-lg text-sm whitespace-nowrap">
                     <span className="mr-2">Remaining Products</span>
                     <span className="font-bold">{equipment.remaining_product}</span>
                 </div> :
