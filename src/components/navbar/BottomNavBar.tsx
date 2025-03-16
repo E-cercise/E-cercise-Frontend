@@ -8,13 +8,13 @@ import ChevlonUpIcon from "../Icon/ChevlonUpIcon.tsx";
 function BottomNavBar() {
     const location = useLocation();
 
-    const isActive = (path: string) => location.pathname === path;
+    const isActive = (paths: string[]) => paths.includes(location.pathname);
 
     const navItems = [
-        { to: "/dashboard", label: "Dashboard", Icon: DashboardIcon },
-        { to: "/", label: "All Products", Icon: AllProductIcon },
-        { to: "/orders", label: "Order List", Icon: DocumentIcon },
-        { to: "/categories", label: "Categories", Icon: ChevlonUpIcon },
+        { to: "/dashboard", label: "Dashboard", Icon: DashboardIcon, includePath: ["/dashboard"] },
+        { to: "/", label: "All Products", Icon: AllProductIcon , includePath: ["/", "/equipment/add"] },
+        { to: "/orders", label: "Order List", Icon: DocumentIcon, includePath: ["/orders"]},
+        { to: "/categories", label: "Categories", Icon: ChevlonUpIcon, includePath: ["/categories"] },
     ];
 
     return (
@@ -26,7 +26,7 @@ function BottomNavBar() {
                         to={item.to}
                         label={item.label}
                         Icon={item.Icon}
-                        isActive={isActive(item.to)}
+                        isActive={isActive(item.includePath)}
                     />
                 ))}
             </div>
