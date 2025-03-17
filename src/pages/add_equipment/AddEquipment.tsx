@@ -1,11 +1,14 @@
 import NavBar from "../../components/navbar/NavBar.tsx";
 import HeaderRow from "../../components/HeaderRow/HeaderRow.tsx";
 import {useAuth} from "../../hook/UseAuth.tsx";
-import {Button, Card, Col, Divider, Form, Input, InputNumber, notification, Row, Select, Space} from "antd";
+import {Button, Card, Col, Divider, Form, Input, InputNumber, notification, Row, Select, Space, Upload} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {CategoryResponse} from "../../interfaces/Equipment.ts";
 import {useEffect, useState} from "react";
 import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
+import {RcCustomRequestOptions, UploadFile} from "antd/es/upload/interface";
+import {UploadEquipmentImage} from "../../api/image/UploadEquipmentImage.ts";
+import UploadPictureCard from "../../components/imageCard/ImageCard.tsx";
 
 function AddEquipmentPage() {
     const {role} = useAuth()
@@ -65,130 +68,92 @@ function AddEquipmentPage() {
                     <Input.TextArea rows={3}/>
                 </Form.Item>
                 <Divider/>
+                <Form.List name="options">
+                    {(fields, { add, remove }) => (
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <h2 className="text-xl font-semibold">Options</h2>
+                                <Button
+                                    type="dashed"
+                                    onClick={() => add()}
+                                    icon={<PlusOutlined />}
+                                    className="flex items-center"
+                                >
+                                    Add Option
+                                </Button>
+                            </div>
+
+                            {fields.map(({ key, name, ...restField }) => (
+                                <Card key={key} className="mb-4 border border-gray-200 p-4">
+                                    <div className="flex justify-between mb-2">
+                                        <h3 className="font-semibold">Option #{name + 1}</h3>
+                                        <MinusCircleOutlined
+                                            className="text-red-500"
+                                            onClick={() => remove(name)}
+                                        />
+                                    </div>
+
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'name']}
+                                        label="Option Name"
+                                        rules={[{ required: true, message: 'Please enter a name' }]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                    <Row gutter={16}>
+                                        <Col span={12}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'price']}
+                                                label="Price"
+                                                rules={[{ required: true, message: 'Please enter a price' }]}
+                                            >
+                                                <InputNumber
+                                                    style={{ width: '100%' }}
+                                                    step={0.01}
+                                                />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={12}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'weight']}
+                                                label="Weight"
+                                            >
+                                                <InputNumber
+                                                    style={{ width: '100%' }}
+                                                    step={0.001}
+                                                />
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'available']}
+                                        label="Available"
+                                    >
+                                        <InputNumber style={{ width: '100%' }} />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, "images"]}
+                                        label="Images"
+                                        valuePropName="value"
+                                        getValueFromEvent={(e) => e}
+                                    >
+                                        <UploadPictureCard />
+                                    </Form.Item>                                </Card>
+                            ))}
+                        </div>
+                    )}
+                </Form.List>
+                <Divider/>
 
             </Form>
-
-
-            <Form.List name="options">
-                {(fields, {add, remove}) => (
-                    <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <h2 className="text-xl font-semibold">Options</h2>
-                            <Button
-                                type="dashed"
-                                onClick={() => add()}
-                                icon={<PlusOutlined/>}
-                                className="flex items-center"
-                            >
-                                Add Option
-                            </Button>
-                        </div>
-
-                        {fields.map(({key, name, ...restField}) => (
-                            <Card key={key} className="mb-4 border border-gray-200 p-4">
-                                <div className="flex justify-between mb-2">
-                                    <h3 className="font-semibold">Option #{name + 1}</h3>
-                                    <MinusCircleOutlined
-                                        className="text-red-500"
-                                        onClick={() => remove(name)}
-                                    />
-                                </div>
-
-                                <Form.Item
-                                    {...restField}
-                                    name={[name, 'name']}
-                                    label="Option Name"
-                                    rules={[{required: true, message: 'Please enter a name'}]}
-                                >
-                                    <Input/>
-                                </Form.Item>
-
-                                <Row gutter={16}>
-                                    <Col span={12}>
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'price']}
-                                            label="Price"
-                                            rules={[{required: true, message: 'Please enter a price'}]}
-                                        >
-                                            <InputNumber
-                                                style={{width: '100%'}}
-                                                step={0.01}
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'weight']}
-                                            label="Weight"
-                                        >
-                                            <InputNumber
-                                                style={{width: '100%'}}
-                                                step={0.001}
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-
-                                <Form.Item
-                                    {...restField}
-                                    name={[name, 'available']}
-                                    label="Available"
-                                >
-                                    <InputNumber style={{width: '100%'}}/>
-                                </Form.Item>
-
-                                {/* IMAGES NESTED ARRAY */}
-                                <Form.List name={[name, 'images']}>
-                                    {(imgFields, imgActions) => (
-                                        <div className="mb-2">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <h4 className="font-medium">Images</h4>
-                                                <Button
-                                                    type="dashed"
-                                                    onClick={() => imgActions.add()}
-                                                    icon={<PlusOutlined/>}
-                                                >
-                                                    Add Image
-                                                </Button>
-                                            </div>
-                                            {imgFields.map(({key: imgKey, name: imgName, ...imgRest}) => (
-                                                <Space
-                                                    key={imgKey}
-                                                    style={{display: 'flex', marginBottom: 8}}
-                                                    align="baseline"
-                                                >
-                                                    <Form.Item
-                                                        {...imgRest}
-                                                        name={[imgName, 'id']}
-                                                        label="ID"
-                                                    >
-                                                        <Input placeholder="Image ID"/>
-                                                    </Form.Item>
-                                                    <Form.Item
-                                                        {...imgRest}
-                                                        name={[imgName, 'is_primary']}
-                                                        label="Is Primary?"
-                                                        valuePropName="checked"
-                                                    >
-                                                        <Input type="checkbox"/>
-                                                    </Form.Item>
-                                                    <MinusCircleOutlined
-                                                        onClick={() => imgActions.remove(imgName)}
-                                                    />
-                                                </Space>
-                                            ))}
-                                        </div>
-                                    )}
-                                </Form.List>
-                            </Card>
-                        ))}
-                    </div>
-                )}
-            </Form.List>
-
-            <Divider/>
 
             {/*      /!**/}
             {/*  2) MUSCLE_GROUP_USED (ARRAY OF STRINGS)*/}
