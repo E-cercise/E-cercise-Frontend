@@ -68,7 +68,6 @@ function Detail() {
     try {
       const detail = await equipmentDetail(id);
       setDetail(detail);
-      console.log(detail);
     } catch (err) {
       console.error(err);
     }

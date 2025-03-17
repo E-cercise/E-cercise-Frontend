@@ -10,7 +10,7 @@ const HeaderRow: React.FC<HeaderRowProps> = ({ role, title }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex items-center justify-between mb-3 px-5">
+        <div className="flex items-center justify-between mb-3 mt-3 px-5">
             <p className="text-lg font-bold">
                 {title}
             </p>
