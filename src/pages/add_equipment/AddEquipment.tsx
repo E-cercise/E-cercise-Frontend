@@ -1,14 +1,28 @@
 import NavBar from "../../components/navbar/NavBar.tsx";
 import HeaderRow from "../../components/HeaderRow/HeaderRow.tsx";
 import {useAuth} from "../../hook/UseAuth.tsx";
-import {Button, Card, Col, Divider, Form, Input, InputNumber, notification, Row, Select, Space, Upload} from "antd";
+import {
+    Button,
+    Card,
+    Col,
+    Divider,
+    Form,
+    FormProps,
+    Input,
+    InputNumber,
+    notification,
+    Row,
+    Select,
+    Space,
+    Upload
+} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
-import {CategoryResponse} from "../../interfaces/Equipment.ts";
+import {AddEquipmentRequest, CategoryResponse} from "../../interfaces/Equipment.ts";
 import {useEffect, useState} from "react";
 import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
-import {RcCustomRequestOptions, UploadFile} from "antd/es/upload/interface";
-import {UploadEquipmentImage} from "../../api/image/UploadEquipmentImage.ts";
-import UploadPictureCard from "../../components/imageCard/ImageCard.tsx";
+import { RcCustomRequestOptions } from "antd/es/upload/interface";
+import PrimaryImageCard from "../../components/imageCard/PrimaryImageCard.tsx";
+import GalleryImageCard from "../../components/imageCard/GallaryImageCard.tsx";
 
 function AddEquipmentPage() {
     const {role} = useAuth()
@@ -30,6 +44,36 @@ function AddEquipmentPage() {
         }
     }
 
+    const onFinish: FormProps<AddEquipmentRequest>['onFinish'] = (values) => {
+        const transformedValues = {
+            ...values,
+            options: values.options?.map((opt) => {
+                // @ts-ignore
+                const { primaryImage, galleryImages, ...rest } = opt;
+
+                const mergedImages = [];
+
+                if (primaryImage) {
+                    mergedImages.push(primaryImage);
+                }
+                if (galleryImages && galleryImages.length > 0) {
+                    mergedImages.push(...galleryImages);
+                }
+
+                return {
+                    ...rest,
+                    images: mergedImages,
+                };
+            }),
+        };
+
+        console.log("Transformed Values:", transformedValues);
+    };
+
+    const onFinishFailed: FormProps<AddEquipmentRequest>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
     useEffect(() => {
         fetchCategories();
     }, []);
@@ -44,6 +88,7 @@ function AddEquipmentPage() {
             <Form
                 layout="horizontal"
                 name="add equipment form"
+                onFinish={onFinish}
             >
                 <Form.Item name="category" label="Category" rules={[{required: true}]}>
                     <Select options={categories.categories}>
@@ -61,10 +106,10 @@ function AddEquipmentPage() {
                 <Form.Item name="color" label="Main Color" rules={[{required: true}]}>
                     <Input/>
                 </Form.Item>
-                <Form.Item name="material" label="Material">
+                <Form.Item name="material" label="Material"  rules={[{required: true}]}>
                     <Input/>
                 </Form.Item>
-                <Form.Item name="description" label="Description">
+                <Form.Item name="description" label="Description" rules={[{required: true}]}>
                     <Input.TextArea rows={3}/>
                 </Form.Item>
                 <Divider/>
@@ -82,22 +127,18 @@ function AddEquipmentPage() {
                                     Add Option
                                 </Button>
                             </div>
-
                             {fields.map(({ key, name, ...restField }) => (
                                 <Card key={key} className="mb-4 border border-gray-200 p-4">
                                     <div className="flex justify-between mb-2">
                                         <h3 className="font-semibold">Option #{name + 1}</h3>
-                                        <MinusCircleOutlined
-                                            className="text-red-500"
-                                            onClick={() => remove(name)}
-                                        />
+                                        <MinusCircleOutlined className="text-red-500" onClick={() => remove(name)} />
                                     </div>
 
                                     <Form.Item
                                         {...restField}
-                                        name={[name, 'name']}
+                                        name={[name, "name"]}
                                         label="Option Name"
-                                        rules={[{ required: true, message: 'Please enter a name' }]}
+                                        rules={[{ required: true, message: "Please enter a name" }]}
                                     >
                                         <Input />
                                     </Form.Item>
@@ -106,53 +147,67 @@ function AddEquipmentPage() {
                                         <Col span={12}>
                                             <Form.Item
                                                 {...restField}
-                                                name={[name, 'price']}
+                                                name={[name, "price"]}
                                                 label="Price"
-                                                rules={[{ required: true, message: 'Please enter a price' }]}
+                                                rules={[{ required: true, message: "Please enter a price" }]}
                                             >
-                                                <InputNumber
-                                                    style={{ width: '100%' }}
-                                                    step={0.01}
-                                                />
+                                                <InputNumber style={{ width: "100%" }} step={0.01} />
                                             </Form.Item>
                                         </Col>
                                         <Col span={12}>
                                             <Form.Item
                                                 {...restField}
-                                                name={[name, 'weight']}
+                                                name={[name, "weight"]}
                                                 label="Weight"
+                                                rules={[{ required: true }]}
                                             >
-                                                <InputNumber
-                                                    style={{ width: '100%' }}
-                                                    step={0.001}
-                                                />
+                                                <InputNumber style={{ width: "100%" }} step={0.001} />
                                             </Form.Item>
                                         </Col>
                                     </Row>
 
                                     <Form.Item
                                         {...restField}
-                                        name={[name, 'available']}
+                                        name={[name, "available"]}
                                         label="Available"
+                                        rules={[{ required: true }]}
                                     >
-                                        <InputNumber style={{ width: '100%' }} />
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
 
+                                    {/* Primary Image Field */}
                                     <Form.Item
                                         {...restField}
-                                        name={[name, "images"]}
-                                        label="Images"
+                                        name={[name, "primaryImage"]}
+                                        label="Primary Image"
+                                        rules={[{ required: true, message: "Please upload the primary image" }]}
                                         valuePropName="value"
                                         getValueFromEvent={(e) => e}
                                     >
-                                        <UploadPictureCard />
-                                    </Form.Item>                                </Card>
+                                        <PrimaryImageCard />
+                                    </Form.Item>
+
+                                    {/* Gallery Images Field */}
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, "galleryImages"]}
+                                        label="Gallery Images"
+                                        rules={[{ required: true, message: "Please upload at least one gallery image" }]}
+                                        valuePropName="value"
+                                        getValueFromEvent={(e) => e}
+                                    >
+                                        <GalleryImageCard />
+                                    </Form.Item>
+                                </Card>
                             ))}
                         </div>
                     )}
                 </Form.List>
-                <Divider/>
 
+                <Divider/>
+                <Button type="primary" htmlType="submit" className="bg-blue-500 hover:bg-blue-600">
+                    Submit
+                </Button>
             </Form>
 
             {/*      /!**/}
@@ -284,10 +339,7 @@ function AddEquipmentPage() {
             {/*      <Divider />*/}
 
             {/*      <Form.Item>*/}
-            {/*          <Button type="primary" htmlType="submit" className="bg-blue-500 hover:bg-blue-600">*/}
-            {/*              Submit*/}
-            {/*          </Button>*/}
-            {/*      </Form.Item>*/}
+
             {/*  </Form>*/}
         </div>
     </div>
