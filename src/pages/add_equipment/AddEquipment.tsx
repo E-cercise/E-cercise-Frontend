@@ -81,11 +81,11 @@ function AddEquipmentPage() {
     }, []);
 
 
-    return <div className="h-full pt-3 pb-3 pl-5 pr-5 mt-3">
-        {contextHolder}
+    return <div className="h-full pt-3 pb-3 px-0 mt-3">
+    {contextHolder}
         <NavBar/>
         <HeaderRow role={role} title={"Add Equipment"}/>
-        <div className="flex flex-col items-start justify-center w-full h-full bg-[#D9D9D9] rounded-md space-y-2">
+        <div className="flex flex-col items-start justify-center w-full h-full bg-[#D9D9D9] rounded-md space-y-2 px-6 py-4">
 
             <Form
                 layout="horizontal"
@@ -209,9 +209,10 @@ function AddEquipmentPage() {
                 <Divider/>
                 <Form.Item
                     name="muscle_group_used"
-                    label="Select Muscles"
+                    label="Muscle group used"
                     valuePropName="value"
                     getValueFromEvent={(value) => value}
+                    rules={[{ required: true, message: "please specify the " }]}
                 >
                 <MuscleGroupForm />
                 </Form.Item>
