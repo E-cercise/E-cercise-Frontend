@@ -1,5 +1,5 @@
 import NavBar from "../../components/navbar/NavBar.tsx";
-import HeaderRow from "../../components/HeaderRow/HeaderRow.tsx";
+import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import {useAuth} from "../../hook/UseAuth.tsx";
 import {
     Button,
@@ -23,11 +23,13 @@ import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
 import { RcCustomRequestOptions } from "antd/es/upload/interface";
 import PrimaryImageCard from "../../components/imageCard/PrimaryImageCard.tsx";
 import GalleryImageCard from "../../components/imageCard/GallaryImageCard.tsx";
+import MuscleGroupForm from "../../components/form/MuscleGroupForm.tsx";
 
 function AddEquipmentPage() {
     const {role} = useAuth()
     const [categories, setCategories] = useState<CategoryResponse>({categories: []});
     const [notificationAntd, contextHolder] = notification.useNotification();
+
 
     const fetchCategories = async () => {
         try {
@@ -205,48 +207,21 @@ function AddEquipmentPage() {
                 </Form.List>
 
                 <Divider/>
+                <Form.Item
+                    name="muscle_group_used"
+                    label="Select Muscles"
+                    valuePropName="value"
+                    getValueFromEvent={(value) => value}
+                >
+                <MuscleGroupForm />
+                </Form.Item>
+                <Divider />
+
                 <Button type="primary" htmlType="submit" className="bg-blue-500 hover:bg-blue-600">
                     Submit
                 </Button>
             </Form>
 
-            {/*      /!**/}
-            {/*  2) MUSCLE_GROUP_USED (ARRAY OF STRINGS)*/}
-            {/**!/*/}
-            {/*      <Form.List name="muscle_group_used">*/}
-            {/*          {(fields, { add, remove }) => (*/}
-            {/*              <div className="mb-4">*/}
-            {/*                  <div className="flex items-center justify-between mb-2">*/}
-            {/*                      <h2 className="text-xl font-semibold">Muscle Group Used</h2>*/}
-            {/*                      <Button*/}
-            {/*                          type="dashed"*/}
-            {/*                          icon={<PlusOutlined />}*/}
-            {/*                          onClick={() => add('')}*/}
-            {/*                      >*/}
-            {/*                          Add Muscle*/}
-            {/*                      </Button>*/}
-            {/*                  </div>*/}
-            {/*                  {fields.map(({ key, name, ...restField }) => (*/}
-            {/*                      <div key={key} className="flex items-center gap-2 mb-2">*/}
-            {/*                          <Form.Item*/}
-            {/*                              {...restField}*/}
-            {/*                              name={name}*/}
-            {/*                              rules={[{ required: true, message: 'Please enter muscle group' }]}*/}
-            {/*                              className="flex-1"*/}
-            {/*                          >*/}
-            {/*                              <Input placeholder="e.g. Abs" />*/}
-            {/*                          </Form.Item>*/}
-            {/*                          <MinusCircleOutlined*/}
-            {/*                              className="text-red-500"*/}
-            {/*                              onClick={() => remove(name)}*/}
-            {/*                          />*/}
-            {/*                      </div>*/}
-            {/*                  ))}*/}
-            {/*              </div>*/}
-            {/*          )}*/}
-            {/*      </Form.List>*/}
-
-            {/*      <Divider />*/}
 
             {/*      /!**/}
             {/*  3) FEATURES (ARRAY OF STRINGS)*/}

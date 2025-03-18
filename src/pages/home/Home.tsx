@@ -11,7 +11,7 @@ import { Role } from "../../enum/Role.ts"
 import SearchIcon from "../../assets/home/search.png"
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import {useNavigate} from "react-router-dom";
-import HeaderRow from "../../components/HeaderRow/HeaderRow.tsx";
+import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 
 const Home: React.FC = () => {
     const [equipmentId, setEquipmentId] = useState<number>(-1)

@@ -18,7 +18,7 @@ function BottomNavBar() {
     ];
 
     return (
-        <div className="sticky top-[64px] bg-gray-300 px-4 py-2 shadow-md z-50">
+        <div className="sticky top-[64px] bg-gray-300 px-4 py-2 shadow-md z-[999]">
             <div className="flex items-center space-x-6 text-sm">
                 {navItems.map((item) => (
                     <NavItem
