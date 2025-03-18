@@ -1,4 +1,3 @@
-// src/pages/home/Home.tsx
 import React, { useState, useEffect } from "react"
 import NavBar from "../../components/navbar/NavBar.tsx"
 import { Pagination, Spin } from "antd"
