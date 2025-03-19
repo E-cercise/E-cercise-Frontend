@@ -44,7 +44,7 @@ const AddEquipmentPage = () => {
         }
     };
 
-    const handleCategorySearch = (value) => {
+    const handleCategorySearch = (value : string) => {
         setSearchCategory(value);
     };
 
