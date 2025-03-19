@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Tag } from "antd";
+import {Button, Tag} from "antd";
 import { backAttributes, frontAttributes } from "../muscles/muscles";
 import MuscleFrontImage from "../../assets/navbar/muscles-front-image.png";
 import MuscleBackImage from "../../assets/navbar/muscles-back-image.png";
@@ -19,9 +19,13 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
         onChange && onChange(newSelected);
     };
 
+    const clearAllMuscles = () => {
+        onChange && onChange([]);
+    }
+
+
     return (
         <div className="p-4 max-w-4xl mx-auto">
-
             <div className="flex flex-col md:flex-row gap-4 items-start">
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="border border-blue-500 rounded">
@@ -95,23 +99,28 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
                     </div>
                 </div>
 
-                <div className="flex-1 border border-gray-300 p-4 rounded bg-white">
+                <div className="flex-1 border border-gray-300 p-4 rounded bg-white relative">
                     <label className="block mb-2 text-sm font-medium text-gray-700">
                         Selected Muscles:
                     </label>
                     {value.length > 0 ? (
-                        value.map((id) => {
-                            const muscle =
-                                frontAttributes.find((m) => m.id === id) ||
-                                backAttributes.find((m) => m.id === id);
-                            return (
-                                muscle && (
-                                    <Tag key={id} closable onClose={() => toggleMuscle(id)}>
-                                        {muscle.name}
-                                    </Tag>
-                                )
-                            );
-                        })
+                        <>
+                            {value.map((id) => {
+                                const muscle =
+                                    frontAttributes.find((m) => m.id === id) ||
+                                    backAttributes.find((m) => m.id === id);
+                                return (
+                                    muscle && (
+                                        <Tag key={id} closable onClose={() => toggleMuscle(id)} className="mt-2 first:mt-0">
+                                            {muscle.name}
+                                        </Tag>
+                                    )
+                                );
+                            })}
+                            <Button type="link" danger onClick={clearAllMuscles} className="absolute top-2 right-2">
+                                Clear All
+                            </Button>
+                        </>
                     ) : (
                         <span className="text-gray-500">No muscle selected</span>
                     )}
