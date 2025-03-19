@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, Col, Divider, Form, Input, InputNumber, Modal, notification, Row, Select} from "antd";
+import {Button, Card, Col, Divider, Form, Input, InputNumber, notification, Row, Select} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import NavBar from "../../components/navbar/NavBar";
 import HeaderRow from "../../components/headerRow/HeaderRow";
@@ -9,6 +9,9 @@ import PrimaryImageCard from "../../components/imageCard/PrimaryImageCard";
 import GalleryImageCard from "../../components/imageCard/GallaryImageCard";
 import MuscleGroupForm from "../../components/form/MuscleGroupForm";
 import {AddEquipmentRequest} from "../../interfaces/Equipment.ts";
+import {addEquipment} from "../../api/equipment/AddEquipment.ts";
+import {useNavigate} from "react-router-dom";
+import './AddEquipmentPage.css';
 
 const AddEquipmentPage = () => {
     const {role} = useAuth();
@@ -17,13 +20,20 @@ const AddEquipmentPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [notificationAntd, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
-
+    const navigate = useNavigate();
 
     const fetchCategories = async () => {
         setLoadingCategories(true);
         try {
-            const category = await getEquipmentCategory();
-            setCategories(category.categories);
+            const categoryRes = await getEquipmentCategory();
+
+            const mappedCategories = categoryRes.categories.map((cat: any) => ({
+                label: cat.label,
+                value: cat.label,
+            }));
+            console.log(mappedCategories);
+
+            setCategories(mappedCategories);
         } catch (err) {
             notificationAntd.error({
                 message: "Error",
@@ -41,7 +51,7 @@ const AddEquipmentPage = () => {
     const handleAddNewCategory = () => {
         const newCategory = {
             label: searchCategory,
-            value: searchCategory.toLowerCase().replace(/\s+/g, "_"), // simple transformation for value
+            value: searchCategory,
         };
 
         setCategories((prevCategories) => [...prevCategories, newCategory]);
@@ -49,9 +59,7 @@ const AddEquipmentPage = () => {
             message: "Category Added",
             description: `New category "${searchCategory}" added successfully!`,
         });
-        setSearchCategory(""); // clear after adding
     };
-
     useEffect(() => {
         fetchCategories();
     }, []);
@@ -65,17 +73,34 @@ const AddEquipmentPage = () => {
                 // @ts-expect-error
                 const {primaryImage, galleryImages, ...rest} = opt;
                 const mergedImages = [];
-                if (primaryImage) mergedImages.push(primaryImage);
-                if (galleryImages?.length) mergedImages.push(...galleryImages);
+                if (primaryImage) mergedImages.push({
+                    is_primary: primaryImage.is_primary,
+                    id: primaryImage.fileID
+                });
+                if (galleryImages?.length) mergedImages.push({
+                    is_primary: galleryImages.is_primary,
+                    id: galleryImages.fileID,
+                });
                 return {...rest, images: mergedImages};
             }),
         };
-        console.log("Form Values", transformedValues);
-        notificationAntd.success({
-            message: "Success",
-            description: "Equipment added successfully!",
-        });
-        setIsSubmitting(false);
+
+        try{
+            await addEquipment(transformedValues);
+            notificationAntd.success({
+                message: "Success",
+                description: "Equipment added successfully!",
+            });
+            navigate('/')
+        }catch (error) {
+            console.error(error);
+            notificationAntd.error({
+                message: "Error",
+                description: "Error adding equipment",
+            })
+        }finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -167,7 +192,7 @@ const AddEquipmentPage = () => {
                         {(fields, {add, remove}, {errors}) => (
                             <>
                                 <Form.ErrorList errors={errors}/>
-                                <Button icon={<PlusOutlined/>} onClick={() => add()}>Add Option</Button>
+                                <Button icon={<PlusOutlined/>} onClick={() => add()} className="mb-4">Add Option</Button>
 
                                 {fields.map(({key, name}) => (
                                     <Card key={key} className="mb-4 border border-gray-200 p-4 bg-gray-50">
@@ -217,7 +242,7 @@ const AddEquipmentPage = () => {
                         <MuscleGroupForm/>
                     </Form.Item>
 
-                    <Divider orientation="left" orientationMargin={0}>Features</Divider>
+                    <Divider orientation="left" orientationMargin={0} className="mt-3">Features</Divider>
                     <Form.List name="features">
                         {(fields, {add, remove}) => (
                             <>
