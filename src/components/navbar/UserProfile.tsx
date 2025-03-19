@@ -63,6 +63,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
             onOpenChange={setMenuOpen}
             arrow={false}
             trigger={["click"]}
+            className="z-1000"
         >
             <Avatar
                 style={{backgroundColor: "#87d068", cursor: "pointer"}}

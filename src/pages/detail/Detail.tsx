@@ -68,7 +68,6 @@ function Detail() {
     try {
       const detail = await equipmentDetail(id);
       setDetail(detail);
-      console.log(detail);
     } catch (err) {
       console.error(err);
     }
@@ -106,10 +105,10 @@ function Detail() {
                 thumbWidth={72}
               >
                 {detail?.option[0].images
-                  ?.slice() // Create a shallow copy to avoid mutating original data
+                  ?.slice()
                   .sort(
                     (a, b) => (b.is_primary ? 0 : 1) - (a.is_primary ? 0 : 1)
-                  ) // Sort: primary image first
+                  )
                   .map((image, index) => {
                     if (index == 0) {
                       return (
