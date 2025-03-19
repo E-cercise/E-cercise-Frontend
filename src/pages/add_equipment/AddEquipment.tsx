@@ -15,7 +15,7 @@ import './AddEquipmentPage.css';
 
 const AddEquipmentPage = () => {
     const {role} = useAuth();
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [notificationAntd, contextHolder] = notification.useNotification();
