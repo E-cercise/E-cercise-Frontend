@@ -15,7 +15,7 @@ import {
   frontAttributes,
   backAttributes,
 } from "../../components/muscles/muscles.ts";
-import { EquipmentDetailResponse } from "../../interfaces/Equipment.ts";
+import { EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Detail.css";
 

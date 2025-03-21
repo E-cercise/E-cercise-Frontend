@@ -1,4 +1,4 @@
-interface Equipment {
+interface EquipmentDetail {
   ID: string;
   name: string;
   price: number;
@@ -8,7 +8,7 @@ interface Equipment {
 }
 
 export interface FilteredEquipmentResponse {
-  equipments: { equipments: Equipment[] };
+  equipments: { equipments: EquipmentDetail[] };
   page: number;
   limit: number;
   total_pages: number;
@@ -60,37 +60,5 @@ interface Category{
 
 export interface CategoryResponse{
   categories: Category[]
-}
-
-interface AdditionalFieldAdd {
-  key: string;
-  value: string;
-}
-
-interface OptionAdd {
-  available: number;
-  images?: ImageAdd[];
-  name: string;
-  price: number;
-  weight: number;
-}
-
-interface ImageAdd {
-  id: string;
-  isPrimary: boolean;
-}
-
-export interface AddEquipmentRequest {
-  additionalFields?: AdditionalFieldAdd[];
-  brand: string;
-  category: string;
-  color: string;
-  description: string;
-  features: string[];
-  material: string;
-  model: string;
-  muscleGroupUsed: string[];
-  name: string;
-  options: OptionAdd[];
 }
 
