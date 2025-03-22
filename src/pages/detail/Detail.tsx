@@ -40,9 +40,6 @@ function Detail() {
     setShowPopOver(value);
   };
 
-  // const handleShowMusclesPopover = (value: boolean) => {
-  //   setShowMusclesPopover(value);
-  // };
 
   const handleOk = () => {
     // setModalText('The modal will be closed after two seconds');

@@ -160,7 +160,7 @@ function NavBar({
                                                 );
                                             }
 
-                                            return null; // Handle cases where the id is not found
+                                            return null;
                                         })}
                                     </div>
                                 </div>
@@ -180,7 +180,6 @@ function NavBar({
                                         ></image>
                                         {frontAttributes.map((element, index) => {
                                             const id = `ft_${index + 1}`;
-                                            // console.log(showPopOver);
                                             return (
                                                 <>
                                                     <Popover title={element.name}>
@@ -202,10 +201,6 @@ function NavBar({
                                                             onMouseEnter={() => {
                                                                 handleMouseEnter(id);
                                                                 handleShowPopOver(true);
-                                                            }}
-                                                            onMouseLeave={() => {
-                                                                handleMouseLeave();
-                                                                handleShowPopOver(false);
                                                             }}
                                                             onClick={() => {
                                                                 handleClickedMuscles(id);

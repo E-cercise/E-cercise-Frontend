@@ -1,127 +1,165 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import {CategoryResponse, EquipmentDetailResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
 import {useEffect, useState} from "react";
-import {EquipmentFormMode, EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
-import {transformFormToPUT, transformGETtoForm} from "../../helper/transformHelpers.ts";
-import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
+import {useAuth} from "../../hook/UseAuth.tsx";
+import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
+import {Card, notification} from "antd";
 import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
-import {Button, Card, notification, Spin} from "antd";
-import {updateEquipment} from "../../api/equipment/UpdateEquipmentDetail.ts";
-import {EditOutlined} from "@ant-design/icons";
-import EquipmentForm from "../equipment_form/EquipmentFormPage.tsx";
+import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
+import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
+import NavBar from "../../components/navbar/NavBar.tsx";
+import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
+import EquipmentForm from "../../components/form/EquipmentForm.tsx";
 
-const EquipmentDetailAndUpdatePage: React.FC = () => {
-    const { id } = useParams(); // equipment ID from URL param
-    const [loading, setLoading] = useState(true);
-    const [initialValues, setInitialValues] = useState<Partial<EquipmentFormValues>>({});
-    const [mode, setMode] = useState<EquipmentFormMode>("view");
-    const [isSubmitting, setIsSubmitting] = useState(false);
+const AdminDetailPage: React.FC = () => {
+    const { equipment_id } = useParams();
+    const navigate = useNavigate();
+    const { role } = useAuth();
 
-    // We'll store the fetched categories in a state array
-    const [categories, setCategories] = useState<{ label: string; value: string }[]>([]);
+    const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
+    const [initialFormValues, setInitialFormValues] = useState<EquipmentFormValues>();
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
-
-    // We'll also keep the "oldData" (the raw data from GET) if we need it for transformFormToPUT
-    const [oldData, setOldData] = useState<any>(null);
+    const [notificationApi, contextHolder] = notification.useNotification();
+    const [searchCategory, setSearchCategory] = useState("");
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
+        if (equipment_id) {
+            fetchEquipmentDetail(equipment_id);
+        }
+        fetchCategories();
+    }, [equipment_id]);
 
-                // 1) Fetch categories for the select box
-                setLoadingCategories(true);
-                const categoriesResponse = await getEquipmentCategory();
-                const mappedCategories = categoriesResponse.categories.map((cat: any) => ({
-                    label: cat.label,
-                    value: cat.label,
-                }));
-                setCategories(mappedCategories);
-                setLoadingCategories(false);
-
-                // 2) Fetch the existing equipment detail
-                const detailData = await equipmentDetail(id!);
-                setOldData(detailData);
-
-                // Transform from the GET shape into the shape your EquipmentForm expects
-                const formData = transformGETtoForm(detailData);
-                setInitialValues(formData);
-            } catch (error) {
-                notification.error({ message: "Error fetching detail" });
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [id]);
-
-    /**
-     * Toggles between view/edit. If in "view", switch to "update".
-     * If in "update", you could also switch back to "view" (cancel).
-     */
-    const handleEditClick = () => {
-        setMode((prev) => (prev === "view" ? "update" : "view"));
-    };
-
-    /**
-     * Called by the form on submit in "update" mode.
-     * We transform the form data into your PUT shape, call the API, and if successful, revert to "view" mode.
-     */
-    const handleUpdateSubmit = async (values: EquipmentFormValues) => {
-        setIsSubmitting(true);
+    const fetchCategories = async () => {
+        setLoadingCategories(true);
         try {
-            // transform the user-changed form data into your required PUT shape
-            const payload = transformFormToPUT(values, oldData);
-
-            // call your updateEquipment endpoint
-            await updateEquipment(id!, payload);
-
-            notification.success({ message: "Equipment updated!" });
-            setMode("view"); // optional: go back to read-only mode after successful update
+            const res = await getEquipmentCategory();
+            const mapped = res.categories.map((cat: any) => ({
+                label: cat.label,
+                value: cat.label,
+            }));
+            setCategories(mapped);
         } catch (err) {
-            notification.error({ message: "Error updating equipment" });
+            notificationApi.error({
+                message: "Error",
+                description: "Error fetching categories",
+            });
         } finally {
-            setIsSubmitting(false);
+            setLoadingCategories(false);
         }
     };
 
-    if (loading) {
-        return <Spin tip="Loading..." />;
+    const fetchEquipmentDetail = async (id: string) => {
+        try {
+            const data = await equipmentDetail(id);
+            setOriginalData(data);
+            console.log(data);
+
+            const formShape: EquipmentFormValues = {
+                name: data.name,
+                brand: data.brand,
+                model: data.model,
+                color: data.color,
+                material: data.material,
+                category: data.category,
+                description: data.description,
+                muscle_group_used: data.muscle_group_used || [],
+                features: (data.feature || []).map((f) => ({
+                    __id: f.id,
+                    description: f.description,
+                })),
+                additional_fields: (data.additional_field || []).map((af) => ({
+                    __id: af.id,
+                    key: af.key,
+                    value: af.value,
+                })),
+                options: (data.option || []).map((opt: { images: any[]; id: any; name: any; price: any; weight: any; available: any; }) => {
+                    const primaryImg = opt.images.find((img: { is_primary: any; }) => img.is_primary);
+                    const galleryImgs = opt.images.filter((img) => !img.is_primary);
+                    return {
+                        __id: opt.id,
+                        name: opt.name,
+                        price: opt.price,
+                        weight: opt.weight,
+                        available: opt.available,
+                        primaryImage: primaryImg
+                            ? { fileID: primaryImg.id, thumbnail: primaryImg.url, is_primary: true }
+                            : undefined,
+                        galleryImages: galleryImgs.map((g) => ({
+                            fileID: g.id,
+                            thumbnail: g.url,
+                            is_primary: false,
+                        })),
+                    };
+                }),
+            };
+
+            setInitialFormValues(formShape);
+        } catch (err) {
+            notificationApi.error({
+                message: "Error",
+                description: "Could not fetch equipment details",
+            });
+        }
+    };
+
+    const handleCategorySearch = (val: string) => {
+        setSearchCategory(val);
+    };
+
+    const handleAddNewCategory = () => {
+        if (!searchCategory) return;
+        const newCat = { label: searchCategory, value: searchCategory };
+        setCategories((prev) => [...prev, newCat]);
+        notificationApi.success({
+            message: "Category Added",
+            description: `New category "${searchCategory}" added successfully!`,
+        });
+    };
+
+    // This is where we call our helper
+    const handleUpdateSubmit = async (values: EquipmentFormValues) => {
+        if (!originalData || !equipment_id) return;
+
+        try {
+            await handleUpdateSubmitPartial(equipment_id, originalData, values);
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+            notificationApi.error({ message: "Error", description: "Update request failed." });
+        }
+    };
+
+    if (!initialFormValues) {
+        return (
+            <div>
+                {contextHolder}
+                <NavBar />
+                <HeaderRow role={role} title="Edit Equipment" />
+                <p className="text-center mt-4">Loading...</p>
+            </div>
+        );
     }
 
     return (
-        <Card>
-            {/*
-         Show an Edit or Cancel button, depending on current mode.
-         If mode="view", user sees an Edit button with a pen icon.
-         If mode="update", user sees a Cancel button.
-      */}
-            {mode === "view" ? (
-                <Button
-                    icon={<EditOutlined />}
-                    style={{ float: "right" }}
-                    onClick={handleEditClick}
-                >
-                    Edit
-                </Button>
-            ) : (
-                <Button style={{ float: "right" }} onClick={handleEditClick}>
-                    Cancel
-                </Button>
-            )}
-
-            {/* The single form that can be read-only (view) or editable (update) */}
-            <EquipmentForm
-                mode={mode}
-                initialValues={initialValues}
-                isSubmitting={isSubmitting}
-                // If you have your create categories logic or category fetch:
-                categories={categories}
-                loadingCategories={loadingCategories}
-                onSubmit={handleUpdateSubmit}
-            />
-        </Card>
+        <div className="min-h-screen bg-gray-100">
+            {contextHolder}
+            <NavBar />
+            <HeaderRow role={role} title="Edit Equipment" />
+            <Card className="w-11/12 mx-auto mt-4">
+                <EquipmentForm
+                    mode="EDIT"
+                    loadingCategories={loadingCategories}
+                    categories={categories}
+                    onCategorySearch={handleCategorySearch}
+                    onAddNewCategory={handleAddNewCategory}
+                    searchCategory={searchCategory}
+                    initialValues={initialFormValues}
+                    onSubmit={handleUpdateSubmit}
+                />
+            </Card>
+        </div>
     );
 };
 
-export default EquipmentDetailAndUpdatePage;
+export default AdminDetailPage;

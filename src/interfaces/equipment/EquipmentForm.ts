@@ -1,18 +1,14 @@
-import PrimaryImageCard, { UploadedImage as PrimaryImg } from "../../components/imageCard/PrimaryImageCard";
-import GalleryImageCard, { GalleryUploadedImage as GalleryImg } from "../../components/imageCard/GallaryImageCard";
+import {CategoryResponse} from "./EquipmentDetail.ts";
 
-export interface OptionFormValue {
-    id?: string; // might exist if editing
-    name: string;
-    price: number;
-    weight: number;
-    available: number;
-    primaryImage: PrimaryImg | null;
-    galleryImages?: {
-        final: GalleryImg[];
-        deletedIDs: string[];
-        addedIDs: string[];
-    } | GalleryImg[]; // or any shape you prefer
+export interface EquipmentFormProps {
+    mode: "ADD" | "EDIT";
+    loadingCategories: boolean;
+    categories: CategoryResponse[];
+    initialValues?: any; // The shape for form initial values
+    onSubmit: (formValues: any) => Promise<void>;
+    onCategorySearch: (val: string) => void;
+    onAddNewCategory: () => void;
+    searchCategory: string;
 }
 
 export interface EquipmentFormValues {
@@ -21,25 +17,33 @@ export interface EquipmentFormValues {
     model: string;
     color: string;
     material: string;
-    category?: string;
-    description?: string; // e.g. special_feature
+    category: string;
+    description: string;
     muscle_group_used: string[];
-    options: OptionFormValue[];
-    features: string[]; // or array of objects
-    additional_fields: Array<{
-        id?: string;
+    features: {
+        __id?: string;
+        description: string;
+    }[];
+    additional_fields: {
+        __id?: string;
         key: string;
         value: string;
-    }>;
-}
-
-export type EquipmentFormMode = "create" | "update" | "view";
-
-export interface EquipmentFormProps {
-    mode: EquipmentFormMode;
-    initialValues?: Partial<EquipmentFormValues>;
-    isSubmitting?: boolean;
-    loadingCategories?: boolean;
-    categories?: { label: string; value: string }[];
-    onSubmit: (values: EquipmentFormValues) => void;
+    }[];
+    options: {
+        __id?: string;
+        name: string;
+        price: number;
+        weight: number;
+        available: number;
+        primaryImage?: {
+            fileID: string;
+            thumbnail?: string;
+            is_primary?: boolean;
+        };
+        galleryImages?: {
+            fileID: string;
+            thumbnail?: string;
+            is_primary?: boolean;
+        }[];
+    }[];
 }

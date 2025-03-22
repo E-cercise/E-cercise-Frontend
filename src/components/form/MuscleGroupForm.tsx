@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import {Button, Tag} from "antd";
-import { backAttributes, frontAttributes } from "../muscles/muscles";
+import React, {useState} from "react";
+import {Button, Popover, Tag} from "antd";
+import {backAttributes, frontAttributes} from "../muscles/muscles";
 import MuscleFrontImage from "../../assets/navbar/muscles-front-image.png";
 import MuscleBackImage from "../../assets/navbar/muscles-back-image.png";
 
@@ -9,8 +9,9 @@ interface MuscleGroupFormProps {
     onChange?: (value: string[]) => void;
 }
 
-const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange }) => {
+const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({value = [], onChange}) => {
     const [activePath, setActivePath] = useState<string>("");
+    const [, setShowPopOver] = useState<boolean>(false);
 
     const toggleMuscle = (id: string) => {
         const newSelected = value.includes(id)
@@ -23,6 +24,13 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
         onChange && onChange([]);
     }
 
+    const handleMouseEnter = (id: any) => {
+        setActivePath(id);
+    };
+
+    const handleShowPopOver = (value: boolean) => {
+        setShowPopOver(value);
+    };
 
     return (
         <div className="p-4 max-w-4xl mx-auto">
@@ -35,29 +43,39 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
                             viewBox="0 0 600 980"
                             className="cursor-pointer"
                         >
-                            <image href={MuscleFrontImage} width="600" height="980" />
+                            <image href={MuscleFrontImage} width="600" height="980"/>
                             {frontAttributes.map((element) => {
                                 const isSelected = value.includes(element.id);
                                 return (
-                                    <path
-                                        key={element.id}
-                                        d={element.d}
-                                        fillOpacity={activePath === element.id || isSelected ? "0.7" : "0"}
-                                        stroke="#ef4444"
-                                        strokeWidth={1}
-                                        strokeOpacity="1"
-                                        className="transition duration-150 ease-in-out"
-                                        onMouseEnter={() => setActivePath(element.id)}
-                                        onMouseLeave={() => setActivePath("")}
-                                        onClick={() => toggleMuscle(element.id)}
-                                        style={{
-                                            fill: isSelected
-                                                ? "rgba(239, 68, 68, 0.7)"
-                                                : activePath === element.id
-                                                    ? "rgba(239, 68, 68, 0.3)"
-                                                    : "transparent",
-                                        }}
-                                    />
+                                    <>
+                                        <Popover title={element.name} className="p-0">
+                                            <path
+                                                key={element.id}
+                                                d={element.d}
+                                                fillOpacity={activePath === element.id || isSelected ? "0.7" : "0"}
+                                                stroke="#ef4444"
+                                                strokeWidth={1}
+                                                strokeOpacity="1"
+                                                className="transition duration-150 ease-in-out"
+                                                onMouseEnter={() => {
+                                                    handleMouseEnter(element.id);
+                                                    handleShowPopOver(true);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    setActivePath("")
+                                                    handleShowPopOver(false)
+                                                }}
+                                                onClick={() => toggleMuscle(element.id)}
+                                                style={{
+                                                    fill: isSelected
+                                                        ? "rgba(239, 68, 68, 0.7)"
+                                                        : activePath === element.id
+                                                            ? "rgba(239, 68, 68, 0.3)"
+                                                            : "transparent",
+                                                }}
+                                            />
+                                        </Popover>
+                                    </>
                                 );
                             })}
                         </svg>
@@ -70,31 +88,37 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
                             viewBox="0 0 600 980"
                             className="cursor-pointer"
                         >
-                            <image href={MuscleBackImage} width="600" height="980" />
+                            <image href={MuscleBackImage} width="600" height="980"/>
                             {backAttributes.map((element) => {
-                                const isSelected = value.includes(element.id);
-                                return (
-                                    <path
-                                        key={element.id}
-                                        d={element.d}
-                                        fillOpacity={activePath === element.id || isSelected ? "0.7" : "0"}
-                                        stroke="#ef4444"
-                                        strokeWidth={1}
-                                        strokeOpacity="1"
-                                        className="transition duration-150 ease-in-out"
-                                        onMouseEnter={() => setActivePath(element.id)}
-                                        onMouseLeave={() => setActivePath("")}
-                                        onClick={() => toggleMuscle(element.id)}
-                                        style={{
-                                            fill: isSelected
-                                                ? "rgba(239, 68, 68, 0.7)"
-                                                : activePath === element.id
-                                                    ? "rgba(239, 68, 68, 0.3)"
-                                                    : "transparent",
-                                        }}
-                                    />
-                                );
-                            })}
+                                    const isSelected = value.includes(element.id);
+                                    return (
+                                        <>
+                                            <Popover title={element.name}>
+                                                <path
+                                                    key={element.id}
+                                                    d={element.d}
+                                                    fillOpacity={activePath === element.id || isSelected ? "0.7" : "0"}
+                                                    stroke="#ef4444"
+                                                    strokeWidth={1}
+                                                    strokeOpacity="1"
+                                                    className="transition duration-150 ease-in-out"
+                                                    onMouseEnter={() => setActivePath(element.id)}
+                                                    onMouseLeave={() => setActivePath("")}
+                                                    onClick={() => toggleMuscle(element.id)}
+                                                    style={{
+                                                        fill: isSelected
+                                                            ? "rgba(239, 68, 68, 0.7)"
+                                                            : activePath === element.id
+                                                                ? "rgba(239, 68, 68, 0.3)"
+                                                                : "transparent",
+                                                    }}
+                                                />
+                                            </Popover>
+                                        </>
+                                    );
+
+                                }
+                            )}
                         </svg>
                     </div>
                 </div>
@@ -111,7 +135,8 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
                                     backAttributes.find((m) => m.id === id);
                                 return (
                                     muscle && (
-                                        <Tag key={id} closable onClose={() => toggleMuscle(id)} className="mt-2 first:mt-0">
+                                        <Tag key={id} closable onClose={() => toggleMuscle(id)}
+                                             className="mt-2 first:mt-0">
                                             {muscle.name}
                                         </Tag>
                                     )

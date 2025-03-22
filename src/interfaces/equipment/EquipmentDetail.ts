@@ -53,12 +53,12 @@ export interface EquipmentDetailResponse {
   additional_field: AdditionalField[];
 }
 
-interface Category{
+export interface CategoryRes{
   label: string;
   value: number;
 }
 
 export interface CategoryResponse{
-  categories: Category[]
+  categories: CategoryRes[]
 }
 

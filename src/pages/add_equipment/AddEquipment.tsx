@@ -1,63 +1,105 @@
+import { useEffect, useState } from "react";
+import { Card, notification} from "antd";
+import NavBar from "../../components/navbar/NavBar";
+import HeaderRow from "../../components/headerRow/HeaderRow";
+import { useAuth } from "../../hook/UseAuth";
+import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory";
+import { addEquipment } from "../../api/equipment/AddEquipment";
+import { useNavigate } from "react-router-dom";
+import EquipmentForm from "../../components/form/EquipmentForm.tsx";
+import {CategoryResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
 
-import React, { useEffect, useState } from "react";
-import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
-import {addEquipment} from "../../api/equipment/AddEquipment.ts";
-import {transformFormToPUT} from "../../helper/transformHelpers.ts";
-import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
-import {Card, notification, Spin} from "antd";
-import EquipmentForm from "../equipment_form/EquipmentFormPage.tsx";
-
-const AddEquipmentPage: React.FC = () => {
-    const [isSubmitting, setIsSubmitting] = useState(false);
+const AddEquipmentPage = () => {
+    const { role } = useAuth();
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
-    const [categories, setCategories] = useState<{ label: string; value: string }[]>([]);
+    const [notificationApi, contextHolder] = notification.useNotification();
+    const [searchCategory, setSearchCategory] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchCats = async () => {
-            setLoadingCategories(true);
-            try {
-                const catRes = await getEquipmentCategory();
-                const mapped = catRes.categories.map((c: any) => ({
-                    label: c.label,
-                    value: c.label,
-                }));
-                setCategories(mapped);
-            } catch (error) {
-                notification.error({ message: "Error fetching categories" });
-            } finally {
-                setLoadingCategories(false);
-            }
-        };
-        fetchCats();
+        fetchCategories();
     }, []);
 
-    const handleSubmit = async (values: EquipmentFormValues) => {
-        setIsSubmitting(true);
+    const fetchCategories = async () => {
+        setLoadingCategories(true);
         try {
-            // Possibly transform form => the shape needed for POST
-            const payload = transformFormToPUT(values);
-            await addEquipment(payload);
-            notification.success({ message: "Equipment added successfully!" });
-            // redirect somewhere
-        } catch (error) {
-            notification.error({ message: "Error adding equipment" });
+            const res = await getEquipmentCategory();
+            const mapped = res.categories.map((cat: any) => ({
+                label: cat.label,
+                value: cat.label,
+            }));
+            setCategories(mapped);
+        } catch (err) {
+            notificationApi.error({
+                message: "Error",
+                description: "Error fetching categories",
+            });
         } finally {
-            setIsSubmitting(false);
+            setLoadingCategories(false);
         }
     };
 
-    if (loadingCategories) return <Spin tip="Loading categories..." />;
+    const handleCategorySearch = (value: string) => {
+        setSearchCategory(value);
+    };
+
+    const handleAddNewCategory = () => {
+        if (!searchCategory) return;
+        const newCat = { label: searchCategory, value: searchCategory };
+        setCategories((prev) => [...prev, newCat]);
+        notificationApi.success({
+            message: "Category Added",
+            description: `New category "${searchCategory}" added successfully!`,
+        });
+    };
+
+    const handleSubmit = async (values: any) => {
+        const transformedPayload = {
+            ...values,
+            options: values.options?.map((opt: any) => {
+                const { primaryImage, galleryImages, ...rest } = opt;
+                const mergedImages: any[] = [];
+                if (primaryImage) {
+                    mergedImages.push({
+                        id: primaryImage.fileID,
+                        is_primary: primaryImage.is_primary,
+                    });
+                }
+                // If "galleryImages" is an array, push each
+                if (Array.isArray(galleryImages)) {
+                    galleryImages.forEach((img: any) => {
+                        mergedImages.push({
+                            id: img.fileID,
+                            is_primary: img.is_primary || false,
+                        });
+                    });
+                }
+                return { ...rest, images: mergedImages };
+            }),
+        };
+
+        await addEquipment(transformedPayload);
+        navigate("/");
+    };
 
     return (
-        <Card>
-            <EquipmentForm
-                mode="create"
-                onSubmit={handleSubmit}
-                isSubmitting={isSubmitting}
-                loadingCategories={loadingCategories}
-                categories={categories}
-            />
-        </Card>
+        <div className="min-h-screen bg-gray-100">
+            {contextHolder}
+            <NavBar />
+            <HeaderRow role={role} title="Add Equipment" />
+            <Card className="w-11/12 mx-auto mt-4">
+                <EquipmentForm
+                    mode="ADD"
+                    loadingCategories={loadingCategories}
+                    categories={categories}
+                    onSubmit={handleSubmit}
+                    onCategorySearch={handleCategorySearch}
+                    onAddNewCategory={handleAddNewCategory}
+                    searchCategory={searchCategory}
+                />
+            </Card>
+        </div>
     );
 };
 
