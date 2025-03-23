@@ -18,7 +18,6 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     useEffect(() => {
-        console.log(value)
         if (value && value.length > 0) {
             const mappedFiles: UploadFile[] = value.map((item) => ({
                 uid: item.fileID,
@@ -27,8 +26,6 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
                 url: item.thumbnail ,
             }));
             setFileList(mappedFiles);
-        } else {
-            setFileList([]);
         }
     }, []);
 
@@ -45,7 +42,7 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         const uploadedFiles: UploadedImage[] = mappedFileList
             .filter((file) => file.response)
             .map((file) => ({
-                fileID: file.response.fileId,
+                fileID: file.response.fileID,
                 thumbnail: file.response.url,
                 is_primary: false,
             }));
