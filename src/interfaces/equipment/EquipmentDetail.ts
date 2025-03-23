@@ -45,6 +45,8 @@ export interface EquipmentDetailResponse {
   brand: string;
   color: string;
   material: string;
+  description: string;
+  category: string;
   model: string;
   muscle_group_used: string[];
   name: string;

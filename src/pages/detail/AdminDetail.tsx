@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import { useParams} from "react-router-dom";
 import {CategoryResponse, EquipmentDetailResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
 import {useEffect, useState} from "react";
 import {useAuth} from "../../hook/UseAuth.tsx";
@@ -13,7 +13,6 @@ import EquipmentForm from "../../components/form/EquipmentForm.tsx";
 
 const AdminDetailPage: React.FC = () => {
     const { equipment_id } = useParams();
-    const navigate = useNavigate();
     const { role } = useAuth();
 
     const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
@@ -53,7 +52,6 @@ const AdminDetailPage: React.FC = () => {
         try {
             const data = await equipmentDetail(id);
             setOriginalData(data);
-            console.log(data);
 
             const formShape: EquipmentFormValues = {
                 name: data.name,
@@ -123,7 +121,6 @@ const AdminDetailPage: React.FC = () => {
 
         try {
             await handleUpdateSubmitPartial(equipment_id, originalData, values);
-            navigate("/");
         } catch (err) {
             console.error(err);
             notificationApi.error({ message: "Error", description: "Update request failed." });

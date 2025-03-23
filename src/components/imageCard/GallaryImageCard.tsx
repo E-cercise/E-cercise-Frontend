@@ -9,13 +9,16 @@ import { validateFileTypeAndSize } from "./util";
 interface GalleryImageCardProps {
     value?: UploadedImage[];
     onChange?: (files: UploadedImage[]) => void;
+    onDelete?: (deleted: UploadedImage[]) => void;
 }
 
 const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
                                                                value = [],
                                                                onChange,
+                                                               onDelete,
                                                            }) => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [initialImages] = useState<UploadedImage[]>(value);
 
     useEffect(() => {
         if (value && value.length > 0) {
@@ -23,30 +26,37 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
                 uid: item.fileID,
                 name: item.fileID,
                 status: "done",
-                url: item.thumbnail ,
+                url: item.thumbnail,
             }));
             setFileList(mappedFiles);
         }
-    }, []);
+    }, [value]);
 
     const handleChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
-        const mappedFileList = newFileList.map((file) => {
+        const mapped = newFileList.map((file) => {
             if (file.response && file.response.url) {
                 file.url = file.response.url;
-                file.status = 'done';
+                file.status = "done";
             }
             return file;
         });
 
-        setFileList(mappedFileList);
-        const uploadedFiles: UploadedImage[] = mappedFileList
-            .filter((file) => file.response)
+        setFileList(mapped);
+
+        const currentFiles = mapped
+            .filter((file) => file.response || file.url)
             .map((file) => ({
-                fileID: file.response.fileID,
-                thumbnail: file.response.url,
+                fileID: file.response?.fileID || file.uid,
+                thumbnail: file.response?.url || file.url,
                 is_primary: false,
             }));
-        onChange?.(uploadedFiles);
+
+        onChange?.(currentFiles);
+
+        const deleted = initialImages.filter(
+            (init) => !currentFiles.find((curr) => curr.fileID === init.fileID)
+        );
+        if (deleted.length > 0) onDelete?.(deleted);
     };
 
     const customRequest = async (options: RcCustomRequestOptions) => {
@@ -61,13 +71,6 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         }
     };
 
-    const uploadButton = (
-        <div>
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </div>
-    );
-
     return (
         <Upload
             multiple
@@ -76,19 +79,13 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
             fileList={fileList}
             onChange={handleChange}
             beforeUpload={validateFileTypeAndSize}
-            onPreview={async (file) => {
-                let src = file.url as string;
-                if (!src && file.originFileObj) {
-                    src = await new Promise<string>((resolve) => {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file.originFileObj as File);
-                        reader.onload = () => resolve(reader.result as string);
-                    });
-                }
-                window.open(src);
-            }}
         >
-            {fileList.length >= 8 ? null : uploadButton}
+            {fileList.length >= 8 ? null : (
+                <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+            )}
         </Upload>
     );
 };
