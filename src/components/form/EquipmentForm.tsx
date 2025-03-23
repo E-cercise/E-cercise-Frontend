@@ -12,7 +12,7 @@ import {
     notification,
 } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import PrimaryImageCard from "../imageCard/PrimaryImageCard";
+import PrimaryImageCard, {UploadedImage} from "../imageCard/PrimaryImageCard";
 import GalleryImageCard from "../imageCard/GallaryImageCard";
 import MuscleGroupForm from "../form/MuscleGroupForm";
 import "./EquipmentForm.css";
@@ -31,12 +31,13 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                                      }) => {
     const [form] = Form.useForm<EquipmentFormValues>();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [galleryImages, setGalleryImages] = useState<UploadedImage[]>([]);
     const [notificationApi, contextHolder] = notification.useNotification();
 
     const handleFinish = async (values: any) => {
         try {
             setIsSubmitting(true);
-            await onSubmit(values); // parent handles the transformation for ADD or EDIT
+            await onSubmit(values);
             notificationApi.success({
                 message: "Success",
                 description: mode === "ADD"
@@ -144,9 +145,9 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                     <Form.Item
                         name="description"
                         label="Description"
-                        rules={[{ required: true, message: "Please enter a description" , defaultField: "description" }]}
+                        rules={[{ required: true, message: "Please enter a description" }]}
                     >
-                        <Input.TextArea rows={3} />
+                        <Input.TextArea rows={3} defaultValue=""/>
                     </Form.Item>
                 </Card>
 
@@ -236,7 +237,6 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                         <InputNumber className="w-full" />
                                     </Form.Item>
 
-                                    {/* Image Fields */}
                                     <Form.Item
                                         name={[name, "primaryImage"]}
                                         label="Primary Image"
@@ -247,8 +247,10 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                         <PrimaryImageCard />
                                     </Form.Item>
                                     <Form.Item name={[name, "galleryImages"]} label="Gallery Images">
-                                        <GalleryImageCard />
-                                    </Form.Item>
+                                        <GalleryImageCard
+                                            value={galleryImages}
+                                            onChange={(newList) => setGalleryImages(newList)}
+                                        />                                    </Form.Item>
                                 </Card>
                             ))}
                         </>

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Upload, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { UploadFile, RcCustomRequestOptions } from "antd/es/upload/interface";
-import { UploadEquipmentImage } from "../../api/image/UploadEquipmentImage.ts";
+import { UploadEquipmentImage } from "../../api/image/UploadEquipmentImage";
 import { UploadedImage } from "./PrimaryImageCard";
-import {validateFileTypeAndSize} from "./util.ts";
+import { validateFileTypeAndSize } from "./util";
 
 interface GalleryImageCardProps {
     value?: UploadedImage[];
@@ -17,27 +17,49 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
                                                            }) => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+    useEffect(() => {
+        console.log(value)
+        if (value && value.length > 0) {
+            const mappedFiles: UploadFile[] = value.map((item) => ({
+                uid: item.fileID,
+                name: item.fileID,
+                status: "done",
+                url: item.thumbnail ,
+            }));
+            setFileList(mappedFiles);
+        } else {
+            setFileList([]);
+        }
+    }, []);
+
     const handleChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
-        setFileList(newFileList);
-        const uploadedFiles: UploadedImage[] = newFileList
+        const mappedFileList = newFileList.map((file) => {
+            if (file.response && file.response.url) {
+                file.url = file.response.url;
+                file.status = 'done';
+            }
+            return file;
+        });
+
+        setFileList(mappedFileList);
+        const uploadedFiles: UploadedImage[] = mappedFileList
             .filter((file) => file.response)
             .map((file) => ({
-                fileID: file.response.fileID,
+                fileID: file.response.fileId,
+                thumbnail: file.response.url,
                 is_primary: false,
             }));
-        if (onChange) {
-            onChange(uploadedFiles);
-        }
+        onChange?.(uploadedFiles);
     };
 
     const customRequest = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options;
         try {
             const response = await UploadEquipmentImage(file as File);
-            if (onSuccess) onSuccess(response, file);
+            onSuccess?.(response, file);
             message.success("Gallery image uploaded successfully!");
         } catch (error) {
-            if (onError) onError(error);
+            onError?.(error);
             message.error("Gallery image upload failed.");
         }
     };
@@ -48,18 +70,6 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
             <div style={{ marginTop: 8 }}>Upload</div>
         </div>
     );
-
-    // useEffect(() => {
-    //     if (value && value.length > 0) {
-    //         const mappedFiles: UploadFile[] = value.map((item) => ({
-    //             uid: item.fileID,
-    //             name: item.fileID,
-    //             status: "done",
-    //             url: item.thumbnail || "",
-    //         }));
-    //         setFileList(mappedFiles);
-    //     }
-    // }, [value]);
 
     return (
         <Upload

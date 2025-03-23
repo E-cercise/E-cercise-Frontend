@@ -1,9 +1,7 @@
 import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem.tsx";
-import DashboardIcon from "../Icon/DashboardIcon.tsx";
 import AllProductIcon from "../Icon/AllProductIcon.tsx";
 import DocumentIcon from "../Icon/DocumentIcon.tsx";
-import ChevlonUpIcon from "../Icon/ChevlonUpIcon.tsx";
 
 function BottomNavBar() {
     const location = useLocation();
@@ -11,10 +9,8 @@ function BottomNavBar() {
     const isActive = (paths: string[]) => paths.includes(location.pathname);
 
     const navItems = [
-        { to: "/dashboard", label: "Dashboard", Icon: DashboardIcon, includePath: ["/dashboard"] },
         { to: "/", label: "All Products", Icon: AllProductIcon , includePath: ["/", "/equipment/add"] },
         { to: "/orders", label: "Order List", Icon: DocumentIcon, includePath: ["/orders"]},
-        { to: "/categories", label: "Categories", Icon: ChevlonUpIcon, includePath: ["/categories"] },
     ];
 
     return (

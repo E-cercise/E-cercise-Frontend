@@ -57,6 +57,7 @@ const AddEquipmentPage = () => {
     const handleSubmit = async (values: any) => {
         const transformedPayload = {
             ...values,
+            features: values.features.map((f) => f.description),
             options: values.options?.map((opt: any) => {
                 const { primaryImage, galleryImages, ...rest } = opt;
                 const mergedImages: any[] = [];
@@ -66,7 +67,6 @@ const AddEquipmentPage = () => {
                         is_primary: primaryImage.is_primary,
                     });
                 }
-                // If "galleryImages" is an array, push each
                 if (Array.isArray(galleryImages)) {
                     galleryImages.forEach((img: any) => {
                         mergedImages.push({
@@ -78,7 +78,6 @@ const AddEquipmentPage = () => {
                 return { ...rest, images: mergedImages };
             }),
         };
-
         await addEquipment(transformedPayload);
         navigate("/");
     };
