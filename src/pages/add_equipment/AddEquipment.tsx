@@ -90,6 +90,7 @@ const AddEquipmentPage = () => {
             <Card className="w-11/12 mx-auto mt-4">
                 <EquipmentForm
                     mode="ADD"
+                    isEditing={true}
                     loadingCategories={loadingCategories}
                     categories={categories}
                     onSubmit={handleSubmit}

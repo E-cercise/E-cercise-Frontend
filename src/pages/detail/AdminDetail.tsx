@@ -117,15 +117,69 @@ const AdminDetailPage: React.FC = () => {
         });
     };
 
-    // This is where we call our helper
+
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setInitialFormValues({ ...initialFormValues });
+    };
+
     const handleUpdateSubmit = async (values: EquipmentFormValues) => {
         if (!originalData || !equipment_id) return;
 
         try {
-            await handleUpdateSubmitPartial(equipment_id, originalData, values);
+            const result = await handleUpdateSubmitPartial(equipment_id, originalData, values);
+
+            if (!result) {
+                notificationApi.info({
+                    message: "No Changes",
+                    description: "No fields were changed, update skipped.",
+                });
+                return;
+            }
+
+            const categoryObj = categories.find(c => c.value === values.category);
+
+            setOriginalData({
+                ...originalData,
+                ...values,
+                category: categoryObj?.value || values.category,
+                feature: values.features.map((f) => ({
+                    id: f.__id ?? Math.random().toString(),
+                    description: f.description,
+                })),
+                additional_field: values.additional_fields?.map((f) => ({
+                    id: f.__id ?? Math.random().toString(),
+                    key: f.key,
+                    value: f.value,
+                })),
+                option: values.options?.map((opt) => ({
+                    id: opt.__id ?? Math.random().toString(),
+                    name: opt.name,
+                    price: opt.price,
+                    weight: opt.weight,
+                    available: opt.available,
+                    images: [
+                        ...(opt.primaryImage ? [{
+                            id: opt.primaryImage.fileID,
+                            url: opt.primaryImage.thumbnail,
+                            is_primary: true
+                        }] : []),
+                        ...(opt.galleryImages || []).map(g => ({
+                            id: g.fileID,
+                            url: g.thumbnail,
+                            is_primary: false
+                        }))
+                    ]
+                })),
+                muscle_group_used: values.muscle_group_used,
+            });
+
+            setInitialFormValues(values);
+            notificationApi.success({ message: "Success", description: "Equipment updated!" });
+            setIsEditing(false);
         } catch (err) {
             console.error(err);
-            notificationApi.error({ message: "Error", description: "Update request failed." });
+            notificationApi.error({ message: "Error", description: "Update failed." });
         }
     };
 
@@ -170,6 +224,7 @@ const AdminDetailPage: React.FC = () => {
                         handleUpdateSubmit(vals);
                         setIsEditing(false);
                     }}
+                    onCancelEdit={handleCancelEdit}
                 />
             </Card>
         </div>

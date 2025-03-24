@@ -7,9 +7,10 @@ import MuscleBackImage from "../../assets/navbar/muscles-back-image.png";
 interface MuscleGroupFormProps {
     value?: string[];
     onChange?: (value: string[]) => void;
+    isEditing: boolean;
 }
 
-const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange }) => {
+const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange, isEditing = true }) => {
     const [selected, setSelected] = useState<string[]>(value || []);
     const [activePath, setActivePath] = useState<string>("");
     const [, setShowPopOver] = useState<boolean>(false);
@@ -42,6 +43,7 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
 
     return (
         <div className="p-4 max-w-4xl mx-auto">
+            {isEditing ? (
             <div className="flex flex-col md:flex-row gap-4 items-start">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* FRONT */}
@@ -115,7 +117,6 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
                     </div>
                 </div>
 
-                {/* Selected List */}
                 <div className="flex-1 border border-gray-300 p-4 rounded bg-white relative">
                     <label className="block mb-2 text-sm font-medium text-gray-700">Selected Muscles:</label>
                     {selected.length > 0 ? (
@@ -139,7 +140,58 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({ value = [], onChange 
                         <span className="text-gray-500">No muscle selected</span>
                     )}
                 </div>
-            </div>
+            </div>):(
+                <div className="flex flex-col gap-4 md:flex-row items-start">
+                    <div className="flex gap-4">
+                        <svg width="220px" height="350px" viewBox="0 0 600 980" className="border rounded">
+                            <image href={MuscleFrontImage} width="600" height="980" />
+                            {frontAttributes
+                                .filter((attr) => value.includes(attr.id))
+                                .map((attr) => (
+                                    <path
+                                        key={attr.id}
+                                        d={attr.d}
+                                        fill="rgba(239, 68, 68, 0.7)"
+                                        stroke="#ef4444"
+                                        strokeWidth={1}
+                                        strokeOpacity={1}
+                                    />
+                                ))}
+                        </svg>
+                        <svg width="220px" height="350px" viewBox="0 0 600 980" className="border rounded">
+                            <image href={MuscleBackImage} width="600" height="980" />
+                            {backAttributes
+                                .filter((attr) => value.includes(attr.id))
+                                .map((attr) => (
+                                    <path
+                                        key={attr.id}
+                                        d={attr.d}
+                                        fill="rgba(239, 68, 68, 0.7)"
+                                        stroke="#ef4444"
+                                        strokeWidth={1}
+                                        strokeOpacity={1}
+                                    />
+                                ))}
+                        </svg>                    </div>
+                    <div className="flex-1 border border-gray-300 p-4 rounded bg-white">
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Selected Muscles:</label>
+                        {value.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {value.map((id) => {
+                                    const muscle =
+                                        frontAttributes.find((m) => m.id === id) ||
+                                        backAttributes.find((m) => m.id === id);
+                                    return muscle ? (
+                                        <Tag key={id}>{muscle.name}</Tag>
+                                    ) : null;
+                                })}
+                            </div>
+                        ) : (
+                            <span className="text-gray-500">No muscle selected</span>
+                        )}
+                    </div>
+                </div>
+                )}
         </div>
     );
 };

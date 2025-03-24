@@ -198,4 +198,6 @@ export const handleUpdateSubmitPartial = async (
     if (Object.keys(payload).length > 0) {
         return await updateEquipment(equipment_id, payload);
     }
+
+    return null;
 };
