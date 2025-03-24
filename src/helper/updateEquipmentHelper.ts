@@ -2,34 +2,25 @@ import { EquipmentDetailResponse } from "../interfaces/equipment/EquipmentDetail
 import { EquipmentFormValues } from "../interfaces/equipment/EquipmentForm.ts";
 import { updateEquipment } from "../api/equipment/UpdateEquipmentDetail.ts";
 
-const areArraysEqual = (a: string[], b: string[]) => {
-    return JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
-};
-
 export const handleUpdateSubmitPartial = async (
     equipment_id: string,
     originalData: EquipmentDetailResponse,
     values: EquipmentFormValues
 ) => {
-    console.log("Original muscle group:", originalData.muscle_group_used);
-    console.log("Updated muscle group:", values.muscle_group_used);
-
     const payload: any = {};
 
-    // === Basic Fields Comparison ===
     const basicFields: (keyof EquipmentFormValues)[] = [
         "name", "brand", "model", "color", "material", "category", "description"
     ];
-
     for (const field of basicFields) {
         if (values[field] !== originalData[field]) {
             payload[field] = values[field];
         }
     }
 
+    // === Muscle Groups ===
     const originalMuscles = originalData.muscle_group_used || [];
     const currentMuscles = values.muscle_group_used || [];
-
 
     if (
         originalMuscles.length !== currentMuscles.length ||
@@ -38,56 +29,70 @@ export const handleUpdateSubmitPartial = async (
         payload.muscle_group_used = currentMuscles;
     }
 
+    // === Additional Fields ===
     const originalAtts = originalData.additional_field || [];
     const updatedAtts = values.additional_fields || [];
 
-    const updatedAdditionalFields = updatedAtts.filter(field => {
-        const orig = originalAtts.find(f => f.id === field.__id);
-        return orig && (orig.key !== field.key || orig.value !== field.value);
-    });
-
-    const deletedAtts = originalAtts
+    const updatedFields = updatedAtts.filter(field =>
+        originalAtts.some(orig => orig.id === field.__id && (orig.key !== field.key || orig.value !== field.value))
+    );
+    const deletedFields = originalAtts
         .filter(orig => !updatedAtts.find(u => u.__id === orig.id))
-        .map(d => d.id);
+        .map(f => f.id);
+    const createdFields = updatedAtts
+        .filter(field => !originalAtts.some(orig => orig.id === field.__id));
 
-    if (updatedAdditionalFields.length || deletedAtts.length) {
-        payload.additional_field = {
-            updated: updatedAdditionalFields.length
-                ? updatedAdditionalFields.map(f => ({
-                    id: f.__id,
-                    key: f.key,
-                    value: f.value,
-                }))
-                : null,
-            deleted: deletedAtts.length ? deletedAtts : null,
-            created: null,
-        };
+    if (updatedFields.length || deletedFields.length || createdFields.length) {
+        payload.additional_field = {};
+        if (updatedFields.length) {
+            payload.additional_field.updated = updatedFields.map(f => ({
+                id: f.__id,
+                key: f.key,
+                value: f.value
+            }));
+        }
+        if (deletedFields.length) {
+            payload.additional_field.deleted = deletedFields;
+        }
+        if (createdFields.length) {
+            payload.additional_field.created = createdFields.map(f => ({
+                key: f.key,
+                value: f.value
+            }));
+        }
     }
 
     // === Features ===
     const updatedFeatures = values.features?.filter(f => {
         const orig = originalData.feature?.find(of => of.id === f.__id);
         return orig && orig.description !== f.description;
-    });
+    }) || [];
 
-    const deletedFeatures = (originalData.feature || [])
-        .filter(orig => !values.features?.find(v => v.__id === orig.id))
-        .map(f => f.id);
+    const deletedFeatures = (originalData.feature || []).filter(orig =>
+        !values.features?.find(v => v.__id === orig.id)
+    ).map(f => f.id);
 
-    if ((updatedFeatures && updatedFeatures.length) || deletedFeatures.length) {
-        payload.feature = {
-            ...(updatedFeatures?.length
-                ? {
-                    updated: updatedFeatures.map(f => ({
-                        id: f.__id,
-                        description: f.description,
-                    }))
-                }
-                : {}),
-            ...(deletedFeatures.length ? { deleted: deletedFeatures } : {}),
-        };
+    const createdFeatures = values.features?.filter(f =>
+        !originalData.feature?.some(orig => orig.id === f.__id)
+    ).map(f => f.description) || [];
+
+    if (updatedFeatures.length || deletedFeatures.length || createdFeatures.length) {
+        payload.feature = {};
+        if (updatedFeatures.length) {
+            payload.feature.updated = updatedFeatures.map(f => ({
+                id: f.__id,
+                description: f.description
+            }));
+        }
+        if (deletedFeatures.length) {
+            payload.feature.deleted = deletedFeatures;
+        }
+        if (createdFeatures.length) {
+            payload.feature.created = createdFeatures;
+        }
     }
 
+    // === Options ===
     const updatedOptions = values.options?.map(opt => {
         const orig = originalData.option?.find(o => o.id === opt.__id);
         if (!orig) return null;
@@ -108,8 +113,7 @@ export const handleUpdateSubmitPartial = async (
         const origGalleryIDs = orig.images.filter(i => !i.is_primary).map(i => i.id).sort();
         const newGalleryIDs = (opt.galleryImages || []).map(i => i.fileID).sort();
 
-        const galleryChanged =
-            JSON.stringify(origGalleryIDs) !== JSON.stringify(newGalleryIDs);
+        const galleryChanged = JSON.stringify(origGalleryIDs) !== JSON.stringify(newGalleryIDs);
 
         if (!baseChanged && !primaryChanged && !galleryChanged) return null;
 
@@ -140,24 +144,58 @@ export const handleUpdateSubmitPartial = async (
             available: opt.available,
             images: {
                 ...(deleted_id.length ? { deleted_id } : {}),
-                ...(upload_id.length ? { upload_id } : {}),
+                ...(upload_id.length ? { upload_id } : {})
             }
         };
-    }).filter(Boolean);
+    }).filter(Boolean) || [];
 
-    if (updatedOptions.length > 0) {
-        payload.option = { updated: updatedOptions };
+    const createdOptions = values.options?.filter(opt =>
+        !originalData.option?.some(o => o.id === opt.__id)
+    ).map(opt => {
+        const mergedImages: any[] = [];
+
+        if (opt.primaryImage) {
+            mergedImages.push({
+                id: opt.primaryImage.fileID,
+                is_primary: true
+            });
+        }
+
+        if (Array.isArray(opt.galleryImages)) {
+            opt.galleryImages.forEach(img => {
+                mergedImages.push({
+                    id: img.fileID,
+                    is_primary: false
+                });
+            });
+        }
+
+        return {
+            name: opt.name,
+            price: opt.price,
+            weight: opt.weight,
+            available: opt.available,
+            images: mergedImages
+        };
+    }) || [];
+
+    const deletedOptions = originalData.option?.filter(opt =>
+        !values.options?.find(o => o.__id === opt.id)
+    ).map(opt => opt.id) || [];
+
+    if (updatedOptions.length || createdOptions.length || deletedOptions.length) {
+        payload.option = {};
+        if (updatedOptions.length) {
+            payload.option.updated = updatedOptions;
+        }
+        if (createdOptions.length) {
+            payload.option.created = createdOptions;
+        }
+        if (deletedOptions.length) {
+            payload.option.deleted = deletedOptions;
+        }
     }
 
-    // === Final clean-up ===
-    if (payload.option && Object.keys(payload.option).length === 0) {
-        delete payload.option;
-    }
-    if (payload.additional_field && Object.keys(payload.additional_field).length === 0) {
-        delete payload.additional_field;
-    }
-
-    // === Only send if anything changed ===
     if (Object.keys(payload).length > 0) {
         return await updateEquipment(equipment_id, payload);
     }

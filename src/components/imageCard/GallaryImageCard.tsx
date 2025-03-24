@@ -30,7 +30,7 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
             }));
             setFileList(mappedFiles);
         }
-    }, [value]);
+    }, []);
 
     const handleChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
         const mapped = newFileList.map((file) => {
