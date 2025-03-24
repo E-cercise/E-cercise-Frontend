@@ -1,5 +1,5 @@
 import API from "../index.ts";
-import {AddEquipmentRequest} from "../../interfaces/Equipment.ts";
+import {AddEquipmentRequest} from "../../interfaces/equipment/AddEquipment.ts";
 
 export const addEquipment = async (data: AddEquipmentRequest) => {
     try {

@@ -13,9 +13,10 @@ import {useAuth} from "./hook/UseAuth.tsx";
 import Home from "./pages/home/Home.tsx";
 import OrderList from "./pages/order_list/OrderList.tsx";
 import AddEquipmentPage from "./pages/add_equipment/AddEquipment.tsx";
+import AdminDetailPage from "./pages/detail/AdminDetail.tsx";
 
 function App() {
-  const {isLoading} = useAuth()
+  const {role, isLoading} = useAuth()
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -29,7 +30,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/' element={<Home/> }/>
-          <Route path='/equipment/:equipment_id' element={<Detail />} />
+          <Route path='/equipment/:equipment_id' element={role===Role.Admin?<ProtectedRoute allowedRoles={[Role.Admin]}><AdminDetailPage/></ProtectedRoute>:<Detail />} />
           <Route path='/equipment/add' element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage />  </ProtectedRoute>}/>
           <Route path='/comparison' element={<Comparison />}/>
           <Route path='/cart' element={<ProtectedRoute><Cart /></ProtectedRoute>}/>

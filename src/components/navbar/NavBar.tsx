@@ -160,7 +160,7 @@ function NavBar({
                                                 );
                                             }
 
-                                            return null; // Handle cases where the id is not found
+                                            return null;
                                         })}
                                     </div>
                                 </div>
@@ -180,7 +180,6 @@ function NavBar({
                                         ></image>
                                         {frontAttributes.map((element, index) => {
                                             const id = `ft_${index + 1}`;
-                                            // console.log(showPopOver);
                                             return (
                                                 <>
                                                     <Popover title={element.name}>
@@ -188,10 +187,9 @@ function NavBar({
                                                             key={id}
                                                             id={id}
                                                             fill="#FF0000"
-                                                            // stroke={activePath === id ? "#0000FF" : "#ff8080"} // Change stroke color on hover
-                                                            stroke={"#ff8080"} // Change stroke color on hover
+                                                            stroke={"#ff8080"}
                                                             vectorEffect="non-scaling-stroke"
-                                                            d={element.d} // Replace with actual path data for each path
+                                                            d={element.d}
                                                             fillOpacity={
                                                                 activePath === id || clickedMuscles.includes(id)
                                                                     ? "1"
@@ -202,10 +200,6 @@ function NavBar({
                                                             onMouseEnter={() => {
                                                                 handleMouseEnter(id);
                                                                 handleShowPopOver(true);
-                                                            }}
-                                                            onMouseLeave={() => {
-                                                                handleMouseLeave();
-                                                                handleShowPopOver(false);
                                                             }}
                                                             onClick={() => {
                                                                 handleClickedMuscles(id);
@@ -237,7 +231,6 @@ function NavBar({
                                         ></image>
                                         {backAttributes.map((element, index) => {
                                             const id = `bk_${index + 1}`;
-                                            // console.log(showPopOver);
                                             return (
                                                 <>
                                                     <Popover title={element.name}>
@@ -245,10 +238,9 @@ function NavBar({
                                                             key={id}
                                                             id={id}
                                                             fill="#FF0000"
-                                                            // stroke={activePath === id ? "#0000FF" : "#ff8080"} // Change stroke color on hover
-                                                            stroke={"#ff8080"} // Change stroke color on hover
+                                                            stroke={"#ff8080"}
                                                             vectorEffect="non-scaling-stroke"
-                                                            d={element.d} // Replace with actual path data for each path
+                                                            d={element.d}
                                                             fillOpacity={
                                                                 activePath === id || clickedMuscles.includes(id)
                                                                     ? "1"
@@ -311,17 +303,18 @@ function NavBar({
                         </button>
                     </Popover>
                 )}
-                <Link to="/comparison" className="absolute right-[310px]">
-                    <img
-                        src={ComparisonLogo}
-                        alt="Comparison Logo"
-                        className="w-[60px] h-8"
-                    />
-                </Link>
-                {/* <Link to="/cart" className="absolute right-[240px]">
-        <img src={Cart} alt="Cart Logo" className="h-8" />
-      </Link> */}
-                <img src={Cart} alt="Cart Logo" className="absolute right-[240px] h-8" onClick={handleCartClick}/>
+                {role !== Role.Admin && <>
+                    <Link to="/comparison" className="absolute right-[310px]">
+                        <img
+                            src={ComparisonLogo}
+                            alt="Comparison Logo"
+                            className="w-[60px] h-8"
+                        />
+                    </Link><img src={Cart} alt="Cart Logo" className="absolute right-[240px] h-8"
+                                onClick={handleCartClick}/>
+                </>
+                }
+
                 <div className="absolute right-8 space-x-6">
                     <UserProfile userId={userId} name={name} logout={logout}/>
                 </div>
