@@ -92,7 +92,6 @@ export const handleUpdateSubmitPartial = async (
         }
     }
 
-    // === Options ===
     const updatedOptions = values.options?.map(opt => {
         const orig = originalData.option?.find(o => o.id === opt.__id);
         if (!orig) return null;

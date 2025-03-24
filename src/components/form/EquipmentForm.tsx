@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
     Form,
     Input,
@@ -11,7 +11,7 @@ import {
     Col,
     notification,
 } from "antd";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {PlusOutlined, MinusCircleOutlined} from "@ant-design/icons";
 import PrimaryImageCard, {UploadedImage} from "../imageCard/PrimaryImageCard";
 import GalleryImageCard from "../imageCard/GallaryImageCard";
 import MuscleGroupForm from "../form/MuscleGroupForm";
@@ -21,6 +21,7 @@ import {EquipmentFormProps, EquipmentFormValues} from "../../interfaces/equipmen
 
 const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                                          mode,
+                                                         isEditing,
                                                          loadingCategories,
                                                          categories,
                                                          initialValues = {},
@@ -64,6 +65,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                 form={form}
                 layout="vertical"
                 onFinish={handleFinish}
+                disabled={!isEditing}
                 initialValues={initialValues as EquipmentFormValues}
             >
                 <Divider orientation="left" orientationMargin={0}>Basic Information</Divider>
@@ -73,27 +75,27 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                             <Form.Item
                                 name="name"
                                 label="Name"
-                                rules={[{ required: true, message: "Please enter the equipment name" }]}
+                                rules={[{required: true, message: "Please enter the equipment name"}]}
                             >
-                                <Input placeholder="Name" />
+                                <Input placeholder="Name"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
                             <Form.Item
                                 name="brand"
                                 label="Brand"
-                                rules={[{ required: true, message: "Please enter the brand name" }]}
+                                rules={[{required: true, message: "Please enter the brand name"}]}
                             >
-                                <Input placeholder="Brand" />
+                                <Input placeholder="Brand"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
                             <Form.Item
                                 name="model"
                                 label="Model"
-                                rules={[{ required: true, message: "Please enter the model" }]}
+                                rules={[{required: true, message: "Please enter the model"}]}
                             >
-                                <Input placeholder="Model" />
+                                <Input placeholder="Model"/>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -103,25 +105,25 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                             <Form.Item
                                 name="color"
                                 label="Color"
-                                rules={[{ required: true, message: "Please enter the color" }]}
+                                rules={[{required: true, message: "Please enter the color"}]}
                             >
-                                <Input placeholder="Color" />
+                                <Input placeholder="Color"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
                             <Form.Item
                                 name="material"
                                 label="Material"
-                                rules={[{ required: true, message: "Please enter the material" }]}
+                                rules={[{required: true, message: "Please enter the material"}]}
                             >
-                                <Input placeholder="Material" />
+                                <Input placeholder="Material"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
                             <Form.Item
                                 name="category"
                                 label="Category"
-                                rules={[{ required: true, message: "Please select a category" }]}
+                                rules={[{required: true, message: "Please select a category"}]}
                             >
                                 <Select
                                     loading={loadingCategories}
@@ -145,7 +147,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                     <Form.Item
                         name="description"
                         label="Description"
-                        rules={[{ required: true, message: "Please enter a description" }]}
+                        rules={[{required: true, message: "Please enter a description"}]}
                     >
                         <Input.TextArea rows={3} defaultValue=""/>
                     </Form.Item>
@@ -166,24 +168,28 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                         },
                     ]}
                 >
-                    {(fields, { add, remove }, { errors }) => (
+                    {(fields, {add, remove}, {errors}) => (
                         <>
-                            <Form.ErrorList errors={errors} />
-                            <Button icon={<PlusOutlined />} onClick={() => add()} className="mb-4">
-                                Add Option
-                            </Button>
-                            {fields.map(({ key, name }) => (
+                            <Form.ErrorList errors={errors}/>
+                            {isEditing && (
+
+                                <Button icon={<PlusOutlined/>} onClick={() => add()} className="mb-4">
+                                    Add Option
+                                </Button>
+                            )}
+                            {fields.map(({key, name}) => (
                                 <Card key={key} className="mb-4 bg-gray-50 p-4 relative">
-                                    <MinusCircleOutlined
-                                        onClick={() => remove(name)}
-                                        className="absolute top-4 right-4 text-red-500 cursor-pointer"
-                                    />
+                                    {isEditing && (
+                                        <MinusCircleOutlined
+                                            onClick={() => remove(name)}
+                                            className="absolute top-4 right-4 text-red-500 cursor-pointer"
+                                        />)}
                                     <Form.Item
                                         name={[name, "name"]}
                                         label="Option Name"
-                                        rules={[{ required: true, message: "Please enter the option name" }]}
+                                        rules={[{required: true, message: "Please enter the option name"}]}
                                     >
-                                        <Input />
+                                        <Input/>
                                     </Form.Item>
                                     <Row gutter={16}>
                                         <Col span={12}>
@@ -191,7 +197,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                                 name={[name, "price"]}
                                                 label="Price"
                                                 rules={[
-                                                    { required: true, message: "Please enter the price" },
+                                                    {required: true, message: "Please enter the price"},
                                                     {
                                                         type: "number",
                                                         min: 0,
@@ -199,7 +205,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                                     },
                                                 ]}
                                             >
-                                                <InputNumber className="w-full" step={0.01} />
+                                                <InputNumber className="w-full" step={0.01}/>
                                             </Form.Item>
                                         </Col>
                                         <Col span={12}>
@@ -207,7 +213,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                                 name={[name, "weight"]}
                                                 label="Weight"
                                                 rules={[
-                                                    { required: true, message: "Please enter the weight" },
+                                                    {required: true, message: "Please enter the weight"},
                                                     {
                                                         type: "number",
                                                         min: 0,
@@ -215,7 +221,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                                     },
                                                 ]}
                                             >
-                                                <InputNumber className="w-full" step={0.001} />
+                                                <InputNumber className="w-full" step={0.001}/>
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -234,23 +240,23 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                                             },
                                         ]}
                                     >
-                                        <InputNumber className="w-full" />
+                                        <InputNumber className="w-full"/>
                                     </Form.Item>
 
                                     <Form.Item
                                         name={[name, "primaryImage"]}
                                         label="Primary Image"
                                         rules={[
-                                            { required: true, message: "Please upload a primary image" },
+                                            {required: true, message: "Please upload a primary image"},
                                         ]}
                                     >
-                                        <PrimaryImageCard />
+                                        <PrimaryImageCard/>
                                     </Form.Item>
                                     <Form.Item name={[name, "galleryImages"]} label="Gallery Images">
                                         <GalleryImageCard
                                             value={galleryImages}
                                             onChange={(newList) => setGalleryImages(newList)}
-                                        />                                    </Form.Item>
+                                        /> </Form.Item>
                                 </Card>
                             ))}
                         </>
@@ -260,89 +266,95 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                 <Divider orientation="left" orientationMargin={0}>Muscle Group</Divider>
                 <Form.Item
                     name="muscle_group_used"
-                    rules={[{ required: true, message: "Please select at least one muscle group" }]}
+                    rules={[{required: true, message: "Please select at least one muscle group"}]}
                 >
-                    <MuscleGroupForm />
+                    <MuscleGroupForm/>
                 </Form.Item>
 
                 <Divider orientation="left" orientationMargin={0}>Features</Divider>
                 <Form.List name="features">
-                    {(fields, { add, remove }) => (
+                    {(fields, {add, remove}) => (
                         <>
-                            {fields.map(({ key, name }) => (
+                            {fields.map(({key, name}) => (
                                 <Row key={key} gutter={16} className="mb-2">
                                     <Col span={22}>
                                         <Form.Item name={[name, "__id"]} hidden>
-                                            <Input type="hidden" />
+                                            <Input type="hidden"/>
                                         </Form.Item>
 
                                         <Form.Item
                                             name={[name, "description"]}
-                                            rules={[{ required: true, message: "Please enter the feature" }]}
+                                            rules={[{required: true, message: "Please enter the feature"}]}
                                         >
                                             <Input.TextArea
                                                 placeholder="Feature Description"
-                                                autoSize={{ minRows: 2, maxRows: 6 }}
+                                                autoSize={{minRows: 2, maxRows: 6}}
                                             />
                                         </Form.Item>
                                     </Col>
-                                    <Col span={2} className="flex items-center">
-                                        <MinusCircleOutlined
-                                            className="text-red-500 cursor-pointer"
-                                            onClick={() => remove(name)}
-                                        />
-                                    </Col>
+                                    {isEditing && (
+                                        <Col span={2} className="flex items-center">
+                                            <MinusCircleOutlined
+                                                className="text-red-500 cursor-pointer"
+                                                onClick={() => remove(name)}
+                                            />
+                                        </Col>)}
                                 </Row>
                             ))}
-                            <Button icon={<PlusOutlined />} onClick={() => add()}>
-                                Add Feature
-                            </Button>
+                            {isEditing && (
+                                <Button icon={<PlusOutlined/>} onClick={() => add()}>
+                                    Add Feature
+                                </Button>)}
                         </>
                     )}
                 </Form.List>
 
                 <Divider orientation="left" orientationMargin={0}>Additional Fields</Divider>
                 <Form.List name="additional_fields">
-                    {(fields, { add, remove }) => (
+                    {(fields, {add, remove}) => (
                         <>
-                            {fields.map(({ key, name }) => (
+                            {fields.map(({key, name}) => (
                                 <Row key={key} gutter={16} className="mb-2">
                                     <Col span={10}>
                                         <Form.Item
                                             name={[name, "key"]}
-                                            rules={[{ required: true, message: "Please enter attribute key" }]}
+                                            rules={[{required: true, message: "Please enter attribute key"}]}
                                         >
-                                            <Input placeholder="Key" />
+                                            <Input placeholder="Key"/>
                                         </Form.Item>
                                     </Col>
                                     <Col span={10}>
                                         <Form.Item
                                             name={[name, "value"]}
-                                            rules={[{ required: true, message: "Please enter attribute value" }]}
+                                            rules={[{required: true, message: "Please enter attribute value"}]}
                                         >
-                                            <Input placeholder="Value" />
+                                            <Input placeholder="Value"/>
                                         </Form.Item>
                                     </Col>
-                                    <Col span={4} className="flex items-center">
-                                        <MinusCircleOutlined
-                                            className="text-red-500 cursor-pointer"
-                                            onClick={() => remove(name)}
-                                        />
-                                    </Col>
+                                    {isEditing && (
+                                        <Col span={4} className="flex items-center">
+                                            <MinusCircleOutlined
+                                                className="text-red-500 cursor-pointer"
+                                                onClick={() => remove(name)}
+                                            />
+                                        </Col>)}
                                 </Row>
                             ))}
-                            <Button icon={<PlusOutlined />} onClick={() => add()}>
-                                Add Field
-                            </Button>
+                            {isEditing && (
+                                <Button icon={<PlusOutlined/>} onClick={() => add()}>
+                                    Add Field
+                                </Button>
+                            )}
                         </>
                     )}
                 </Form.List>
 
-                <div className="flex justify-end mt-4">
-                    <Button htmlType="submit" type="primary" loading={isSubmitting}>
-                        {mode === "ADD" ? "Create" : "Update"}
-                    </Button>
-                </div>
+                {isEditing && (
+                    <div className="flex justify-end mt-4">
+                        <Button htmlType="submit" type="primary" loading={isSubmitting}>
+                            {mode === "ADD" ? "Create" : "Update"}
+                        </Button>
+                    </div>)}
             </Form>
         </div>
     );

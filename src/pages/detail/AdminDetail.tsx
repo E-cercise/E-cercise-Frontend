@@ -3,7 +3,7 @@ import {CategoryResponse, EquipmentDetailResponse} from "../../interfaces/equipm
 import {useEffect, useState} from "react";
 import {useAuth} from "../../hook/UseAuth.tsx";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
-import {Card, notification} from "antd";
+import {Button, Card, notification} from "antd";
 import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
 import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
 import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
@@ -21,6 +21,8 @@ const AdminDetailPage: React.FC = () => {
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
+    const [isEditing, setIsEditing] = useState(false);
+
 
     useEffect(() => {
         if (equipment_id) {
@@ -142,17 +144,32 @@ const AdminDetailPage: React.FC = () => {
         <div className="min-h-screen bg-gray-100">
             {contextHolder}
             <NavBar />
-            <HeaderRow role={role} title="Edit Equipment" />
+            <HeaderRow role={role} title={isEditing?"Edit Equipment":"Equipment Details"} />
             <Card className="w-11/12 mx-auto mt-4">
+                {!isEditing ? (
+                    <div className="flex justify-end mb-4">
+                        <Button onClick={() => setIsEditing(true)}>Edit</Button>
+                    </div>
+                ) : (
+                    <div className="flex justify-end mb-4">
+                        <Button type="primary" onClick={() => document.getElementById("equipmentFormSubmitBtn")?.click()}>
+                            Save
+                        </Button>
+                    </div>
+                )}
                 <EquipmentForm
                     mode="EDIT"
+                    isEditing={isEditing}
                     loadingCategories={loadingCategories}
                     categories={categories}
                     onCategorySearch={handleCategorySearch}
                     onAddNewCategory={handleAddNewCategory}
                     searchCategory={searchCategory}
                     initialValues={initialFormValues}
-                    onSubmit={handleUpdateSubmit}
+                    onSubmit={(vals: EquipmentFormValues) => {
+                        handleUpdateSubmit(vals);
+                        setIsEditing(false);
+                    }}
                 />
             </Card>
         </div>

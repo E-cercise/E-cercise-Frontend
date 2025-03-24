@@ -2,6 +2,7 @@ import {CategoryResponse} from "./EquipmentDetail.ts";
 
 export interface EquipmentFormProps {
     mode: "ADD" | "EDIT";
+    isEditing: boolean;
     loadingCategories: boolean;
     categories: CategoryResponse[];
     initialValues?: any; // The shape for form initial values
