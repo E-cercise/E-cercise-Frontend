@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Popover, Select } from "antd";
+import { Divider, Modal, Popover, Select } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
@@ -27,10 +27,12 @@ function Detail() {
   const [clickedMuscles, _] = useState<string[]>([]);
   const [detail, setDetail] = useState<EquipmentDetailResponse>();
   const [options, setOptions] = useState<Category[]>([])
+  const [selectedOption, setSelectedOption] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   console.log(detail);
+  console.log(selectedOption);
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -46,6 +48,10 @@ function Detail() {
 
   const handleSetOptions = (value: Category[]) => {
     setOptions(value);
+  }
+
+  const handleOptionChange = (value: number) => {
+    setSelectedOption(value)
   }
 
   const handleOk = () => {
@@ -72,8 +78,8 @@ function Detail() {
     try {
       const detail = await equipmentDetail(id);
       setDetail(detail);
-      const newOptions = detail.option.map((opt: Option) => ({
-        value: opt.id,
+      const newOptions = detail.option.map((opt: Option, index: number) => ({
+        value: index,
         label: opt.name,
       }));
       handleSetOptions(newOptions);
@@ -113,7 +119,7 @@ function Detail() {
                 showStatus={false}
                 thumbWidth={72}
               >
-                {detail?.option[0].images
+                {detail?.option[selectedOption].images
                   ?.slice()
                   .sort(
                     (a, b) => (b.is_primary ? 0 : 1) - (a.is_primary ? 0 : 1)
@@ -157,7 +163,7 @@ function Detail() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span>฿</span>
-                    <p>{detail?.option[0].price}</p>
+                    <p>{detail?.option[selectedOption].price}</p>
                   </div>
                   <div className="flex flex-col space-y-3">
                     <div className="flex items-center space-x-2">
@@ -165,7 +171,8 @@ function Detail() {
                       <span className="text-[12px]">
                         {/* {detail?.option[0].name} */}
                         <Select
-                          value={options.length > 0 ? options[0].value : undefined} // Ensure value exists
+                          value={options.length > 0 ? options[selectedOption].value : undefined} // Ensure value exists
+                          onChange={handleOptionChange}
                           options={options} 
                           className="w-[100px] h-7"
                         />
@@ -220,7 +227,7 @@ function Detail() {
                   <div className="flex items-center space-x-3">
                     <span className="text-[12px] font-bold">Item Weight</span>
                     <span className="text-[12px]">
-                      {detail?.option[0].weight} Pounds
+                      {detail?.option[selectedOption].weight} Pounds
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -237,6 +244,7 @@ function Detail() {
                         : ""}
                     </span>
                   </div>
+                  {/* <Divider style={{ borderColor: '' }}></Divider> */}
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center">
@@ -370,11 +378,23 @@ function Detail() {
                   </div>
                 </div>
               </div>
+              <div>
+                <span className="text-[12px] font-bold">
+                  About this item
+                </span>
+                <ul className="list-disc ml-5">
+                  {
+                    detail?.feature.map((feature, index) => (
+                      <li key={index} className="text-[12px]">{feature.description}</li>
+                    ))
+                  }
+                </ul>
+              </div>
               <div className="flex items-center space-x-10 pl-8 pt-3">
                 <button
                   className="flex items-center bg-[#D9D9D9] font-bold border-2 border-[#565656] rounded w-[170px] pl-5 pr-5 pt-3 pb-3 space-x-3"
                   onClick={async () => {
-                    await addToCart(equipment_id?.equipment_id, detail?.option[0].id, 1);
+                    await addToCart(equipment_id?.equipment_id, detail?.option[selectedOption].id, 1);
                     setOpen(true);
                   }}
                 >
