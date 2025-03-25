@@ -188,21 +188,21 @@ function Detail() {
                       </p>
                     </div>
                     <div className="flex flex-col space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-[12px] font-bold">Style:</span>
-                        <span className="text-[12px]">
-                          <Select
-                            value={
-                              options.length > 0
-                                ? options[selectedOption].value
-                                : undefined
-                            } // Ensure value exists
-                            onChange={handleOptionChange}
-                            options={options}
-                            className="w-[100px] h-7"
-                          />
-                        </span>
-                      </div>
+                      {detail.option.length !== 1 ? (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-[12px] font-bold">Style:</span>
+                          <span className="text-[12px]">
+                            <Select
+                              value={options[selectedOption].value}
+                              onChange={handleOptionChange}
+                              options={options}
+                              className="h-7"
+                            />
+                          </span>
+                        </div>
+                      ) : (
+                        <div>{detail.option[0].name}</div>
+                      )}
                       <div className="flex items-center space-x-2">
                         <span className="text-[12px] font-bold">Quantity:</span>
                         <div className="flex w-[150px] h-[25px] text-[12px] text-center">
