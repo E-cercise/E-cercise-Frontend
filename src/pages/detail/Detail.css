@@ -2,3 +2,7 @@
 .control-arrow.control-prev {
     background-color: black;
 }
+
+.ant-select-selection-item {
+    font-size: 12px;
+}

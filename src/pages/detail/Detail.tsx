@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Popover} from "antd";
+import { Modal, Popover, Select } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
@@ -15,9 +15,10 @@ import {
   frontAttributes,
   backAttributes,
 } from "../../components/muscles/muscles.ts";
-import { EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
+import { Category, EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Detail.css";
+import { Option } from "../../interfaces/equipment/UpdateEquipment.ts";
 
 function Detail() {
   const [activePath, setActivePath] = useState<string>("");
@@ -25,8 +26,11 @@ function Detail() {
   // const [, setShowMusclesPopover] = useState<boolean>(false);
   const [clickedMuscles, _] = useState<string[]>([]);
   const [detail, setDetail] = useState<EquipmentDetailResponse>();
+  const [options, setOptions] = useState<Category[]>([])
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  console.log(detail);
 
   const handleMouseEnter = (id: any) => {
     setActivePath(id);
@@ -40,6 +44,9 @@ function Detail() {
     setShowPopOver(value);
   };
 
+  const handleSetOptions = (value: Category[]) => {
+    setOptions(value);
+  }
 
   const handleOk = () => {
     // setModalText('The modal will be closed after two seconds');
@@ -65,6 +72,11 @@ function Detail() {
     try {
       const detail = await equipmentDetail(id);
       setDetail(detail);
+      const newOptions = detail.option.map((opt: Option) => ({
+        value: opt.id,
+        label: opt.name,
+      }));
+      handleSetOptions(newOptions);
     } catch (err) {
       console.error(err);
     }
@@ -149,9 +161,14 @@ function Detail() {
                   </div>
                   <div className="flex flex-col space-y-3">
                     <div className="flex items-center space-x-2">
-                      <span className="text-[12px] font-bold">Style</span>
+                      <span className="text-[12px] font-bold">Style:</span>
                       <span className="text-[12px]">
-                        {detail?.option[0].name}
+                        {/* {detail?.option[0].name} */}
+                        <Select
+                          value={options.length > 0 ? options[0].value : undefined} // Ensure value exists
+                          options={options} 
+                          className="w-[100px] h-7"
+                        />
                       </span>
                     </div>
                     {/* <Select
