@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Popover, Select, Spin } from "antd";
+import { Collapse, Descriptions, Divider, Modal, Popover, Select, Spin } from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
@@ -100,6 +100,7 @@ function Detail() {
     quantity: number
   ) => {
     try {
+      console.log(quantity);
       await addEquipmentToCart(
         equipment_id,
         equipment_option_id,
@@ -162,7 +163,7 @@ function Detail() {
                   {detail?.name}
                 </span>
                 <div className="flex space-x-[45px]">
-                  <div className="space-y-3">
+                  <div className="w-[220px] space-y-3">
                     <div className="flex items-center space-x-2">
                       <span>4.5</span>
                       <div className="flex items-center w-[100px] space-x-1">
@@ -188,9 +189,9 @@ function Detail() {
                       </p>
                     </div>
                     <div className="flex flex-col space-y-3">
-                      {detail.option.length !== 1 ? (
-                        <div className="flex items-center space-x-2">
-                          <span className="text-[12px] font-bold">Style:</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[12px] font-bold">Style:</span>
+                        {detail.option.length !== 1 ? (
                           <span className="text-[12px]">
                             <Select
                               value={options[selectedOption].value}
@@ -199,10 +200,12 @@ function Detail() {
                               className="h-7"
                             />
                           </span>
-                        </div>
-                      ) : (
-                        <div>{detail.option[0].name}</div>
-                      )}
+                        ) : (
+                          <div className="text-[12px]">
+                            {detail.option[0].name}
+                          </div>
+                        )}
+                      </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-[12px] font-bold">Quantity:</span>
                         <div className="flex w-[150px] h-[25px] text-[12px] text-center">
@@ -264,57 +267,44 @@ function Detail() {
                         <span>{detail.option[selectedOption].available}</span>
                         <span>pieces available</span>
                       </div>
-                      {detail?.option.length !== 1 ? (
-                        // detail?.option.map((option) => {
-                        //   return (
-                        //     <div className="border-2 border-[#565656] rounded-md p-2">
-                        //       <p className="text-[12px] font-semibold">
-                        //         {option.name}
-                        //       </p>
-                        //       {/* <img src={option.images[0].url} alt="" /> */}
-                        //       <p className="text-[12px]">1 option from</p>
-                        //       <p className="text-[12px]">฿ {option.price}</p>
-                        //     </div>
-                        //   );
-                        // })
-                        <></>
-                      ) : (
-                        <></>
-                      )}
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-[12px] font-bold">Brand</span>
-                      <span className="text-[12px]">{detail?.brand}</span>
+                    <Divider style={{ borderColor: "#616161" }}></Divider>
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-[12px] font-bold">Brand</span>
+                        <span className="text-[12px]">{detail?.brand}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-[12px] font-bold">Color</span>
+                        <span className="text-[12px]">{detail?.color}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-[12px] font-bold">Material</span>
+                        <span className="text-[12px]">{detail?.material}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-[12px] font-bold">
+                          Item Weight
+                        </span>
+                        <span className="text-[12px]">
+                          {detail?.option[selectedOption].weight} Pounds
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-[12px] font-bold">Model</span>
+                        <span className="text-[12px]">{detail?.model}</span>
+                      </div>
+                      {/* <div className="flex items-center space-x-3">
+                        <span className="text-[12px] font-bold">
+                          Special Feature
+                        </span>
+                        <span className="text-[12px]">
+                          {detail?.additional_field.length !== 0
+                            ? detail?.additional_field[0].value
+                            : ""}
+                        </span>
+                      </div> */}
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-[12px] font-bold">Color</span>
-                      <span className="text-[12px]">{detail?.color}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-[12px] font-bold">Material</span>
-                      <span className="text-[12px]">{detail?.material}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-[12px] font-bold">Item Weight</span>
-                      <span className="text-[12px]">
-                        {detail?.option[selectedOption].weight} Pounds
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-[12px] font-bold">Model</span>
-                      <span className="text-[12px]">{detail?.model}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-[12px] font-bold">
-                        Special Feature
-                      </span>
-                      <span className="text-[12px]">
-                        {detail?.additional_field.length !== 0
-                          ? detail?.additional_field[0].value
-                          : ""}
-                      </span>
-                    </div>
-                    {/* <Divider style={{ borderColor: '' }}></Divider> */}
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center">
@@ -452,6 +442,32 @@ function Detail() {
                     </div>
                   </div>
                 </div>
+                {/* <div>
+                  {
+                    detail.additional_field.map((field) => (
+                      <div className="flex items-center space-x-[10px]">
+                        <span className="text-[12px] font-bold">
+                          {field.key}
+                        </span>
+                        <span className="text-[12px] w-[250px]">
+                          {field.value}
+                        </span>
+                      </div>
+                    ))
+                  }
+                </div> */}
+                <Collapse>
+                  <Collapse.Panel header="Show Additional Fields" key="1" className="font-semibold">
+                    <Descriptions column={2} size="small" bordered>
+                      {detail.additional_field.map((field, index) => (
+                        <Descriptions.Item key={index} label={field.key} style={{ fontSize: '12px' }}>
+                          {field.value}
+                        </Descriptions.Item>
+                      ))}
+                    </Descriptions>
+                  </Collapse.Panel>
+                </Collapse>
+                <Divider style={{ borderColor: "#616161" }}></Divider>
                 <div>
                   <span className="text-[12px] font-bold">About this item</span>
                   <ul className="list-disc ml-5">
@@ -467,8 +483,8 @@ function Detail() {
                     className="flex items-center bg-[#D9D9D9] font-bold border-2 border-[#565656] rounded w-[170px] pl-5 pr-5 pt-3 pb-3 space-x-3"
                     onClick={async () => {
                       await addToCart(
-                        equipment_id?.equipment_id,
-                        detail?.option[selectedOption].id,
+                        equipment_id.equipment_id,
+                        detail.option[selectedOption].id,
                         quantity
                       );
                       setOpen(true);
