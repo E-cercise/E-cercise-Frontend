@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { FormInstance } from "antd";
+import {useEffect} from "react";
+import {FormInstance} from "antd";
 
 export const useFormAutoSync = (form: FormInstance, initialValues: any) => {
     useEffect(() => {

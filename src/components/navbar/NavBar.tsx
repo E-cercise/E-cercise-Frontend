@@ -7,7 +7,7 @@ import {IoIosArrowDown} from "react-icons/io";
 import ECerciseLogo from "../../assets/navbar/E-Cercise-Logo.png";
 import ComparisonLogo from "../../assets/navbar/Comparison-Logo.png";
 import Cart from "../../assets/navbar/Cart.png";
-import {frontAttributes, backAttributes} from "../muscles/muscles";
+import {backAttributes, frontAttributes} from "../muscles/muscles";
 import "./NavBar.css";
 import {useAuth} from "../../hook/UseAuth.ts";
 import BottomNavBar from "./BottomNavBar.tsx";
@@ -105,7 +105,7 @@ function NavBar({
             <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-[999]">
                 <Link to="/" className="hover:opacity-80 transition-opacity">
                     <div className="flex items-center space-x-4 ml-4 cursor-pointer">
-                        <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4" />
+                        <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4"/>
                     </div>
                 </Link>
                 <Input.Search
@@ -309,15 +309,15 @@ function NavBar({
                         to="/comparison"
                         className="absolute right-[310px] hover:scale-105 transition-transform duration-150 cursor-pointer"
                     >
-                        <img src={ComparisonLogo} alt="Comparison Logo" className="w-[60px] h-8" />
+                        <img src={ComparisonLogo} alt="Comparison Logo" className="w-[60px] h-8"/>
                     </Link>
 
                     <img
-                    src={Cart}
-                    alt="Cart Logo"
-                    className="absolute right-[240px] h-8 cursor-pointer hover:scale-105 transition-transform duration-150"
-                    onClick={handleCartClick}
-                />
+                        src={Cart}
+                        alt="Cart Logo"
+                        className="absolute right-[240px] h-8 cursor-pointer hover:scale-105 transition-transform duration-150"
+                        onClick={handleCartClick}
+                    />
                 </>
                 }
 

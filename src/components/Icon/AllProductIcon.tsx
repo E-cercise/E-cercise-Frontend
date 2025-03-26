@@ -11,11 +11,12 @@ const AllProductIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
             stroke="currentColor"
             {...props}
         >
-            <path d="M13.0978 5.38428H2.90219C2.40392 5.38428 2 5.73642 2 6.1708V11.5721C2 12.0065 2.40392 12.3586 2.90219 12.3586H13.0978C13.5961 12.3586 14 12.0065 14 11.5721V6.1708C14 5.73642 13.5961 5.38428 13.0978 5.38428Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                  fill="none"
+            <path
+                d="M13.0978 5.38428H2.90219C2.40392 5.38428 2 5.73642 2 6.1708V11.5721C2 12.0065 2.40392 12.3586 2.90219 12.3586H13.0978C13.5961 12.3586 14 12.0065 14 11.5721V6.1708C14 5.73642 13.5961 5.38428 13.0978 5.38428Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+                fill="none"
             />
             <path d="M4.5 2.76904H11.5H4.5ZM3.5 4.07674H12.5H3.5Z"
                   fill="currentColor"/>

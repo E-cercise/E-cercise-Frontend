@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import SignUp from './pages/signup/SignUp'
 import Login from './pages/login/Login'
 import Detail from './pages/detail/Detail'
@@ -17,32 +17,37 @@ import AdminDetailPage from "./pages/detail/AdminDetail.tsx";
 import UserProfilePage from "./pages/user_profile/UserProfile.tsx";
 
 function App() {
-  const {userId, role, isLoading} = useAuth()
+    const {userId, role, isLoading} = useAuth()
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
-  return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Home/> } />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/' element={<Home/> }/>
-          <Route path='/equipment/:equipment_id' element={role===Role.Admin?<ProtectedRoute allowedRoles={[Role.Admin]}><AdminDetailPage/></ProtectedRoute>:<Detail />} />
-          <Route path='/equipment/add' element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage />  </ProtectedRoute>}/>
-          <Route path='/comparison' element={<Comparison />}/>
-          <Route path='/cart' element={<ProtectedRoute><Cart /></ProtectedRoute>}/>
-          <Route path='/purchase' element={<ProtectedRoute><Purchase /></ProtectedRoute>}/>
-          <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking /></ProtectedRoute>}/>
-          <Route path='/orders' element={<ProtectedRoute allowedRoles={[Role.Admin]}><OrderList/></ProtectedRoute>}/>
-          <Route path='/profile' element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><UserProfilePage/> </ProtectedRoute>} />
-        </Routes>
-      </BrowserRouter>
-    </div>
-  )
+    return (
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route index element={<Home/>}/>
+                    <Route path='/login' element={<Login/>}/>
+                    <Route path='/signup' element={<SignUp/>}/>
+                    <Route path='/' element={<Home/>}/>
+                    <Route path='/equipment/:equipment_id' element={role === Role.Admin ?
+                        <ProtectedRoute allowedRoles={[Role.Admin]}><AdminDetailPage/></ProtectedRoute> : <Detail/>}/>
+                    <Route path='/equipment/add'
+                           element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage/> </ProtectedRoute>}/>
+                    <Route path='/comparison' element={<Comparison/>}/>
+                    <Route path='/cart' element={<ProtectedRoute><Cart/></ProtectedRoute>}/>
+                    <Route path='/purchase' element={<ProtectedRoute><Purchase/></ProtectedRoute>}/>
+                    <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking/></ProtectedRoute>}/>
+                    <Route path='/orders'
+                           element={<ProtectedRoute allowedRoles={[Role.Admin]}><OrderList/></ProtectedRoute>}/>
+                    <Route path='/profile'
+                           element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><UserProfilePage/>
+                           </ProtectedRoute>}/>
+                </Routes>
+            </BrowserRouter>
+        </div>
+    )
 }
 
 export default App

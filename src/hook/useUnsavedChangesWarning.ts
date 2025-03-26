@@ -1,5 +1,5 @@
-import { useEffect, useContext } from "react";
-import { UNSAFE_NavigationContext as NavigationContext } from "react-router-dom";
+import {useContext, useEffect} from "react";
+import {UNSAFE_NavigationContext as NavigationContext} from "react-router-dom";
 
 export const useUnsavedChangesWarning = (when: boolean, message: string) => {
     const navigator = useContext(NavigationContext).navigator;

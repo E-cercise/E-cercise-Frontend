@@ -4,7 +4,7 @@ import React from "react";
 import {FaPlus} from "react-icons/fa";
 import {useLocation, useNavigate} from "react-router-dom";
 
-const HeaderRow: React.FC<HeaderRowProps> = ({ role, title }) => {
+const HeaderRow: React.FC<HeaderRowProps> = ({role, title}) => {
     const location = useLocation();
     const isHomePage = location.pathname === "/";
     const navigate = useNavigate();
@@ -34,7 +34,7 @@ const HeaderRow: React.FC<HeaderRowProps> = ({ role, title }) => {
               rounded-full
             "
           >
-            <FaPlus className="w-3 h-3" />
+            <FaPlus className="w-3 h-3"/>
           </span>
                     <span>Add new equipment</span>
                 </button>

@@ -5,7 +5,7 @@ export interface NavItemProps {
     isActive: boolean;
 }
 
-export interface UserProfileProps{
+export interface UserProfileProps {
     userId: string | null;
     name: string | null;
     logout: () => void;

@@ -1,9 +1,9 @@
-import { EquipmentCardProps } from "../../interfaces/Home";
+import {EquipmentCardProps} from "../../interfaces/Home";
 import React from "react";
-import { Link } from "react-router-dom";
-import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import { IoIosArrowDown } from "react-icons/io";
-import { Role } from "../../enum/Role.ts";
+import {Link} from "react-router-dom";
+import {FaStar, FaStarHalfAlt} from "react-icons/fa";
+import {IoIosArrowDown} from "react-icons/io";
+import {Role} from "../../enum/Role.ts";
 
 const EquipmentCard: React.FC<EquipmentCardProps> = ({
                                                          equipment,
@@ -28,7 +28,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
 
     return (
         <div className="w-[200px] bg-[#F2EFEF] p-4 space-y-2 rounded-md">
-            <img src={equipment.image_path} alt="" className="w-full rounded-md" />
+            <img src={equipment.image_path} alt="" className="w-full rounded-md"/>
 
             <p
                 className={`cursor-pointer text-sm ${
@@ -45,13 +45,13 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
             <div className="flex items-center space-x-2">
                 <div className="cursor-pointer flex items-center space-x-1">
                     <div className="flex w-[100px] space-x-1">
-                        <FaStar color="#FFAA1D" />
-                        <FaStar color="#FFAA1D" />
-                        <FaStar color="#FFAA1D" />
-                        <FaStar color="#FFAA1D" />
-                        <FaStarHalfAlt color="#FFAA1D" />
+                        <FaStar color="#FFAA1D"/>
+                        <FaStar color="#FFAA1D"/>
+                        <FaStar color="#FFAA1D"/>
+                        <FaStar color="#FFAA1D"/>
+                        <FaStarHalfAlt color="#FFAA1D"/>
                     </div>
-                    <IoIosArrowDown />
+                    <IoIosArrowDown/>
                 </div>
                 <p className="text-xs text-[#31A421]">(1,046)</p>
             </div>
@@ -59,7 +59,8 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
             <p>฿{equipment.price}</p>
 
             {role === Role.Admin ? (
-                <div className="inline-flex items-center px-2 py-1 border border-gray-300 bg-gray-100 rounded-lg text-sm whitespace-nowrap">
+                <div
+                    className="inline-flex items-center px-2 py-1 border border-gray-300 bg-gray-100 rounded-lg text-sm whitespace-nowrap">
                     <span className="mr-2">Remaining Products</span>
                     <span className="font-bold">{equipment.remaining_product}</span>
                 </div>

@@ -1,23 +1,20 @@
-import { useParams } from "react-router-dom";
-import {
-    CategoryResponse,
-    EquipmentDetailResponse,
-} from "../../interfaces/equipment/EquipmentDetail.ts";
-import React, { useEffect, useState } from "react";
-import { EquipmentFormValues } from "../../interfaces/equipment/EquipmentForm.ts";
-import { Button, Card, notification, Form, Modal } from "antd";
-import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
-import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
-import { handleUpdateSubmitPartial } from "../../helper/updateEquipmentHelper.ts";
+import {useParams} from "react-router-dom";
+import {CategoryResponse, EquipmentDetailResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
+import React, {useEffect, useState} from "react";
+import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
+import {Button, Card, Form, Modal, notification} from "antd";
+import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
+import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
+import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
-import { useUnsavedChangesWarning } from "../../hook/useUnsavedChangesWarning.ts";
+import {useUnsavedChangesWarning} from "../../hook/useUnsavedChangesWarning.ts";
 import {useAuth} from "../../hook/UseAuth.ts";
 
 const AdminDetailPage: React.FC = () => {
-    const { equipment_id } = useParams();
-    const { role } = useAuth();
+    const {equipment_id} = useParams();
+    const {role} = useAuth();
 
     const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
     const [initialFormValues, setInitialFormValues] =
@@ -120,7 +117,7 @@ const AdminDetailPage: React.FC = () => {
 
     const handleAddNewCategory = () => {
         if (!searchCategory) return;
-        const newCat = { label: searchCategory, value: searchCategory };
+        const newCat = {label: searchCategory, value: searchCategory};
         setCategories((prev) => [...prev, newCat]);
         notificationApi.success({
             message: "Category Added",
@@ -235,8 +232,8 @@ const AdminDetailPage: React.FC = () => {
         return (
             <div>
                 {contextHolder}
-                <NavBar />
-                <HeaderRow role={role} title="Edit Equipment" />
+                <NavBar/>
+                <HeaderRow role={role} title="Edit Equipment"/>
                 <p className="text-center mt-4">Loading...</p>
             </div>
         );
@@ -245,7 +242,7 @@ const AdminDetailPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-100">
             {contextHolder}
-            <NavBar />
+            <NavBar/>
             <HeaderRow
                 role={role}
                 title={isEditing ? "Edit Equipment" : "Equipment Details"}

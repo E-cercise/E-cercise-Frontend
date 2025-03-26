@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import { Pagination, Spin, message } from "antd";
-import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
-import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
-import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";
-import {
-    EquipmentDetailResponse,
-    FilteredEquipmentResponse,
-} from "../../interfaces/equipment/EquipmentDetail.ts";
-import { useAuth } from "../../hook/UseAuth.ts";
-import { Role } from "../../enum/Role.ts";
+import {message, Pagination, Spin} from "antd";
+import {filteredEquipment} from "../../api/equipment/FilteredEquipment.ts";
+import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
+import {addEquipmentToCart} from "../../api/cart/AddEquipmentToCart.ts";
+import {EquipmentDetailResponse, FilteredEquipmentResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
+import {useAuth} from "../../hook/UseAuth.ts";
+import {Role} from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
-import { useNavigate } from "react-router-dom";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 
 const Home: React.FC = () => {
@@ -26,8 +22,7 @@ const Home: React.FC = () => {
     const [tempState, setTempState] = useState<boolean>(false);
     const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
 
-    const navigate = useNavigate();
-    const { role } = useAuth();
+    const {role} = useAuth();
     const pageSize = 50;
     const headingText =
         role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
@@ -64,19 +59,19 @@ const Home: React.FC = () => {
     const handleAddToCart = async (eqId: string) => {
         setAddingToCartId(eqId);
         try {
-            const detail: EquipmentDetailResponse | undefined =
-                await getEquipmentDetail(eqId);
+            const detail: EquipmentDetailResponse | undefined = await getEquipmentDetail(eqId);
             if (detail?.option?.length) {
-                await addEquipmentToCart(eqId, detail.option[0].id, 1, navigate);
+                await addEquipmentToCart(eqId, detail.option[0].id, 1);
                 message.success("Added to cart!");
             } else {
                 message.warning("No options available for this equipment.");
             }
         } catch (err: any) {
+            const status = err?.response?.status;
             const msg =
-                err?.response?.data?.message ||
-                err?.message ||
-                "Failed to add item to cart.";
+                status === 409
+                    ? "This item is already in your cart."
+                    : err?.response?.data?.message || err?.message || "Failed to add item to cart.";
             message.error(msg);
             console.error(err);
         } finally {
@@ -116,13 +111,14 @@ const Home: React.FC = () => {
         if (!tempState) {
             return (
                 <div className="w-full h-[85vh] flex items-center justify-center">
-                    <Spin size="large" />
+                    <Spin size="large"/>
                 </div>
             );
         }
         return (
-            <div className="flex flex-col items-center justify-center w-full h-[84.5vh] bg-[#D9D9D9] rounded-md space-y-2">
-                <img src={SearchIcon} alt="Search icon" width={80} />
+            <div
+                className="flex flex-col items-center justify-center w-full h-[84.5vh] bg-[#D9D9D9] rounded-md space-y-2">
+                <img src={SearchIcon} alt="Search icon" width={80}/>
                 <p className="text-lg font-semibold">No equipments match your search</p>
                 <p className="text-md font-semibold">
                     Nothing found for &laquo;{searchKeyword}&raquo;
@@ -140,7 +136,7 @@ const Home: React.FC = () => {
             />
 
             <div className="h-full pt-3 pb-3 pl-5 pr-5">
-                <HeaderRow role={role} title={headingText} />
+                <HeaderRow role={role} title={headingText}/>
 
                 {filteredEquipments?.equipments.equipments?.length ? (
                     <>

@@ -21,9 +21,9 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
                 {
                     key: "user_info",
                     label: (
-                        <div style={{ lineHeight: "1.2", pointerEvents: "none" }}>
+                        <div style={{lineHeight: "1.2", pointerEvents: "none"}}>
                             <strong>{name || "Unknown User"}</strong>
-                            <br />
+                            <br/>
                             <small>ID: {userId}</small>
                         </div>
                     ),
@@ -68,7 +68,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
             <Avatar
                 style={{backgroundColor: "#87d068", cursor: "pointer"}}
             >
-                {userId && firstLetter ? firstLetter : <UserOutlined />}
+                {userId && firstLetter ? firstLetter : <UserOutlined/>}
 
             </Avatar>
         </Dropdown>

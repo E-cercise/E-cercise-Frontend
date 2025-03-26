@@ -1,18 +1,6 @@
 import React, {useState} from "react";
-import {
-    Form,
-    Input,
-    InputNumber,
-    Select,
-    Button,
-    Card,
-    Divider,
-    Row,
-    Modal,
-    Col,
-    notification,
-} from "antd";
-import {PlusOutlined, MinusCircleOutlined} from "@ant-design/icons";
+import {Button, Card, Col, Divider, Form, Input, InputNumber, Modal, notification, Row, Select,} from "antd";
+import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import PrimaryImageCard, {UploadedImage} from "../imageCard/PrimaryImageCard";
 import GalleryImageCard from "../imageCard/GallaryImageCard";
 import MuscleGroupForm from "./MuscleGroupForm";
@@ -76,7 +64,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
                 form={form}
                 layout="vertical"
                 onFinish={handleFinish}
-                onFinishFailed={({ errorFields }) => {
+                onFinishFailed={({errorFields}) => {
                     if (errorFields.length) {
                         form.scrollToField(errorFields[0].name);
                     }

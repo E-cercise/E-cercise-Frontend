@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {AuthContextProps, JwtPayload} from "../../interfaces/Context.ts";
 
 
@@ -8,7 +8,7 @@ interface AuthProviderProps {
     children: React.ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const [role, setRole] = useState<string | null>(null);
     const [userId, setUserId] = useState<string | null>(null);
     const [name, setName] = useState<string | null>(null);

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "antd";
+import React, {useState} from "react";
+import {Link} from "react-router-dom";
+import {Button} from "antd";
 import "./NavBar.css";
 import {NavItemProps} from "../../interfaces/Navbar.ts";
-const NavItem: React.FC<NavItemProps> = ({ to, label, Icon, isActive }) => {
+
+const NavItem: React.FC<NavItemProps> = ({to, label, Icon, isActive}) => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (

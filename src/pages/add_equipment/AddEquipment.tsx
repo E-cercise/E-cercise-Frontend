@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {Card, Form, notification} from "antd";
 import NavBar from "../../components/navbar/NavBar";
 import HeaderRow from "../../components/headerRow/HeaderRow";
-import { useAuth } from "../../hook/UseAuth.ts";
-import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory";
-import { addEquipment } from "../../api/equipment/AddEquipment";
-import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../hook/UseAuth.ts";
+import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory";
+import {addEquipment} from "../../api/equipment/AddEquipment";
+import {useNavigate} from "react-router-dom";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
 import {CategoryResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 
 const AddEquipmentPage = () => {
-    const { role } = useAuth();
+    const {role} = useAuth();
     const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
@@ -49,7 +49,7 @@ const AddEquipmentPage = () => {
 
     const handleAddNewCategory = () => {
         if (!searchCategory) return;
-        const newCat = { label: searchCategory, value: searchCategory };
+        const newCat = {label: searchCategory, value: searchCategory};
         setCategories((prev) => [...prev, newCat]);
         notificationApi.success({
             message: "Category Added",
@@ -64,7 +64,7 @@ const AddEquipmentPage = () => {
                 ...values,
                 features: values.features.map((f) => f.description),
                 options: values.options?.map((opt: any) => {
-                    const { primaryImage, galleryImages, ...rest } = opt;
+                    const {primaryImage, galleryImages, ...rest} = opt;
                     const mergedImages: any[] = [];
                     if (primaryImage) {
                         mergedImages.push({
@@ -80,7 +80,7 @@ const AddEquipmentPage = () => {
                             });
                         });
                     }
-                    return { ...rest, images: mergedImages };
+                    return {...rest, images: mergedImages};
                 }),
             };
 
@@ -108,8 +108,8 @@ const AddEquipmentPage = () => {
     return (
         <div className="min-h-screen bg-gray-100">
             {contextHolder}
-            <NavBar />
-            <HeaderRow role={role} title="Add Equipment" />
+            <NavBar/>
+            <HeaderRow role={role} title="Add Equipment"/>
             <Card className="w-11/12 mx-auto mt-4">
                 <EquipmentForm
                     mode="ADD"

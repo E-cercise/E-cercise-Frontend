@@ -1,6 +1,6 @@
-import { EquipmentDetailResponse } from "../interfaces/equipment/EquipmentDetail.ts";
-import { EquipmentFormValues } from "../interfaces/equipment/EquipmentForm.ts";
-import { updateEquipment } from "../api/equipment/UpdateEquipmentDetail.ts";
+import {EquipmentDetailResponse} from "../interfaces/equipment/EquipmentDetail.ts";
+import {EquipmentFormValues} from "../interfaces/equipment/EquipmentForm.ts";
+import {updateEquipment} from "../api/equipment/UpdateEquipmentDetail.ts";
 
 export const handleUpdateSubmitPartial = async (
     equipment_id: string,
@@ -118,18 +118,18 @@ export const handleUpdateSubmitPartial = async (
 
         const deletedGallery = orig.images
             .filter(i => !i.is_primary && !newGalleryIDs.includes(i.id))
-            .map(i => ({ id: i.id, url: i.url, is_primary: false }));
+            .map(i => ({id: i.id, url: i.url, is_primary: false}));
 
         const uploadedGallery = (opt.galleryImages || [])
             .filter(i => !origGalleryIDs.includes(i.fileID))
-            .map(i => ({ id: i.fileID, is_primary: false }));
+            .map(i => ({id: i.fileID, is_primary: false}));
 
         const deletedPrimary = origPrimary && newPrimary?.fileID !== origPrimary.id
-            ? [{ id: origPrimary.id, url: origPrimary.url, is_primary: true }]
+            ? [{id: origPrimary.id, url: origPrimary.url, is_primary: true}]
             : [];
 
         const uploadedPrimary = newPrimary?.fileID && newPrimary?.fileID !== origPrimary?.id
-            ? [{ id: newPrimary.fileID, is_primary: true }]
+            ? [{id: newPrimary.fileID, is_primary: true}]
             : [];
 
         const deleted_id = [...deletedPrimary, ...deletedGallery];
@@ -142,8 +142,8 @@ export const handleUpdateSubmitPartial = async (
             weight: opt.weight,
             available: opt.available,
             images: {
-                ...(deleted_id.length ? { deleted_id } : {}),
-                ...(upload_id.length ? { upload_id } : {})
+                ...(deleted_id.length ? {deleted_id} : {}),
+                ...(upload_id.length ? {upload_id} : {})
             }
         };
     }).filter(Boolean) || [];
