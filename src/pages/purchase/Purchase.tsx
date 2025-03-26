@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {Input} from "antd";
 import {FaLocationDot} from "react-icons/fa6";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
+import { splitString } from "../../helper/splitStringHelper.ts";
 // import Test from "../../assets/test/home/Group 32.png";
 // import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 // import Dumbbells3 from "../../assets/test/comparison/image 18.png";
@@ -57,6 +58,10 @@ function Purchase() {
     //   { value: 29, label: "Standard Delivery - deliver inside the country" },
     //   { value: 100, label: "Standard Delivery Bulky - deliver big product" },
     // ];
+    const location = useLocation();
+    const selectedItems = location.state;
+
+    console.log(selectedItems);
 
     // const handleIsAddressModalOpen = (value: boolean) => {
     //   setIsAddressModalOpen(value);
@@ -113,21 +118,28 @@ function Purchase() {
           });
     };
 
-    const totalPrice = () => {
-        let total = 0;
-        cart?.line_equipments.forEach((product) => {
-            total += product.per_unit_price * product.quantity;
-        });
-        return total;
-    };
+    // const totalPrice = () => {
+    //     let total = 0;
+    //     cart?.line_equipments.forEach((product) => {
+    //         total += product.per_unit_price * product.quantity;
+    //     });
+    //     return total;
+    // };
 
-    const totalQuantity = () => {
+    const totalPrice = (selectedItems: string[] | undefined) => {
+      if (selectedItems !== undefined) {
         let total = 0;
-        cart?.line_equipments.forEach((product) => {
-            total += product.quantity;
+        cart?.line_equipments.forEach((equipment) => {
+          if (selectedItems.includes(equipment.line_equipment_id)) {
+            total += equipment.per_unit_price * equipment.quantity;
+          }
         });
         return total;
-    };
+      } else {
+        return 0;
+      }
+    };    
+
 
     // useEffect(() => {
     //   const selectedAddressObj = addressList.find(
@@ -363,36 +375,46 @@ function Purchase() {
                             </div>
                             <div
                                 className={`space-y-3 max-h-[44vh] ${
-                                    cart?.line_equipments.length > 4 ? "overflow-y-scroll" : ""
+                                    selectedItems.length > 4 ? "overflow-y-scroll" : ""
                                 }`}
                             >
-                                {cart?.line_equipments.map((product) => (
-                                    <div
-                                        key={product.line_equipment_id}
-                                        className="flex items-center bg-zinc-300 h-[60px] py-5 rounded-md"
-                                    >
-                                        <div className="grow flex items-center w-[600px] h-[60px] pl-4 space-x-3">
-                                            <img
-                                                src={product.img_url}
-                                                alt=""
-                                                className="w-12 rounded-md"
-                                            />
-                                            <p className="text-[13px]">{product.equipment_name}</p>
-                                        </div>
-                                        <div
-                                            className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
-                                            ฿{product.per_unit_price}
-                                        </div>
-                                        <div
-                                            className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
-                                            {product.quantity}
-                                        </div>
-                                        <div
-                                            className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
-                                            ฿{product.per_unit_price * product.quantity}
-                                        </div>
-                                    </div>
-                                ))}
+                                {cart?.line_equipments.map((product) => {
+                                   if (selectedItems.includes(product.line_equipment_id)) {
+                                    return (
+                                      <div
+                                          key={product.line_equipment_id}
+                                          className="flex items-center bg-zinc-300 h-[60px] py-5 rounded-md"
+                                      >
+                                          <div className="grow flex items-center w-[600px] h-[60px] pl-4 space-x-3">
+                                              <img
+                                                  src={product.img_url}
+                                                  alt=""
+                                                  className="w-12 h-12 rounded-md"
+                                              />
+                                              <p className="text-[12px]">{splitString(product.equipment_name)[0]}</p>
+                                          </div>
+                                          <div
+                                              className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
+                                              ฿{product.per_unit_price.toLocaleString("en-US", {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                              })}
+                                          </div>
+                                          <div
+                                              className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
+                                              {product.quantity}
+                                          </div>
+                                          <div
+                                              className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
+                                              ฿{(product.per_unit_price * product.quantity).toLocaleString("en-US", {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                              })}
+                                          </div>
+                                      </div>
+                                    )
+                                   }
+                                })}
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -445,12 +467,15 @@ function Purchase() {
                         </div>
                         <div className="flex items-center justify-end pb-4 pr-5 space-x-5">
                             <p className="text-[13px]">
-                                Order Total ({totalQuantity()} Item
-                                {totalQuantity() > 1 ? "s" : ""}):{" "}
+                                Order Total ({selectedItems.length} Item
+                                {selectedItems.length > 1 ? "s" : ""}):{" "}
                             </p>
                             <p className="font-semibold">
                                 {/* ฿{totalPrice() + selectedShippingOption} */}
-                                ฿{totalPrice()}
+                                ฿{totalPrice(selectedItems).toLocaleString("en-US", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                })}
                             </p>
                         </div>
                     </div>
@@ -496,7 +521,12 @@ function Purchase() {
                                     <p className="text-[13px] text-[#767676]">
                                         Merchandise Subtotal
                                     </p>
-                                    <p className="text-[13px] text-right">฿{totalPrice()}</p>
+                                    <p className="text-[13px] text-right">
+                                      ฿{totalPrice(selectedItems).toLocaleString("en-US", {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })}
+                                    </p>
                                     {/* <p className="text-[13px] text-[#767676]">
                     Shipping Subtotal
                   </p> */}
@@ -504,7 +534,10 @@ function Purchase() {
                                     <p className="text-[13px] text-[#767676]">Total Payment:</p>
                                     <p className="text-[17px] text-right font-semibold">
                                         {/* ฿{totalPrice() + selectedShippingOption} */}
-                                        ฿{totalPrice()}
+                                        ฿{totalPrice(selectedItems).toLocaleString("en-US", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
                                     </p>
                                 </div>
                             </div>

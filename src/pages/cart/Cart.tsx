@@ -4,8 +4,9 @@ import {Link, useNavigate} from "react-router-dom";
 import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
 import {modifyEquipmentInCart} from "../../api/cart/ModifyEquipmentInCart.ts";
 import {deleteEquipmentInCart} from "../../api/cart/DeleteEquipmentInCart.ts";
-import NavBar from "../../components/navbar/NavBar.tsx";
+import {splitString} from "../../helper/splitStringHelper.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import CrossMark from "../../assets/test/cart/image 36.png";
 
 function Cart() {
@@ -48,14 +49,14 @@ function Cart() {
         }
     };
 
-    const splitString = (equipmentName: string) => {
-        if (equipmentName.includes(" - ")) {
-            return equipmentName.split(" - ");
-        } else if (equipmentName.includes(", ")) {
-            return equipmentName.split(", ");
-        }
-        return [equipmentName];
-    };
+    // const splitString = (equipmentName: string) => {
+    //     if (equipmentName.includes(" - ")) {
+    //         return equipmentName.split(" - ");
+    //     } else if (equipmentName.includes(", ")) {
+    //         return equipmentName.split(", ");
+    //     }
+    //     return [equipmentName];
+    // };
 
     // const totalQuantity =
     //     cart?.line_equipments?.reduce(
