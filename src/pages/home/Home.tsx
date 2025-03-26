@@ -8,7 +8,7 @@ import {
     EquipmentDetailResponse,
     FilteredEquipmentResponse,
 } from "../../interfaces/equipment/EquipmentDetail.ts";
-import { useAuth } from "../../hook/UseAuth.tsx";
+import { useAuth } from "../../hook/UseAuth.ts";
 import { Role } from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";

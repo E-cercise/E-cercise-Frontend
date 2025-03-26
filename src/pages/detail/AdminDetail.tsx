@@ -3,8 +3,7 @@ import {
     CategoryResponse,
     EquipmentDetailResponse,
 } from "../../interfaces/equipment/EquipmentDetail.ts";
-import { useEffect, useState } from "react";
-import { useAuth } from "../../hook/UseAuth.tsx";
+import React, { useEffect, useState } from "react";
 import { EquipmentFormValues } from "../../interfaces/equipment/EquipmentForm.ts";
 import { Button, Card, notification, Form, Modal } from "antd";
 import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
@@ -14,6 +13,7 @@ import NavBar from "../../components/navbar/NavBar.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
 import { useUnsavedChangesWarning } from "../../hook/useUnsavedChangesWarning.ts";
+import {useAuth} from "../../hook/UseAuth.ts";
 
 const AdminDetailPage: React.FC = () => {
     const { equipment_id } = useParams();
