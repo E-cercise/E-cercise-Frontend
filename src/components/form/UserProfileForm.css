@@ -1,0 +1,8 @@
+.ant-input[disabled],
+.ant-input-disabled {
+    background-color: transparent !important;
+    border: none !important;
+    color: #111827 !important; /* text-gray-900 */
+    padding-left: 0;
+    font-weight: 500;
+}
