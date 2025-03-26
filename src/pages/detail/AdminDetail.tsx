@@ -1,27 +1,34 @@
-import { useParams} from "react-router-dom";
-import {CategoryResponse, EquipmentDetailResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
-import {useEffect, useState} from "react";
-import {useAuth} from "../../hook/UseAuth.tsx";
-import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
-import {Button, Card, notification} from "antd";
-import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
-import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
-import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
+import { useParams } from "react-router-dom";
+import {
+    CategoryResponse,
+    EquipmentDetailResponse,
+} from "../../interfaces/equipment/EquipmentDetail.ts";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../hook/UseAuth.tsx";
+import { EquipmentFormValues } from "../../interfaces/equipment/EquipmentForm.ts";
+import { Button, Card, notification, Form, Modal } from "antd";
+import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
+import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
+import { handleUpdateSubmitPartial } from "../../helper/updateEquipmentHelper.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
+import { useUnsavedChangesWarning } from "../../hook/useUnsavedChangesWarning.ts";
 
 const AdminDetailPage: React.FC = () => {
     const { equipment_id } = useParams();
     const { role } = useAuth();
 
     const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
-    const [initialFormValues, setInitialFormValues] = useState<EquipmentFormValues>();
+    const [initialFormValues, setInitialFormValues] =
+        useState<EquipmentFormValues>();
     const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
     const [isEditing, setIsEditing] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [form] = Form.useForm<EquipmentFormValues>();
 
 
     useEffect(() => {
@@ -73,8 +80,8 @@ const AdminDetailPage: React.FC = () => {
                     key: af.key,
                     value: af.value,
                 })),
-                options: (data.option || []).map((opt: { images: any[]; id: any; name: any; price: any; weight: any; available: any; }) => {
-                    const primaryImg = opt.images.find((img: { is_primary: any; }) => img.is_primary);
+                options: (data.option || []).map((opt) => {
+                    const primaryImg = opt.images.find((img) => img.is_primary);
                     const galleryImgs = opt.images.filter((img) => !img.is_primary);
                     return {
                         __id: opt.id,
@@ -83,7 +90,11 @@ const AdminDetailPage: React.FC = () => {
                         weight: opt.weight,
                         available: opt.available,
                         primaryImage: primaryImg
-                            ? { fileID: primaryImg.id, thumbnail: primaryImg.url, is_primary: true }
+                            ? {
+                                fileID: primaryImg.id,
+                                thumbnail: primaryImg.url,
+                                is_primary: true,
+                            }
                             : undefined,
                         galleryImages: galleryImgs.map((g) => ({
                             fileID: g.id,
@@ -117,17 +128,34 @@ const AdminDetailPage: React.FC = () => {
         });
     };
 
-
     const handleCancelEdit = () => {
-        setIsEditing(false);
-        setInitialFormValues({ ...initialFormValues });
+        const isDirty = form.isFieldsTouched(true);
+        if (isDirty) {
+            Modal.confirm({
+                title: "Discard Changes?",
+                content: "You have unsaved changes. Are you sure you want to discard them?",
+                okText: "Discard",
+                cancelText: "Cancel",
+                onOk: () => {
+                    setIsEditing(false);
+                    form.resetFields();
+                },
+            });
+        } else {
+            setIsEditing(false);
+        }
     };
 
     const handleUpdateSubmit = async (values: EquipmentFormValues) => {
         if (!originalData || !equipment_id) return;
 
+        setSubmitting(true);
         try {
-            const result = await handleUpdateSubmitPartial(equipment_id, originalData, values);
+            const result = await handleUpdateSubmitPartial(
+                equipment_id,
+                originalData,
+                values
+            );
 
             if (!result) {
                 notificationApi.info({
@@ -137,8 +165,11 @@ const AdminDetailPage: React.FC = () => {
                 return;
             }
 
-            const categoryObj = categories.find(c => c.value === values.category);
+            const categoryObj = categories.find(
+                (c) => c.value === values.category
+            );
 
+            // Update local original data for form
             setOriginalData({
                 ...originalData,
                 ...values,
@@ -159,29 +190,46 @@ const AdminDetailPage: React.FC = () => {
                     weight: opt.weight,
                     available: opt.available,
                     images: [
-                        ...(opt.primaryImage ? [{
-                            id: opt.primaryImage.fileID,
-                            url: opt.primaryImage.thumbnail,
-                            is_primary: true
-                        }] : []),
-                        ...(opt.galleryImages || []).map(g => ({
+                        ...(opt.primaryImage
+                            ? [
+                                {
+                                    id: opt.primaryImage.fileID,
+                                    url: opt.primaryImage.thumbnail,
+                                    is_primary: true,
+                                },
+                            ]
+                            : []),
+                        ...(opt.galleryImages || []).map((g) => ({
                             id: g.fileID,
                             url: g.thumbnail,
-                            is_primary: false
-                        }))
-                    ]
+                            is_primary: false,
+                        })),
+                    ],
                 })),
                 muscle_group_used: values.muscle_group_used,
             });
 
             setInitialFormValues(values);
-            notificationApi.success({ message: "Success", description: "Equipment updated!" });
+            notificationApi.success({
+                message: "Success",
+                description: "Equipment updated!",
+            });
             setIsEditing(false);
         } catch (err) {
             console.error(err);
-            notificationApi.error({ message: "Error", description: "Update failed." });
+            notificationApi.error({
+                message: "Error",
+                description: "Update failed.",
+            });
+        } finally {
+            setSubmitting(false);
         }
     };
+
+    useUnsavedChangesWarning(
+        isEditing,
+        "You have unsaved changes. Are you sure you want to leave this page?"
+    );
 
     if (!initialFormValues) {
         return (
@@ -198,21 +246,32 @@ const AdminDetailPage: React.FC = () => {
         <div className="min-h-screen bg-gray-100">
             {contextHolder}
             <NavBar />
-            <HeaderRow role={role} title={isEditing?"Edit Equipment":"Equipment Details"} />
+            <HeaderRow
+                role={role}
+                title={isEditing ? "Edit Equipment" : "Equipment Details"}
+            />
             <Card className="w-11/12 mx-auto mt-4">
                 {!isEditing ? (
                     <div className="flex justify-end mb-4">
                         <Button onClick={() => setIsEditing(true)}>Edit</Button>
                     </div>
                 ) : (
-                    <div className="flex justify-end mb-4">
-                        <Button type="primary" onClick={() => document.getElementById("equipmentFormSubmitBtn")?.click()}>
+                    <div className="flex justify-end mb-4 gap-2">
+                        <Button onClick={handleCancelEdit}>Cancel</Button>
+                        <Button
+                            type="primary"
+                            loading={submitting}
+                            onClick={() =>
+                                document.getElementById("equipmentFormSubmitBtn")?.click()
+                            }
+                        >
                             Save
                         </Button>
                     </div>
                 )}
                 <EquipmentForm
                     mode="EDIT"
+                    form={form}
                     isEditing={isEditing}
                     loadingCategories={loadingCategories}
                     categories={categories}
@@ -220,11 +279,9 @@ const AdminDetailPage: React.FC = () => {
                     onAddNewCategory={handleAddNewCategory}
                     searchCategory={searchCategory}
                     initialValues={initialFormValues}
-                    onSubmit={(vals: EquipmentFormValues) => {
-                        handleUpdateSubmit(vals);
-                        setIsEditing(false);
-                    }}
+                    onSubmit={handleUpdateSubmit}
                     onCancelEdit={handleCancelEdit}
+                    submitting={submitting}
                 />
             </Card>
         </div>

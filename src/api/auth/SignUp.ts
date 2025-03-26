@@ -8,7 +8,6 @@ export const signUp = async (
   address: string,
   phoneNumber: string
 ) => {
-  try {
     const response = await axios.post(
       `${process.env.API_BASE_URL}/api/auth/register`,
       {
@@ -25,7 +24,4 @@ export const signUp = async (
       }
     );
     return response.data;
-  } catch (err) {
-    console.error(err);
-  }
 };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Upload, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { UploadFile, RcCustomRequestOptions } from "antd/es/upload/interface";
-import { UploadEquipmentImage } from "../../api/image/UploadEquipmentImage.ts";
+import { uploadEquipmentImage } from "../../api/image/UploadEquipmentImage.ts";
 import {validateFileTypeAndSize} from "./util.ts";
 
 export interface UploadedImage {
@@ -48,17 +48,21 @@ const PrimaryImageCard: React.FC<PrimaryImageCardProps> = ({
         }
     };
 
-    const customRequest = async (options: RcCustomRequestOptions) => {
+    const customRequest = (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options;
-        try {
-            const response = await UploadEquipmentImage(file as File);
-            if (onSuccess) onSuccess(response, file);
-            message.success("Primary image uploaded successfully!");
-        } catch (error) {
-            if (onError) onError(error);
-            message.error("Primary image upload failed.");
-        }
+
+        uploadEquipmentImage(file as File)
+            .then((response) => {
+                onSuccess?.(response, file);
+                message.success("Image uploaded successfully!");
+            })
+            .catch((error) => {
+                console.error(error);
+                onError?.(error);
+                message.error(error.message || "Upload failed.");
+            });
     };
+
 
     const uploadButton = (
         <div

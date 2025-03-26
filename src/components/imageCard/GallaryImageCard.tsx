@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Upload, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import type { UploadFile, RcCustomRequestOptions } from "antd/es/upload/interface";
-import { UploadEquipmentImage } from "../../api/image/UploadEquipmentImage";
+import { uploadEquipmentImage } from "../../api/image/UploadEquipmentImage";
 import { UploadedImage } from "./PrimaryImageCard";
 import { validateFileTypeAndSize } from "./util";
 
@@ -59,17 +59,21 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         if (deleted.length > 0) onDelete?.(deleted);
     };
 
-    const customRequest = async (options: RcCustomRequestOptions) => {
+    const customRequest = (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options;
-        try {
-            const response = await UploadEquipmentImage(file as File);
-            onSuccess?.(response, file);
-            message.success("Gallery image uploaded successfully!");
-        } catch (error) {
-            onError?.(error);
-            message.error("Gallery image upload failed.");
-        }
+
+        uploadEquipmentImage(file as File)
+            .then((response) => {
+                onSuccess?.(response, file);
+                message.success("Image uploaded successfully!");
+            })
+            .catch((error) => {
+                console.error(error);
+                onError?.(error);
+                message.error(error.message || "Upload failed.");
+            });
     };
+
 
     return (
         <Upload

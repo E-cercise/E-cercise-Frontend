@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Popover} from "antd";
+import {message, Modal, Popover} from "antd";
 import { Carousel } from "react-responsive-carousel";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
@@ -70,16 +70,23 @@ function Detail() {
     }
   };
 
-  const addToCart = async (
-    equipment_id: string | undefined,
-    equipment_option_id: string | undefined,
-    quantity: number
+  const addToCart = (
+      equipment_id: string | undefined,
+      equipment_option_id: string | undefined,
+      quantity: number
   ) => {
-    try {
-      await addEquipmentToCart(equipment_id, equipment_option_id, quantity, navigate);
-    } catch (err) {
-      console.log(err);
-    }
+    addEquipmentToCart(equipment_id, equipment_option_id, quantity)
+        .then(() => {
+          message.success("equipment is added to cart successfully")
+        })
+        .catch((err) => {
+          if (err.response?.status === 401) {
+            navigate("/login");
+          } else {
+            message.error(err.message);
+            console.error(err);
+          }
+        });
   };
 
   useEffect(() => {

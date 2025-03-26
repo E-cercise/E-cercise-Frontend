@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, notification} from "antd";
+import {Card, Form, notification} from "antd";
 import NavBar from "../../components/navbar/NavBar";
 import HeaderRow from "../../components/headerRow/HeaderRow";
 import { useAuth } from "../../hook/UseAuth";
@@ -8,6 +8,7 @@ import { addEquipment } from "../../api/equipment/AddEquipment";
 import { useNavigate } from "react-router-dom";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
 import {CategoryResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
+import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 
 const AddEquipmentPage = () => {
     const { role } = useAuth();
@@ -15,6 +16,8 @@ const AddEquipmentPage = () => {
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const [form] = Form.useForm<EquipmentFormValues>();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -55,31 +58,51 @@ const AddEquipmentPage = () => {
     };
 
     const handleSubmit = async (values: any) => {
-        const transformedPayload = {
-            ...values,
-            features: values.features.map((f) => f.description),
-            options: values.options?.map((opt: any) => {
-                const { primaryImage, galleryImages, ...rest } = opt;
-                const mergedImages: any[] = [];
-                if (primaryImage) {
-                    mergedImages.push({
-                        id: primaryImage.fileID,
-                        is_primary: primaryImage.is_primary,
-                    });
-                }
-                if (Array.isArray(galleryImages)) {
-                    galleryImages.forEach((img: any) => {
+        setSubmitting(true);
+        try {
+            const transformedPayload = {
+                ...values,
+                features: values.features.map((f) => f.description),
+                options: values.options?.map((opt: any) => {
+                    const { primaryImage, galleryImages, ...rest } = opt;
+                    const mergedImages: any[] = [];
+                    if (primaryImage) {
                         mergedImages.push({
-                            id: img.fileID,
-                            is_primary: img.is_primary || false,
+                            id: primaryImage.fileID,
+                            is_primary: primaryImage.is_primary,
                         });
-                    });
-                }
-                return { ...rest, images: mergedImages };
-            }),
-        };
-        await addEquipment(transformedPayload);
-        navigate("/");
+                    }
+                    if (Array.isArray(galleryImages)) {
+                        galleryImages.forEach((img: any) => {
+                            mergedImages.push({
+                                id: img.fileID,
+                                is_primary: img.is_primary || false,
+                            });
+                        });
+                    }
+                    return { ...rest, images: mergedImages };
+                }),
+            };
+
+            await addEquipment(transformedPayload);
+            notificationApi.success({
+                message: "Success",
+                description: "Equipment added successfully!",
+            });
+            navigate("/");
+        } catch (err: any) {
+            const msg =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Failed to add equipment.";
+            notificationApi.error({
+                message: "Add Equipment Failed",
+                description: msg,
+            });
+            console.error(err);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -90,6 +113,7 @@ const AddEquipmentPage = () => {
             <Card className="w-11/12 mx-auto mt-4">
                 <EquipmentForm
                     mode="ADD"
+                    form={form}
                     isEditing={true}
                     loadingCategories={loadingCategories}
                     categories={categories}
@@ -97,6 +121,7 @@ const AddEquipmentPage = () => {
                     onCategorySearch={handleCategorySearch}
                     onAddNewCategory={handleAddNewCategory}
                     searchCategory={searchCategory}
+                    submitting={submitting}
                 />
             </Card>
         </div>

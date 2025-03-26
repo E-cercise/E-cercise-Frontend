@@ -16,7 +16,8 @@ export interface EquipmentCardProps {
     setEquipmentId: React.Dispatch<React.SetStateAction<number>>
     setTitleHover: React.Dispatch<React.SetStateAction<boolean>>
     role: string | null
-    onAddToCart: (id: string) => Promise<void>
+    onAddToCart: (equipmentId: string) => void;
+    isAddingToCart?: boolean;
 }
 
 export interface HeaderRowProps {

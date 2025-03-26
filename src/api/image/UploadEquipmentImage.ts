@@ -1,18 +1,26 @@
 import API from '../index'
 
-export const UploadEquipmentImage = async (file: File): Promise<any> => {
+export interface UploadImageResponse {
+    fileID: string;
+    url: string;
+    thumbnail?: string;
+}
+
+export const uploadEquipmentImage = async (file: File): Promise<UploadImageResponse> => {
     const formData = new FormData();
     formData.append("img", file);
 
     try {
-        const response = await API.post("/image/upload", formData, {
+        const response = await API.post<UploadImageResponse>("/image/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
         });
+
         return response.data;
-    } catch (error) {
-        console.error("Error uploading image:", error);
-        throw error;
+    } catch (error: any) {
+        throw new Error(
+            error?.response?.data?.message || error.message || "Image upload failed"
+        );
     }
 };

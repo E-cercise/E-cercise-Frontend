@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const fetchToken = async (email: string, password: string) => {
-    try {
         const response = await axios.post(`${process.env.API_BASE_URL}/api/auth/login`,
             {
                 "email": email,
@@ -13,7 +12,4 @@ export const fetchToken = async (email: string, password: string) => {
             }
         );
         return response.data;
-    } catch(error) {
-        console.error(error);
-    }
 };
