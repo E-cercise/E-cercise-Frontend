@@ -6,6 +6,8 @@ import NavBar from "../../components/navbar/NavBar.tsx";
 import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
 import { splitString } from "../../helper/splitStringHelper.ts";
+import { getUserProfile } from "../../api/user_profile/GetUserProfile.ts";
+import { UserProfile } from "../../interfaces/UserProfile.ts";
 // import Test from "../../assets/test/home/Group 32.png";
 // import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 // import Dumbbells3 from "../../assets/test/comparison/image 18.png";
@@ -20,17 +22,7 @@ import { splitString } from "../../helper/splitStringHelper.ts";
 // }
 
 function Purchase() {
-    const [addressList] = useState([
-        {
-            id: 1,
-            fullName: "Thanadol Udomsirinanchai",
-            phoneNumber: "(+66) XXXXXXXXX",
-            provinceDistrictSubDistrictPostalCode:
-                "Bangkok, Nong Khaem, Nong Khang Phlu, 10160",
-            streetNameBuldingHouseNo:
-                "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Nong Khang Phlu",
-        },
-    ]);
+    const [user, setUser] = useState<UserProfile>();
     const [cart, setCart] = useState<CartResponse>();
     // const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
     // const [isAddAddressModalOpen, setIsAddAddressModalOpen] =
@@ -107,6 +99,16 @@ function Purchase() {
     //   setIsModalShippingOptionOpen(value);
     // };
 
+    const getUser = () => {
+      getUserProfile()
+          .then((user) => {
+            setUser(user);
+          })
+          .catch((err) => {
+              console.error(err);
+          });
+    };
+
     const getCart = () => {
       getEquipmentsInCart()
           .then((equipmentsInCart) => {
@@ -117,14 +119,6 @@ function Purchase() {
               console.error(err);
           });
     };
-
-    // const totalPrice = () => {
-    //     let total = 0;
-    //     cart?.line_equipments.forEach((product) => {
-    //         total += product.per_unit_price * product.quantity;
-    //     });
-    //     return total;
-    // };
 
     const totalPrice = (selectedItems: string[] | undefined) => {
       if (selectedItems !== undefined) {
@@ -156,7 +150,8 @@ function Purchase() {
     // }, [selectedEditAddress]);
 
     useEffect(() => {
-      getCart();  
+      getUser()
+      getCart();
     }, []);
 
     return (
@@ -171,20 +166,12 @@ function Purchase() {
                         </div>
                         <div className="flex items-center space-x-3">
                             <div className="w-[200px] text-[12px] font-bold">
-                                {/* <p>{addressList[selectedAddress - 1].fullName}</p>
-                <p>{addressList[selectedAddress - 1].phoneNumber}</p> */}
-                                {addressList[0].fullName}
-                                {addressList[0].phoneNumber}
+                                <p>{user?.first_name + " " + user?.last_name}</p>
+                                <p>{user?.phone_number}</p>
                             </div>
                             <div className="grow">
                                 <p className="text-[12px]">
-                                    {/* {addressList[selectedAddress - 1].streetNameBuldingHouseNo}{" "}
-                  {
-                    addressList[selectedAddress - 1]
-                      .provinceDistrictSubDistrictPostalCode
-                  } */}
-                                    {addressList[0].streetNameBuldingHouseNo}{" "}
-                                    {addressList[0].provinceDistrictSubDistrictPostalCode}
+                                    {user?.address}
                                 </p>
                             </div>
                             {/* <button
