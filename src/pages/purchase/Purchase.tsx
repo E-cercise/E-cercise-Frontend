@@ -1,20 +1,22 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {Input} from "antd";
 import {FaLocationDot} from "react-icons/fa6";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import Test from "../../assets/test/home/Group 32.png";
-import Dumbbells1 from "../../assets/test/comparison/image 16.png";
-import Dumbbells3 from "../../assets/test/comparison/image 18.png";
+import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
+import {CartResponse} from "../../interfaces/Cart.ts";
+// import Test from "../../assets/test/home/Group 32.png";
+// import Dumbbells1 from "../../assets/test/comparison/image 16.png";
+// import Dumbbells3 from "../../assets/test/comparison/image 18.png";
 
-interface CartList {
-    id: number;
-    isSelected: boolean;
-    imageUrl: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
+// interface CartList {
+//     id: number;
+//     isSelected: boolean;
+//     imageUrl: string;
+//     name: string;
+//     price: number;
+//     quantity: number;
+// }
 
 function Purchase() {
     const [addressList] = useState([
@@ -27,42 +29,8 @@ function Purchase() {
             streetNameBuldingHouseNo:
                 "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Nong Khang Phlu",
         },
-        // {
-        //   id: 2,
-        //   fullName: "Thanadol Udomsirinanchai",
-        //   phoneNumber: "(+66) XXXXXXXXX",
-        //   provinceDistrictSubDistrictPostalCode:
-        //     "Bangkok, Bangkok Yai, Wat ThaPhra, 10600",
-        //   streetNameBuldingHouseNo:
-        //     "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Wat Thaphra",
-        // },
     ]);
-    const [cartList] = useState<CartList[]>([
-        {
-            id: 1,
-            isSelected: false,
-            imageUrl: Test,
-            name: "Bodybuilding Dumbbell Kit 10 kg",
-            price: 120,
-            quantity: 2,
-        },
-        {
-            id: 2,
-            isSelected: false,
-            imageUrl: Dumbbells1,
-            name: "Adjustable Weights Dumbbells Set, 20/30/40/60/80lbs Non-Rolling Adjustable Dumbbell Set, Free Weights Dumbbells Set Hexagon, Weights Set for Home Gym",
-            price: 150,
-            quantity: 1,
-        },
-        {
-            id: 3,
-            isSelected: false,
-            imageUrl: Dumbbells3,
-            name: "Yes4All Old School Adjustable Dumbbell Set with Weight Plates, Star Lock Collars/Connector, 40lbs to 200lbs Adjustable Weight Plates Set",
-            price: 200,
-            quantity: 1,
-        },
-    ]);
+    const [cart, setCart] = useState<CartResponse>();
     // const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
     // const [isAddAddressModalOpen, setIsAddAddressModalOpen] =
     // useState<boolean>(false);
@@ -134,17 +102,28 @@ function Purchase() {
     //   setIsModalShippingOptionOpen(value);
     // };
 
+    const getCart = () => {
+      getEquipmentsInCart()
+          .then((equipmentsInCart) => {
+              setCart(equipmentsInCart);
+          })
+          .catch((err) => {
+              // message.error("Failed to load cart items.");
+              console.error(err);
+          });
+    };
+
     const totalPrice = () => {
         let total = 0;
-        cartList.forEach((product) => {
-            total += product.price * product.quantity;
+        cart?.line_equipments.forEach((product) => {
+            total += product.per_unit_price * product.quantity;
         });
         return total;
     };
 
     const totalQuantity = () => {
         let total = 0;
-        cartList.forEach((product) => {
+        cart?.line_equipments.forEach((product) => {
             total += product.quantity;
         });
         return total;
@@ -164,10 +143,14 @@ function Purchase() {
     //   }
     // }, [selectedEditAddress]);
 
+    useEffect(() => {
+      getCart();  
+    }, []);
+
     return (
         <div>
             <NavBar/>
-            {cartList.length > 0 ? (
+            {cart?.line_equipments?.length > 0 ? (
                 <div className="px-[75px] py-10 space-y-4">
                     <div className="w-full h-[120px] bg-[#E7E7E7] px-8 py-5 space-y-5 rounded-md">
                         <div className="flex items-center space-x-3">
@@ -380,25 +363,25 @@ function Purchase() {
                             </div>
                             <div
                                 className={`space-y-3 max-h-[44vh] ${
-                                    cartList.length > 4 ? "overflow-y-scroll" : ""
+                                    cart?.line_equipments.length > 4 ? "overflow-y-scroll" : ""
                                 }`}
                             >
-                                {cartList.map((product) => (
+                                {cart?.line_equipments.map((product) => (
                                     <div
-                                        key={product.id}
+                                        key={product.line_equipment_id}
                                         className="flex items-center bg-zinc-300 h-[60px] py-5 rounded-md"
                                     >
                                         <div className="grow flex items-center w-[600px] h-[60px] pl-4 space-x-3">
                                             <img
-                                                src={product.imageUrl}
+                                                src={product.img_url}
                                                 alt=""
                                                 className="w-12 rounded-md"
                                             />
-                                            <p className="text-[13px]">{product.name}</p>
+                                            <p className="text-[13px]">{product.equipment_name}</p>
                                         </div>
                                         <div
                                             className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
-                                            ฿{product.price}
+                                            ฿{product.per_unit_price}
                                         </div>
                                         <div
                                             className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
@@ -406,7 +389,7 @@ function Purchase() {
                                         </div>
                                         <div
                                             className="grow flex items-center justify-center w-[150px] h-[60px] text-[13px] text-center">
-                                            ฿{product.price * product.quantity}
+                                            ฿{product.per_unit_price * product.quantity}
                                         </div>
                                     </div>
                                 ))}
