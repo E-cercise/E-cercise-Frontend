@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Upload, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import type { UploadFile, RcCustomRequestOptions } from "antd/es/upload/interface";
-import { UploadEquipmentImage } from "../../api/image/UploadEquipmentImage";
-import { UploadedImage } from "./PrimaryImageCard";
-import { validateFileTypeAndSize } from "./util";
+import React, {useEffect, useState} from "react";
+import {message, Upload} from "antd";
+import {PlusOutlined} from "@ant-design/icons";
+import type {RcCustomRequestOptions, UploadFile} from "antd/es/upload/interface";
+import {uploadEquipmentImage} from "../../api/image/UploadEquipmentImage";
+import {UploadedImage} from "./PrimaryImageCard";
+import {validateFileTypeAndSize} from "./util";
 
 interface GalleryImageCardProps {
     value?: UploadedImage[];
@@ -32,7 +32,7 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         }
     }, []);
 
-    const handleChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
+    const handleChange = ({fileList: newFileList}: { fileList: UploadFile[] }) => {
         const mapped = newFileList.map((file) => {
             if (file.response && file.response.url) {
                 file.url = file.response.url;
@@ -59,17 +59,21 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         if (deleted.length > 0) onDelete?.(deleted);
     };
 
-    const customRequest = async (options: RcCustomRequestOptions) => {
-        const { file, onSuccess, onError } = options;
-        try {
-            const response = await UploadEquipmentImage(file as File);
-            onSuccess?.(response, file);
-            message.success("Gallery image uploaded successfully!");
-        } catch (error) {
-            onError?.(error);
-            message.error("Gallery image upload failed.");
-        }
+    const customRequest = (options: RcCustomRequestOptions) => {
+        const {file, onSuccess, onError} = options;
+
+        uploadEquipmentImage(file as File)
+            .then((response) => {
+                onSuccess?.(response, file);
+                message.success("Image uploaded successfully!");
+            })
+            .catch((error) => {
+                console.error(error);
+                onError?.(error);
+                message.error(error.message || "Upload failed.");
+            });
     };
+
 
     return (
         <Upload
@@ -82,8 +86,8 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         >
             {fileList.length >= 8 ? null : (
                 <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
+                    <PlusOutlined/>
+                    <div style={{marginTop: 8}}>Upload</div>
                 </div>
             )}
         </Upload>

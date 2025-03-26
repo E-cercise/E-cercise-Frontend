@@ -1,6 +1,6 @@
 import React from "react";
 
-const DocumentIcon:React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
+const DocumentIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     return (
         <svg
             width="16"

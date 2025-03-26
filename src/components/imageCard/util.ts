@@ -1,5 +1,5 @@
 // src/components/imageCard/util.ts
-import { message } from "antd";
+import {message} from "antd";
 
 export const validateFileTypeAndSize = (file: File): boolean => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";

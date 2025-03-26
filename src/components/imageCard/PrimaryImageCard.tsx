@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Upload, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import type { UploadFile, RcCustomRequestOptions } from "antd/es/upload/interface";
-import { UploadEquipmentImage } from "../../api/image/UploadEquipmentImage.ts";
+import React, {useState} from "react";
+import {message, Upload} from "antd";
+import {PlusOutlined} from "@ant-design/icons";
+import type {RcCustomRequestOptions, UploadFile} from "antd/es/upload/interface";
+import {uploadEquipmentImage} from "../../api/image/UploadEquipmentImage.ts";
 import {validateFileTypeAndSize} from "./util.ts";
 
 export interface UploadedImage {
@@ -33,7 +33,7 @@ const PrimaryImageCard: React.FC<PrimaryImageCardProps> = ({
             : []
     );
 
-    const handleChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
+    const handleChange = ({fileList: newFileList}: { fileList: UploadFile[] }) => {
         setFileList(newFileList);
         const uploadedFile =
             newFileList[0] && newFileList[0].response
@@ -48,17 +48,21 @@ const PrimaryImageCard: React.FC<PrimaryImageCardProps> = ({
         }
     };
 
-    const customRequest = async (options: RcCustomRequestOptions) => {
-        const { file, onSuccess, onError } = options;
-        try {
-            const response = await UploadEquipmentImage(file as File);
-            if (onSuccess) onSuccess(response, file);
-            message.success("Primary image uploaded successfully!");
-        } catch (error) {
-            if (onError) onError(error);
-            message.error("Primary image upload failed.");
-        }
+    const customRequest = (options: RcCustomRequestOptions) => {
+        const {file, onSuccess, onError} = options;
+
+        uploadEquipmentImage(file as File)
+            .then((response) => {
+                onSuccess?.(response, file);
+                message.success("Image uploaded successfully!");
+            })
+            .catch((error) => {
+                console.error(error);
+                onError?.(error);
+                message.error(error.message || "Upload failed.");
+            });
     };
+
 
     const uploadButton = (
         <div
@@ -71,8 +75,8 @@ const PrimaryImageCard: React.FC<PrimaryImageCardProps> = ({
                 justifyContent: "center",
             }}
         >
-            <PlusOutlined style={{ fontSize: 24 }} />
-            <div style={{ marginTop: 8 }}>Upload Primary</div>
+            <PlusOutlined style={{fontSize: 24}}/>
+            <div style={{marginTop: 8}}>Upload Primary</div>
         </div>
     );
 

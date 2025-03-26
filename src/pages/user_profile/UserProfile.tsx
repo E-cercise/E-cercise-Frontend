@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { message, Spin } from "antd";
+import {useEffect, useState} from "react";
+import {message, Spin} from "antd";
 
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import NavBar from "../../components/navbar/NavBar.tsx";
@@ -10,7 +10,7 @@ import {updateUserProfile} from "../../api/user_profile/UpdateUserProfile.ts";
 
 
 const UserProfilePage = () => {
-    const { role } = useAuth();
+    const {role} = useAuth();
     const [initialData, setInitialData] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -41,13 +41,13 @@ const UserProfilePage = () => {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <NavBar />
-            <HeaderRow role={role} title="User Profile" />
+            <NavBar/>
+            <HeaderRow role={role} title="User Profile"/>
 
             <div className="max-w-xl mx-auto mt-8 bg-white p-6 rounded-lg shadow-md">
                 {loading ? (
                     <div className="text-center">
-                        <Spin />
+                        <Spin/>
                     </div>
                 ) : (
                     <UserProfileForm

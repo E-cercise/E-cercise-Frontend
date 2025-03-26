@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import NavItem from "./NavItem.tsx";
 import AllProductIcon from "../Icon/AllProductIcon.tsx";
 import DocumentIcon from "../Icon/DocumentIcon.tsx";
@@ -9,8 +9,8 @@ function BottomNavBar() {
     const isActive = (paths: string[]) => paths.includes(location.pathname);
 
     const navItems = [
-        { to: "/", label: "All Products", Icon: AllProductIcon , includePath: ["/", "/equipment/add"] },
-        { to: "/orders", label: "Order List", Icon: DocumentIcon, includePath: ["/orders"]},
+        {to: "/", label: "All Products", Icon: AllProductIcon, includePath: ["/", "/equipment/add"]},
+        {to: "/orders", label: "Order List", Icon: DocumentIcon, includePath: ["/orders"]},
     ];
 
     return (

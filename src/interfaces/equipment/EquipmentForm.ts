@@ -1,15 +1,18 @@
 import {CategoryResponse} from "./EquipmentDetail.ts";
+import {FormInstance} from "antd";
 
 export interface EquipmentFormProps {
     mode: "ADD" | "EDIT";
+    form: FormInstance<any>;
     isEditing: boolean;
     loadingCategories: boolean;
     categories: CategoryResponse[];
-    initialValues?: any; // The shape for form initial values
+    initialValues?: any;
     onSubmit: (formValues: any) => Promise<void>;
     onCategorySearch: (val: string) => void;
     onAddNewCategory: () => void;
     searchCategory: string;
+    submitting?: boolean;
 }
 
 export interface EquipmentFormValues {
