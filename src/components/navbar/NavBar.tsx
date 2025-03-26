@@ -9,7 +9,7 @@ import ComparisonLogo from "../../assets/navbar/Comparison-Logo.png";
 import Cart from "../../assets/navbar/Cart.png";
 import {frontAttributes, backAttributes} from "../muscles/muscles";
 import "./NavBar.css";
-import {useAuth} from "../../hook/UseAuth.tsx";
+import {useAuth} from "../../hook/UseAuth.ts";
 import BottomNavBar from "./BottomNavBar.tsx";
 import {Role} from "../../enum/Role.ts";
 import UserProfile from "./UserProfile.tsx";

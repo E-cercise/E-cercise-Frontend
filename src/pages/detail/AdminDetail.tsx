@@ -1,7 +1,7 @@
 import { useParams} from "react-router-dom";
 import {CategoryResponse, EquipmentDetailResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
 import {useEffect, useState} from "react";
-import {useAuth} from "../../hook/UseAuth.tsx";
+import {useAuth} from "../../hook/UseAuth.ts";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 import {Button, Card, notification} from "antd";
 import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";

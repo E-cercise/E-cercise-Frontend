@@ -9,14 +9,15 @@ import OrderTracking from './pages/tracking/OrderTracking'
 import './App.css'
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.tsx";
 import {Role} from "./enum/Role.ts";
-import {useAuth} from "./hook/UseAuth.tsx";
+import {useAuth} from "./hook/UseAuth.ts";
 import Home from "./pages/home/Home.tsx";
 import OrderList from "./pages/order_list/OrderList.tsx";
 import AddEquipmentPage from "./pages/add_equipment/AddEquipment.tsx";
 import AdminDetailPage from "./pages/detail/AdminDetail.tsx";
+import UserProfilePage from "./pages/user_profile/UserProfile.tsx";
 
 function App() {
-  const {role, isLoading} = useAuth()
+  const {userId, role, isLoading} = useAuth()
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -37,6 +38,7 @@ function App() {
           <Route path='/purchase' element={<ProtectedRoute><Purchase /></ProtectedRoute>}/>
           <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking /></ProtectedRoute>}/>
           <Route path='/orders' element={<ProtectedRoute allowedRoles={[Role.Admin]}><OrderList/></ProtectedRoute>}/>
+          <Route path='/profile' element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><UserProfilePage/> </ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>
