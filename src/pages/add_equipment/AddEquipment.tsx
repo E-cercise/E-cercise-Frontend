@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {Card, Form, notification} from "antd";
 import NavBar from "../../components/navbar/NavBar";
 import HeaderRow from "../../components/headerRow/HeaderRow";
-import { useAuth } from "../../hook/UseAuth";
+import { useAuth } from "../../hook/UseAuth.ts";
 import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory";
 import { addEquipment } from "../../api/equipment/AddEquipment";
 import { useNavigate } from "react-router-dom";

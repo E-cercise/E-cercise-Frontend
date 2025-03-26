@@ -3,7 +3,7 @@ import { Button, Divider, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchToken } from "../../api/auth/Login.ts";
 import "./Login.css";
-import {useAuth} from "../../hook/UseAuth.tsx";
+import {useAuth} from "../../hook/UseAuth.ts";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
