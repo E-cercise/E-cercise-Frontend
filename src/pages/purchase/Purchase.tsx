@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from "react";
 import {Link, useLocation} from "react-router-dom";
-import {Input} from "antd";
+import {Input, Modal} from "antd";
 import {FaLocationDot} from "react-icons/fa6";
 import NavBar from "../../components/navbar/NavBar.tsx";
+import {getUserProfile} from "../../api/user_profile/GetUserProfile.ts";
 import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
+import {createOrder} from "../../api/order/PlaceOrder.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
-import { splitString } from "../../helper/splitStringHelper.ts";
-import { getUserProfile } from "../../api/user_profile/GetUserProfile.ts";
-import { UserProfile } from "../../interfaces/UserProfile.ts";
+import {UserProfile} from "../../interfaces/UserProfile.ts";
+import {LineEquipment} from "../../interfaces/Order.ts"
+import {splitString} from "../../helper/splitStringHelper.ts";
+
 // import Test from "../../assets/test/home/Group 32.png";
 // import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 // import Dumbbells3 from "../../assets/test/comparison/image 18.png";
@@ -24,80 +27,12 @@ import { UserProfile } from "../../interfaces/UserProfile.ts";
 function Purchase() {
     const [user, setUser] = useState<UserProfile>();
     const [cart, setCart] = useState<CartResponse>();
-    // const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
-    // const [isAddAddressModalOpen, setIsAddAddressModalOpen] =
-    // useState<boolean>(false);
-    // const [isEditAddressModalOpen, setIsEditAddressModalOpen] =
-    // useState<boolean>(false);
-    // const [selectedAddress, setSelectedAddress] = useState<number>(1);
-    // const [selectedEditAddress, setSelectedEditAddress] = useState<number>(1);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
-    // const [fullName, setFullName] = useState<string>("");
-    // const [phoneNumber, setPhoneNumber] = useState<string>("");
-    // const [streetNameBuldingHouseNo, setStreetNameBuldingHouseNo] =
-    //   useState<string>("");
-    // const [
-    //   provinceDistrictSubDistrictPostalCode,
-    //   setProvinceDistrictSubDistrictPostalCode,
-    // ] = useState<string>("");
-    // const [isModalShippingOptionOpen, setIsModalShippingOptionOpen] =
-    //   useState<boolean>(false);
-    // const [selectedShippingOption, setSelectedShippingOption] =
-    //   useState<number>(29);
-    // const [tempSelectedShippingOption, setTempSelectedShippingOption] =
-    //   useState<number>(29);
-    // const shippingOption = [
-    //   { value: 29, label: "Standard Delivery - deliver inside the country" },
-    //   { value: 100, label: "Standard Delivery Bulky - deliver big product" },
-    // ];
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("Cash");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const location = useLocation();
     const selectedItems = location.state;
 
     console.log(selectedItems);
-
-    // const handleIsAddressModalOpen = (value: boolean) => {
-    //   setIsAddressModalOpen(value);
-    // };
-
-    // const handleIsAddAddressModalOpen = (value: boolean) => {
-    //   setIsAddAddressModalOpen(value);
-    // };
-
-    // const handleIsEditAddressModalOpen = (value: boolean) => {
-    //   setIsEditAddressModalOpen(value);
-    // };
-
-    // const handleSetSelectedAddress = (value: number) => {
-    //   setSelectedAddress(value);
-    // };
-
-    // const handleSetSelectedEditAddress = (value: number) => {
-    //   setSelectedEditAddress(value);
-    // };
-
-    // const handleAddAddress = (adrObj: any) => {
-    //   setAddressList((prevAddressList) => [...prevAddressList, adrObj]);
-    // };
-
-    // const handleEditAddress = () => {
-    //   setAddressList((prevAddressList) =>
-    //     prevAddressList.map((adrObj) =>
-    //       selectedEditAddress === adrObj.id
-    //         ? {
-    //             ...adrObj,
-    //             fullName,
-    //             phoneNumber,
-    //             streetNameBuldingHouseNo,
-    //             provinceDistrictSubDistrictPostalCode,
-    //           }
-    //         : adrObj
-    //     )
-    //   );
-    // };
-
-    // const handleisModalShippingOptionOpen = (value: boolean) => {
-    //   setIsModalShippingOptionOpen(value);
-    // };
 
     const getUser = () => {
       getUserProfile()
@@ -132,22 +67,31 @@ function Purchase() {
       } else {
         return 0;
       }
-    };    
+    };
 
+    // const getSelectedItems = (selectedItems: string[]) => {
+    //   return cart?.line_equipments.map((equipment) => {
+    //     if (selectedItems.includes(equipment.line_equipment_id)) {
+    //       return equipment;
+    //     }
+    //   })
+    // }
 
-    // useEffect(() => {
-    //   const selectedAddressObj = addressList.find(
-    //     (adr) => adr.id === selectedEditAddress
-    //   );
-    //   if (selectedAddressObj) {
-    //     setFullName(selectedAddressObj.fullName);
-    //     setPhoneNumber(selectedAddressObj.phoneNumber);
-    //     setProvinceDistrictSubDistrictPostalCode(
-    //       selectedAddressObj.provinceDistrictSubDistrictPostalCode
-    //     );
-    //     setStreetNameBuldingHouseNo(selectedAddressObj.streetNameBuldingHouseNo);
-    //   }
-    // }, [selectedEditAddress]);
+    const placeOrder = (selectedItems: string[], paymentType: string, address: string | undefined) => {
+        const request = {
+          line_equipments: selectedItems,
+          payment_type: paymentType,
+          address: address, 
+        }
+        createOrder(request)
+            .then((response) => {
+                console.log(response)
+                setIsModalOpen(false);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
 
     useEffect(() => {
       getUser()
@@ -174,174 +118,6 @@ function Purchase() {
                                     {user?.address}
                                 </p>
                             </div>
-                            {/* <button
-                className="flex-none text-[12px] text-blue-500 hover:text-blue-600 px-3"
-                // onClick={() => handleIsAddressModalOpen(true)}
-              >
-                Change
-              </button> */}
-                            {/* <Modal
-                title={
-                  <div>
-                    <h3>My Address</h3>
-                    <Divider className="bg-gray-300"></Divider>
-                  </div>
-                }
-                open={isAddressModalOpen}
-                onOk={() => handleIsAddressModalOpen(false)}
-                onCancel={() => handleIsAddressModalOpen(false)}
-              >
-                <Radio.Group value={selectedAddress} className="space-y-5">
-                  {addressList.map((adrObj, index) => (
-                    <Radio
-                      value={adrObj.id}
-                      onClick={() => handleSetSelectedAddress(adrObj.id)}
-                      key={index}
-                    >
-                      <div className="flex items-center space-x-10 ml-4 text-[13px]">
-                        <div className="w-[350px]">
-                          <div className="flex items-center space-x-3">
-                            <p className="font-bold">{adrObj.fullName}</p>
-                            <p>|</p>
-                            <p>{adrObj.phoneNumber}</p>
-                          </div>
-                          <div>{adrObj.streetNameBuldingHouseNo}</div>
-                          <div>
-                            {adrObj.provinceDistrictSubDistrictPostalCode}
-                          </div>
-                        </div>
-                        <button
-                          className="text-blue-500 hover:text-blue-600"
-                          onClick={() => {
-                            handleSetSelectedEditAddress(adrObj.id);
-                            handleIsEditAddressModalOpen(true);
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <Modal
-                          title={<h3>Edit Address</h3>}
-                          open={isEditAddressModalOpen}
-                          onOk={() => {
-                            handleEditAddress();
-                            handleIsEditAddressModalOpen(false);
-                          }}
-                          onCancel={() => handleIsEditAddressModalOpen(false)}
-                        >
-                          <div className="space-y-4 mt-3 mb-3">
-                            <div className="flex items-center space-x-4">
-                              <div className="w-full">
-                                <p>Full Name</p>
-                                <Input
-                                  value={fullName}
-                                  onChange={(e) => setFullName(e.target.value)}
-                                  style={{ fontWeight: "normal" }}
-                                />
-                              </div>
-                              <div className="w-full">
-                                <p>Phone Number</p>
-                                <Input
-                                  value={phoneNumber}
-                                  onChange={(e) =>
-                                    setPhoneNumber(e.target.value)
-                                  }
-                                  style={{ fontWeight: "normal" }}
-                                />
-                              </div>
-                            </div>
-                            <div className="w-full">
-                              <p>
-                                Province, District, Sub District, Postal Code
-                              </p>
-                              <Input
-                                value={provinceDistrictSubDistrictPostalCode}
-                                onChange={(e) =>
-                                  setProvinceDistrictSubDistrictPostalCode(
-                                    e.target.value
-                                  )
-                                }
-                                style={{ fontWeight: "normal" }}
-                              />
-                            </div>
-                            <div className="w-full">
-                              <p>Street Name, Building, House No.</p>
-                              <Input
-                                value={streetNameBuldingHouseNo}
-                                onChange={(e) =>
-                                  setStreetNameBuldingHouseNo(e.target.value)
-                                }
-                                style={{ fontWeight: "normal" }}
-                              />
-                            </div>
-                          </div>
-                        </Modal>
-                      </div>
-                    </Radio>
-                  ))}
-                </Radio.Group>
-                <button
-                  className="flex items-center border-2 border-[#B6B6B6] mt-5 px-3 py-1 rounded-md space-x-2"
-                  onClick={() => handleIsAddAddressModalOpen(true)}
-                >
-                  <img src={Plus} className="w-3 h-3" />
-                  <p>Add New Address</p>
-                </button>
-                <Modal
-                  title={<h3>Add Address</h3>}
-                  open={isAddAddressModalOpen}
-                  onOk={() => {
-                    handleAddAddress({
-                      id: addressList.length + 1,
-                      fullName: fullName,
-                      phoneNumber: phoneNumber,
-                      provinceDistrictSubDistrictPostalCode:
-                        provinceDistrictSubDistrictPostalCode,
-                      streetNameBuldingHouseNo: streetNameBuldingHouseNo,
-                    });
-                    handleIsAddAddressModalOpen(false);
-                  }}
-                  onCancel={() => handleIsAddAddressModalOpen(false)}
-                >
-                  <div className="space-y-4 mt-3 mb-3">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-full">
-                        <p>Full Name</p>
-                        <Input
-                          onChange={(e) => setFullName(e.target.value)}
-                          style={{ fontWeight: "normal" }}
-                        />
-                      </div>
-                      <div className="w-full">
-                        <p>Phone Number</p>
-                        <Input
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          style={{ fontWeight: "normal" }}
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full">
-                      <p>Province, District, Sub District, Postal Code</p>
-                      <Input
-                        onChange={(e) =>
-                          setProvinceDistrictSubDistrictPostalCode(
-                            e.target.value
-                          )
-                        }
-                        style={{ fontWeight: "normal" }}
-                      />
-                    </div>
-                    <div className="w-full">
-                      <p>Street Name, Building, House No.</p>
-                      <Input
-                        onChange={(e) =>
-                          setStreetNameBuldingHouseNo(e.target.value)
-                        }
-                        style={{ fontWeight: "normal" }}
-                      />
-                    </div>
-                  </div>
-                </Modal>
-              </Modal> */}
                         </div>
                     </div>
                     <div className="w-full max-h-[82vh] bg-[#E7E7E7] space-y-3 rounded-md">
@@ -416,40 +192,6 @@ function Purchase() {
                             </div>
                             <div className="h-[80px] border-r-2 border-dashed border-[#ACACAC]"></div>
                             <div className="w-full h-[80px] border-y-2 border-dashed border-[#ACACAC] p-4">
-                                {/* <div className="w-full flex items-center space-x-4">
-                  <label className="text-[13px]">Shipping Option:</label>
-                  <p className="grow text-[13px]">
-                    {
-                      shippingOption.find(
-                        (obj) => obj.value === selectedShippingOption
-                      )?.label
-                    }
-                  </p>
-                  <button
-                    className="flex-none text-[13px] text-blue-500 hover:text-blue-600 px-3"
-                    onClick={() => handleisModalShippingOptionOpen(true)}
-                  >
-                    Change
-                  </button>
-                  <Modal
-                    title={"Select Shipping Option"}
-                    open={isModalShippingOptionOpen}
-                    onOk={() => {
-                      setSelectedShippingOption(tempSelectedShippingOption);
-                      handleisModalShippingOptionOpen(false);
-                    }}
-                    onCancel={() => handleisModalShippingOptionOpen(false)}
-                  >
-                    <Radio.Group
-                      value={tempSelectedShippingOption}
-                      onChange={(e) =>
-                        setTempSelectedShippingOption(e.target.value)
-                      }
-                      options={shippingOption}
-                    ></Radio.Group>
-                  </Modal>
-                  <p className="text-[13px]">฿{selectedShippingOption}</p>
-                </div> */}
                             </div>
                         </div>
                         <div className="flex items-center justify-end pb-4 pr-5 space-x-5">
@@ -458,7 +200,6 @@ function Purchase() {
                                 {selectedItems.length > 1 ? "s" : ""}):{" "}
                             </p>
                             <p className="font-semibold">
-                                {/* ฿{totalPrice() + selectedShippingOption} */}
                                 ฿{totalPrice(selectedItems).toLocaleString("en-US", {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
@@ -472,31 +213,31 @@ function Purchase() {
                             <div className="space-x-10">
                                 <button
                                     className={`text-[13px] border-2 ${
-                                        selectedPaymentMethod === 0
+                                        selectedPaymentMethod === "QRPromptPay"
                                             ? "border-[#2BC517] text-[#2BC517]"
                                             : "border-[#B6B6B6]"
                                     } px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517]`}
-                                    onClick={() => setSelectedPaymentMethod(0)}
+                                    onClick={() => setSelectedPaymentMethod("QRPromptPay")}
                                 >
                                     QR Promptpay
                                 </button>
                                 <button
                                     className={`text-[13px] border-2 ${
-                                        selectedPaymentMethod === 1
+                                        selectedPaymentMethod === "Cash"
                                             ? "border-[#2BC517] text-[#2BC517]"
                                             : "border-[#B6B6B6]"
                                     } px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517]`}
-                                    onClick={() => setSelectedPaymentMethod(1)}
+                                    onClick={() => setSelectedPaymentMethod("Cash")}
                                 >
                                     Cash on Delivery
                                 </button>
                                 <button
                                     className={`text-[13px] border-2 ${
-                                        selectedPaymentMethod === 2
+                                        selectedPaymentMethod === "CreditOrDebitCard"
                                             ? "border-[#2BC517] text-[#2BC517]"
                                             : "border-[#B6B6B6]"
                                     } px-2 py-1 rounded-md hover:border-[#2BC517] hover:text-[#2BC517]`}
-                                    onClick={() => setSelectedPaymentMethod(2)}
+                                    onClick={() => setSelectedPaymentMethod("CreditOrDebitCard")}
                                 >
                                     Credit/ Debit Card
                                 </button>
@@ -514,13 +255,8 @@ function Purchase() {
                                           maximumFractionDigits: 2,
                                       })}
                                     </p>
-                                    {/* <p className="text-[13px] text-[#767676]">
-                    Shipping Subtotal
-                  </p> */}
-                                    {/* <p className="text-[13px] text-right">฿{selectedShippingOption}</p> */}
                                     <p className="text-[13px] text-[#767676]">Total Payment:</p>
                                     <p className="text-[17px] text-right font-semibold">
-                                        {/* ฿{totalPrice() + selectedShippingOption} */}
                                         ฿{totalPrice(selectedItems).toLocaleString("en-US", {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2,
@@ -536,9 +272,20 @@ function Purchase() {
                                 transaction.
                             </p>
                             <button
-                                className="bg-green-500 hover:bg-green-600 text-[13px] text-white w-[120px] h-8 rounded-md">
+                                className="bg-green-500 hover:bg-green-600 text-[13px] text-white w-[120px] h-8 rounded-md"
+                                onClick={() => setIsModalOpen(true)}
+                            >
                                 Place Order
                             </button>
+                            <Modal
+                              title="You are ordering this order"
+                              open={isModalOpen}
+                              onOk={() => placeOrder(selectedItems, selectedPaymentMethod, user?.address)}
+                              onCancel={() => setIsModalOpen(false)}
+                              centered
+                          >
+                              Are you sure to place order?
+                          </Modal>
                         </div>
                     </div>
                 </div>
