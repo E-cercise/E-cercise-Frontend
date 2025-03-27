@@ -8,6 +8,7 @@ import Test from "../../assets/test/home/Group 32.png";
 import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 import Dumbbells3 from "../../assets/test/comparison/image 18.png";
 import "./OrderTracking.css";
+import { useLocation } from "react-router-dom";
 
 interface CartList {
     id: number;
@@ -56,6 +57,10 @@ function OrderTracking() {
             quantity: 1,
         },
     ]);
+    const location = useLocation();
+    const orderID = location.state;
+
+    console.log(orderID);
 
     const totalPrice = () => {
         let total = 0;
