@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Input, Modal} from "antd";
 import {FaLocationDot} from "react-icons/fa6";
 import NavBar from "../../components/navbar/NavBar.tsx";
@@ -29,6 +29,7 @@ function Purchase() {
     const [cart, setCart] = useState<CartResponse>();
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("Cash");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
     const location = useLocation();
     const selectedItems = location.state;
 
@@ -86,7 +87,7 @@ function Purchase() {
         createOrder(request)
             .then((response) => {
                 console.log(response)
-                setIsModalOpen(false);
+                // setIsModalOpen(false);
             })
             .catch((err) => {
                 console.error(err);
@@ -280,7 +281,7 @@ function Purchase() {
                             <Modal
                               title="You are ordering this order"
                               open={isModalOpen}
-                              onOk={() => placeOrder(selectedItems, selectedPaymentMethod, user?.address)}
+                              onOk={() => {placeOrder(selectedItems, selectedPaymentMethod, user?.address);navigate("/order-tracking");}}
                               onCancel={() => setIsModalOpen(false)}
                               centered
                           >
