@@ -8,32 +8,16 @@ import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
 import {createOrder} from "../../api/order/PlaceOrder.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
 import {UserProfile} from "../../interfaces/UserProfile.ts";
-import {LineEquipment} from "../../interfaces/Order.ts"
 import {splitString} from "../../helper/splitStringHelper.ts";
-
-// import Test from "../../assets/test/home/Group 32.png";
-// import Dumbbells1 from "../../assets/test/comparison/image 16.png";
-// import Dumbbells3 from "../../assets/test/comparison/image 18.png";
-
-// interface CartList {
-//     id: number;
-//     isSelected: boolean;
-//     imageUrl: string;
-//     name: string;
-//     price: number;
-//     quantity: number;
-// }
 
 function Purchase() {
     const [user, setUser] = useState<UserProfile>();
     const [cart, setCart] = useState<CartResponse>();
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("Cash");
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("QRPromptPay");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const location = useLocation();
     const selectedItems = location.state;
-
-    console.log(selectedItems);
 
     const getUser = () => {
       getUserProfile()
@@ -70,39 +54,31 @@ function Purchase() {
       }
     };
 
-    // const getSelectedItems = (selectedItems: string[]) => {
-    //   return cart?.line_equipments.map((equipment) => {
-    //     if (selectedItems.includes(equipment.line_equipment_id)) {
-    //       return equipment;
-    //     }
-    //   })
-    // }
-
-    const placeOrder = (selectedItems: string[], paymentType: string, address: string | undefined) => {
+    const placeOrder = async (selectedItems: string[], paymentType: string, address: string | undefined) => {
         const request = {
-          line_equipments: selectedItems,
-          payment_type: paymentType,
-          address: address, 
+            line_equipments: selectedItems,
+            payment_type: paymentType,
+            address: address, 
         }
-        createOrder(request)
-            .then((response) => {
-                console.log(response)
-                // setIsModalOpen(false);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
+        await createOrder(request)
+        .then((response) => {
+          console.log("Order success:", response);
+          navigate("/order-tracking", {state: response.order_id});
+        })
+        .catch((err) => {
+          console.error("Order failed:", err);
+        });
+    };
 
     useEffect(() => {
-      getUser()
+      getUser();
       getCart();
     }, []);
 
     return (
         <div>
             <NavBar/>
-            {cart?.line_equipments?.length > 0 ? (
+            {cart?.line_equipments?.length ?? 0  > 0 ? (
                 <div className="px-[75px] py-10 space-y-4">
                     <div className="w-full h-[120px] bg-[#E7E7E7] px-8 py-5 space-y-5 rounded-md">
                         <div className="flex items-center space-x-3">
@@ -281,7 +257,9 @@ function Purchase() {
                             <Modal
                               title="You are ordering this order"
                               open={isModalOpen}
-                              onOk={() => {placeOrder(selectedItems, selectedPaymentMethod, user?.address);navigate("/order-tracking");}}
+                              onOk={async () => {
+                                  await placeOrder(selectedItems, selectedPaymentMethod, user?.address);
+                              }}
                               onCancel={() => setIsModalOpen(false)}
                               centered
                           >

@@ -1,69 +1,97 @@
-import React, {useState} from "react";
-import NavBar from "../../components/navbar/NavBar.tsx";
-import {Steps} from "antd";
+import React, {useEffect, useState} from "react";
+import {Divider, Modal, message, Steps} from "antd";
+import { useLocation } from "react-router-dom";
 import {RiFileList2Line, RiTruckLine} from "react-icons/ri";
 import {MdOutlinePaid} from "react-icons/md";
 import {TiDownload} from "react-icons/ti";
-import Test from "../../assets/test/home/Group 32.png";
-import Dumbbells1 from "../../assets/test/comparison/image 16.png";
-import Dumbbells3 from "../../assets/test/comparison/image 18.png";
+import { PiHandArrowDownBold } from "react-icons/pi";
+import NavBar from "../../components/navbar/NavBar.tsx";
+import { getOrderDetail } from "../../api/order/GetOrderDetail.ts";
+import { updateOrderStatus } from "../../api/order/UpdateOrderStatus.ts";
+import { splitString } from "../../helper/splitStringHelper.ts";
+import { OrderDetailResponse } from "../../interfaces/Order.ts";
+import QRPromptpay from "../../assets/order-tracking/image.png"
 import "./OrderTracking.css";
 
-interface CartList {
-    id: number;
-    isSelected: boolean;
-    imageUrl: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
+const statusMap: Record<string, number> = {
+    "Placed": 0,
+    "Paid": 1,
+    "Shipped out": 2,
+    "To Receive": 3,
+    "Received": 4,
+};
 
 function OrderTracking() {
-    const [addressList] = useState([
+    const [orderDetail, setOrderDetail] = useState<OrderDetailResponse>();
+    const [isShowModal, setIsShowModal] = useState<boolean>(false);
+    const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
+    const [received, setReceived] = useState<boolean>(true);
+    const location = useLocation();
+    const orderID = location.state;
+    const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
+    const stepItems = [
         {
-            id: 1,
-            fullName: "Thanadol Udomsirinanchai",
-            phoneNumber: "(+66) XXXXXXXXX",
-            provinceDistrictSubDistrictPostalCode:
-                "Bangkok, Nong Khaem, Nong Khang Phlu, 10160",
-            streetNameBuldingHouseNo:
-                "XX/XXX, XXXXXXX Petchkasem XX, Phet Kasem XX Road, Nong Khang Phlu",
-        },
-    ]);
-    const [cartList] = useState<CartList[]>([
-        {
-            id: 1,
-            isSelected: false,
-            imageUrl: Test,
-            name: "Bodybuilding Dumbbell Kit 10 kg",
-            price: 120,
-            quantity: 2,
+            title: "Order Placed",
+            icon: <RiFileList2Line size={30} />,
+            status: currentStatusIndex > 0 ? "finish" : currentStatusIndex === 0 ? "process" : "wait",
         },
         {
-            id: 2,
-            isSelected: false,
-            imageUrl: Dumbbells1,
-            name: "Adjustable Weights Dumbbells Set, 20/30/40/60/80lbs Non-Rolling Adjustable Dumbbell Set, Free Weights Dumbbells Set Hexagon, Weights Set for Home Gym",
-            price: 150,
-            quantity: 1,
+            title: "Order Paid",
+            icon: <MdOutlinePaid size={30} />,
+            status: currentStatusIndex > 1 ? "finish" : currentStatusIndex === 1 ? "process" : "wait",
         },
         {
-            id: 3,
-            isSelected: false,
-            imageUrl: Dumbbells3,
-            name: "Yes4All Old School Adjustable Dumbbell Set with Weight Plates, Star Lock Collars/Connector, 40lbs to 200lbs Adjustable Weight Plates Set",
-            price: 200,
-            quantity: 1,
+            title: "Order Shipped Out",
+            icon: <RiTruckLine size={30} />,
+            status: currentStatusIndex > 2 ? "finish" : currentStatusIndex === 2 ? "process" : "wait",
         },
-    ]);
+        {
+            title: "To Receive",
+            icon: <TiDownload size={30} />,
+            status: currentStatusIndex > 3 ? "finish" : currentStatusIndex === 3 ? "process" : "wait",
+        },
+        {
+            title: "Received",
+            icon: <PiHandArrowDownBold size={30} />,
+            status: currentStatusIndex === 4 ? "process" : "wait",
+        },
+    ];
 
-    const totalPrice = () => {
-        let total = 0;
-        cartList.forEach((product) => {
-            total += product.price * product.quantity;
-        });
-        return total;
-    };
+    console.log(orderID);
+    console.log(orderDetail);
+    console.log(received);
+
+    const detail = (id: string) => {
+        getOrderDetail(id)
+            .then((response) => {
+                if (response?.order_status === "To Receive") {
+                    setShowReceiveButton(true);
+                    setReceived(false);
+                } else {
+                    setReceived(true);
+                }
+                setOrderDetail(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+    }
+
+    const updateStatus = (id: string) => {
+        updateOrderStatus(id)
+            .then((response) => {
+                setIsShowModal(false);
+                message.success(response.message);
+                setReceived(true);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+    }
+
+    useEffect(() => {
+        detail(orderID);
+    }, [received, isShowModal])
 
     return (
         <div>
@@ -73,56 +101,61 @@ function OrderTracking() {
                     <div className="flex items-center space-x-2 bg-[#F2EFEF] rounded-md p-2">
                         <div className="flex items-center text-[12px] space-x-2">
                             <p className="font-bold">ORDER ID:</p>
-                            <p>09554440-dee1-444a-b148-f67da77d4f8c</p>
+                            <p>{orderID}</p>
                         </div>
                         <div>|</div>
                         <div className="flex items-center text-[12px] space-x-2">
                             <p className="font-bold">ORDER STATUS:</p>
-                            <p className="font-bold text-[#00C331]">DELIVERED</p>
+                            <p className="font-bold text-[#00C331]">{orderDetail?.order_status}</p>
                         </div>
                     </div>
                     <Steps
                         labelPlacement="vertical"
-                        items={[
-                            {
-                                title: "Order Placed",
-                                status: "finish",
-                                icon: <RiFileList2Line size={30}/>,
-                            },
-                            {
-                                title: "Order Paid",
-                                status: "finish",
-                                icon: <MdOutlinePaid size={30}/>,
-                            },
-                            {
-                                title: "Order Shipped Out",
-                                status: "wait",
-                                icon: <RiTruckLine size={30}/>,
-                            },
-                            {
-                                title: "To Receive",
-                                status: "wait",
-                                icon: <TiDownload size={30}/>,
-                            },
-                        ]}
+                        items={stepItems}
                     />
-                    <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1">
-                        <button className="text-[14px] text-white bg-[#53D94F] rounded-md px-4 py-2 m-3 float-right">
-                            Order Received
-                        </button>
-                        {/* <Divider></Divider> */}
-                        {/* <button></button> */}
-                    </div>
+                    {orderDetail?.order_status === "Placed" && (
+                        <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1">
+                            <button
+                                className="text-[14px] text-white bg-[#1890ff] rounded-md px-4 py-2 m-3 float-right"
+                                // onClick={() => updateStatus(orderID)}
+                                onClick={() => setIsShowModal(true)}
+                            >
+                                Pay Now
+                            </button>
+                            <Modal 
+                                title="This is just a mock up of Promptpay"
+                                open={isShowModal}
+                                onOk={() => updateStatus(orderID)}
+                                onCancel={() => setIsShowModal(false)}
+                            >
+                                <div className="flex items-center justify-center">
+                                    <img src={QRPromptpay} alt="" className="w-[250px]" />
+                                </div>
+                            </Modal>
+                        </div>
+                    )}
+                    {/* {orderDetail?.order_status === "To Receive" || orderDetail?.order_status === "Received" && ( */}
+                        <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1">
+                            <button 
+                                className={`text-[14px] text-white ${!received ? "bg-[#53D94F]":"bg-[#E7E7E7]"} rounded-md px-4 py-2 m-3 float-right`}
+                                onClick={() => updateStatus(orderID)}
+                                disabled={received}
+                            >
+                                Order Received
+                            </button>
+                            {/* <Divider></Divider>
+                            <button></button> */}
+                        </div>
+                    {/* )} */}
                 </div>
                 <div className="w-full flex bg-[#E7E7E7] rounded-md px-6 py-4 space-x-[20px]">
                     <div className="w-[28vw] h-[30vh] bg-white space-y-2 rounded-md p-5">
                         <h3 className="text-[17px] font-semibold">Delivery Address</h3>
                         <div className="space-y-1">
-                            <p className="text-[13px]">{addressList[0].fullName}</p>
-                            <p className="text-[13px] text-[#767676]">{addressList[0].phoneNumber}</p>
+                            <p className="text-[13px]">{orderDetail?.address.full_name}</p>
+                            <p className="text-[13px] text-[#767676]">{orderDetail?.address.phone_number}</p>
                             <p className="text-[13px] text-[#767676]">
-                                {addressList[0].streetNameBuldingHouseNo},{" "}
-                                {addressList[0].provinceDistrictSubDistrictPostalCode}
+                                {orderDetail?.address.address_line}
                             </p>
                         </div>
                     </div>
@@ -143,25 +176,28 @@ function OrderTracking() {
                         </div>
                         <div
                             className={`space-y-2 max-h-[33vh] ${
-                                cartList.length > 3 ? "overflow-y-scroll" : ""
+                                orderDetail?.orders?.length && orderDetail?.orders.length > 3 ? "overflow-y-scroll" : ""
                             }`}
                         >
-                            {cartList.map((product) => (
+                            {orderDetail?.orders.map((product) => (
                                 <div
-                                    key={product.id}
+                                    key={product.line_equipment_id}
                                     className="flex items-center bg-zinc-300 h-[60px] py-5 rounded-md"
                                 >
                                     <div className="grow flex items-center w-[600px] h-[60px] pl-4 space-x-3">
                                         <img
-                                            src={product.imageUrl}
+                                            src={product.img_url}
                                             alt=""
-                                            className="w-12 rounded-md"
+                                            className="w-12 h-12 rounded-md"
                                         />
-                                        <p className="text-[12px]">{product.name}</p>
+                                        <p className="text-[12px]">{splitString(product.equipment_name)[0]}</p>
                                     </div>
                                     <div
                                         className="grow flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
-                                        ฿{product.price}
+                                        ฿{product.per_unit_price.toLocaleString("en-US", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
                                     </div>
                                     <div
                                         className="grow flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
@@ -169,17 +205,23 @@ function OrderTracking() {
                                     </div>
                                     <div
                                         className="grow flex items-center justify-center w-[150px] h-[60px] text-[12px] text-center">
-                                        ฿{product.price * product.quantity}
+                                        ฿{(product.per_unit_price * product.quantity).toLocaleString("en-US", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
                                     </div>
                                 </div>
                             ))}
-                            <div>
-                                <div className="flex items-center px-2 space-x-2 float-right">
-                                    <p className="text-[14px]">Net Total :</p>
-                                    <p className="text-[15px] font-semibold">
-                                        ฿{totalPrice()}
-                                    </p>
-                                </div>
+                        </div>
+                        <div>
+                            <div className="flex items-center px-2 space-x-2 float-right">
+                                <p className="text-[14px]">Net Total :</p>
+                                <p className="text-[15px] font-semibold">
+                                    ฿{orderDetail?.net_price.toLocaleString("en-US", {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}
+                                </p>
                             </div>
                         </div>
                     </div>
