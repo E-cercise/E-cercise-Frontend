@@ -8,21 +8,7 @@ import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
 import {createOrder} from "../../api/order/PlaceOrder.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
 import {UserProfile} from "../../interfaces/UserProfile.ts";
-import {LineEquipment} from "../../interfaces/Order.ts"
 import {splitString} from "../../helper/splitStringHelper.ts";
-
-// import Test from "../../assets/test/home/Group 32.png";
-// import Dumbbells1 from "../../assets/test/comparison/image 16.png";
-// import Dumbbells3 from "../../assets/test/comparison/image 18.png";
-
-// interface CartList {
-//     id: number;
-//     isSelected: boolean;
-//     imageUrl: string;
-//     name: string;
-//     price: number;
-//     quantity: number;
-// }
 
 function Purchase() {
     const [user, setUser] = useState<UserProfile>();
@@ -32,10 +18,6 @@ function Purchase() {
     const navigate = useNavigate();
     const location = useLocation();
     const selectedItems = location.state;
-
-    console.log(selectedItems);
-    // console.log(selectedPaymentMethod)
-    // console.log(user?.address)
 
     const getUser = () => {
       getUserProfile()
@@ -82,7 +64,6 @@ function Purchase() {
         .then((response) => {
           console.log("Order success:", response);
           navigate("/order-tracking", {state: response.order_id});
-          // getCart();
         })
         .catch((err) => {
           console.error("Order failed:", err);

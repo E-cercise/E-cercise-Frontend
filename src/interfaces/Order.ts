@@ -12,3 +12,17 @@ export interface PlaceOrder {
     payment_type: string;
     address: string;
 }
+
+interface Address {
+    full_name: string;
+    phone_number: string;
+    address_line: string;
+}
+
+export interface OrderDetailResponse {
+    id: string;
+    order_status: string;
+    address: Address;
+    orders: LineEquipment[];
+    net_price: number;
+}
