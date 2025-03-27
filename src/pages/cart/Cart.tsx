@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {message, Modal} from "antd";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {getEquipmentsInCart} from "../../api/cart/GetEquipmentsInCart.ts";
 import {modifyEquipmentInCart} from "../../api/cart/ModifyEquipmentInCart.ts";
 import {deleteEquipmentInCart} from "../../api/cart/DeleteEquipmentInCart.ts";
-import NavBar from "../../components/navbar/NavBar.tsx";
+import {splitString} from "../../helper/splitStringHelper.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
+import NavBar from "../../components/navbar/NavBar.tsx";
 import CrossMark from "../../assets/test/cart/image 36.png";
 
 function Cart() {
@@ -15,6 +16,29 @@ function Cart() {
         lineEquipmentId: string;
         quantity: number;
     }>({lineEquipmentId: "", quantity: 0});
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
+    const navigate = useNavigate();
+
+    // const handleCheckboxChange = (id: string, checked: boolean) => {
+    //   if (checked) {
+    //       setSelectedItems([...selectedItems, id]);
+    //       console.log(id);
+    //   } else {
+    //       setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
+    //   }
+    // };
+    const allItemIds = cart?.line_equipments?.map(e => e.line_equipment_id) || [];
+    const isAllSelected = allItemIds.length > 0 && selectedItems.length === allItemIds.length;
+
+    const handleSelectAllChange = (checked: boolean) => {
+        setSelectedItems(checked ? allItemIds : []);
+    };
+
+    const handleCheckboxChange = (id: string, checked: boolean) => {
+        setSelectedItems(prev =>
+            checked ? [...prev, id] : prev.filter(itemId => itemId !== id)
+        );
+    };
 
     const handleModifyItemQuantityOnCart = (
         lineEquipmentId: string,
@@ -25,20 +49,34 @@ function Cart() {
         }
     };
 
-    const splitString = (equipmentName: string) => {
-        if (equipmentName.includes(" - ")) {
-            return equipmentName.split(" - ");
-        } else if (equipmentName.includes(", ")) {
-            return equipmentName.split(", ");
-        }
-        return [equipmentName];
-    };
+    // const splitString = (equipmentName: string) => {
+    //     if (equipmentName.includes(" - ")) {
+    //         return equipmentName.split(" - ");
+    //     } else if (equipmentName.includes(", ")) {
+    //         return equipmentName.split(", ");
+    //     }
+    //     return [equipmentName];
+    // };
 
-    const totalQuantity =
-        cart?.line_equipments?.reduce(
-            (accumulator, equipment) => accumulator + equipment.quantity,
-            0
-        ) || 0;
+    // const totalQuantity =
+    //     cart?.line_equipments?.reduce(
+    //         (accumulator, equipment) => accumulator + equipment.quantity,
+    //         0
+    //     ) || 0;
+
+    const totalPrice = (selectedItems: string[] | undefined) => {
+      if (selectedItems !== undefined) {
+        let total = 0;
+        cart?.line_equipments.forEach((equipment) => {
+          if (selectedItems.includes(equipment.line_equipment_id)) {
+            total += equipment.per_unit_price * equipment.quantity;
+          }
+        });
+        return total;
+      } else {
+        return 0;
+      }
+    };    
 
     const getCart = () => {
         getEquipmentsInCart()
@@ -86,6 +124,8 @@ function Cart() {
             });
     };
 
+    console.log(selectedItems);
+
     useEffect(() => {
         if (modifyQuantity.lineEquipmentId) {
             modifyItemInCart(modifyQuantity);
@@ -105,7 +145,13 @@ function Cart() {
                     {cart?.line_equipments?.length ? (
                         <div className="w-full flex h-[50px] bg-[#BFBFBF] rounded-lg">
                             <div className="flex items-center justify-center w-[50px] rounded-s-lg">
-                                <input type="checkbox" className="w-6"/>
+                                {/* <input type="checkbox" className="w-6"/> */}
+                                <input
+                                  type="checkbox"
+                                  className="w-6"
+                                  checked={isAllSelected}
+                                  onChange={(e) => handleSelectAllChange(e.target.checked)}
+                                />
                             </div>
                             <div className="flex items-center justify-center w-[500px] font-bold text-[14px]">
                                 Product
@@ -133,7 +179,12 @@ function Cart() {
                                         className="flex bg-[#E7E7E7] h-[60px] rounded-lg"
                                     >
                                         <div className="flex items-center justify-center w-[50px] h-[60px] text-center">
-                                            <input type="checkbox" className="w-5"/>
+                                          <input type="checkbox" className="w-5" 
+                                            checked={selectedItems.includes(equipment.line_equipment_id)}
+                                            onChange={(e) =>
+                                              handleCheckboxChange(equipment.line_equipment_id, e.target.checked)
+                                            }
+                                          />
                                         </div>
                                         <div className="flex items-center w-[500px] h-[60px] pl-4 space-x-3">
                                             <img
@@ -210,16 +261,16 @@ function Cart() {
                                 <h2 className="font-bold mt-6 mb-3">Summary</h2>
                                 <div className="w-full flex bg-[#C5CBD7] h-[60px] rounded-lg">
                                     <div className="flex items-center justify-center w-[50px] h-[60px] text-center">
-                                        <input type="checkbox" className="w-5"/>
+                                        <input type="checkbox" className="w-5" checked={isAllSelected} onChange={(e) => handleSelectAllChange(e.target.checked)}/>
                                     </div>
                                     <div className="flex items-center w-[400px] h-[60px] text-[14px] pl-3">
-                                        Select All ({cart?.line_equipments.length})
+                                        Select All ({selectedItems.length})
                                     </div>
                                     <div className="flex items-center w-[470px] h-[60px] pr-3">
                                         <p className="w-full text-[14px] text-right">
-                                            Total ({totalQuantity} item
-                                            {totalQuantity > 1 ? "s" : ""}): ฿
-                                            {cart.total_price.toLocaleString("en-US", {
+                                            Total ({selectedItems.length} item
+                                            {selectedItems.length > 1 ? "s" : ""}): ฿
+                                            {totalPrice(selectedItems).toLocaleString("en-US", {
                                                 minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2,
                                             })}
@@ -229,10 +280,10 @@ function Cart() {
                                         <button
                                             className="bg-green-500 hover:bg-green-600 text-[13px] text-white w-[120px] h-8 rounded-md"
                                             onClick={() => {
-                                                if (totalQuantity === 0) {
+                                                if (selectedItems.length === 0) {
                                                     setIsModalOpen(true);
                                                 } else {
-                                                    // handleCheckout()
+                                                    navigate("/purchase", { state: selectedItems })
                                                 }
                                             }}
                                         >
