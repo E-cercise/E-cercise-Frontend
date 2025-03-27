@@ -13,7 +13,7 @@ import {splitString} from "../../helper/splitStringHelper.ts";
 function Purchase() {
     const [user, setUser] = useState<UserProfile>();
     const [cart, setCart] = useState<CartResponse>();
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("Cash");
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("QRPromptPay");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const location = useLocation();
