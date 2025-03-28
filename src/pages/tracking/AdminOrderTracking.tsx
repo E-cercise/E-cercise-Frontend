@@ -21,7 +21,7 @@ const statusMap: Record<string, number> = {
     "Received": 4,
 };
 
-function OrderTracking() {
+function AdminOrderTracking() {
     const [orderDetail, setOrderDetail] = useState<OrderDetailResponse>();
     const [isShowModal, setIsShowModal] = useState<boolean>(false);
     const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
@@ -231,4 +231,4 @@ function OrderTracking() {
     );
 }
 
-export default OrderTracking;
+export default AdminOrderTracking;
