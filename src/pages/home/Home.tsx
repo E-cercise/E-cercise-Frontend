@@ -34,7 +34,7 @@ const Home: React.FC = () => {
   const headingText =
     role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
 
-    console.log(filteredEquipments);
+  console.log(filteredEquipments);
 
   const fetchEquipments = async () => {
     try {
@@ -102,7 +102,7 @@ const Home: React.FC = () => {
     const displayed = equipmentArray.slice(0, pageSize);
 
     return (
-      <div className="grid grid-cols-5 gap-4 w-full bg-[#D9D9D9] pt-4 pb-4 pl-3 pr-6 rounded-md">
+      <div className={`grid grid-cols-5 gap-4 w-full bg-[#D9D9D9] pt-4 pb-4 pl-3 ${role === Role.Admin ? "": "pr-3"} rounded-md`}>
         {displayed.map((equipment, index) => (
           <EquipmentCard
             key={equipment.ID}
@@ -148,36 +148,38 @@ const Home: React.FC = () => {
         setCurrentPage={setCurrentPage}
       />
       <div className="flex flex-grow">
-        <div className="flex-shrink-0 w-[200px] h-[560px] bg-neutral-700">
-          <div className="pt-3 px-3 space-y-3">
-            <span className="text-white text-sm">Price Range</span>
-            <div className="flex items-center w-full space-x-2">
-              <Input
-                placeholder="฿ MIN"
-                value={tempMinPrice}
-                onChange={(e) => setTempMinPrice(e.target.value)}
-                className="w-[75px]"
-              />
-              <div className="w-10 text-white border border-solid"></div>
-              <Input
-                placeholder="฿ MAX"
-                value={tempMaxPrice}
-                onChange={(e) => setTempMaxPrice(e.target.value)}
-                className="w-[75px]"
-              />
+        {role == Role.User && (
+          <div className="flex-shrink-0 w-[200px] h-[560px] bg-zinc-800">
+            <div className="pt-3 px-3 space-y-3">
+              <span className="text-white text-sm">Price Range</span>
+              <div className="flex items-center w-full space-x-2">
+                <Input
+                  placeholder="฿ MIN"
+                  value={tempMinPrice}
+                  onChange={(e) => setTempMinPrice(e.target.value)}
+                  className="w-[75px]"
+                />
+                <div className="w-10 text-white border border-solid"></div>
+                <Input
+                  placeholder="฿ MAX"
+                  value={tempMaxPrice}
+                  onChange={(e) => setTempMaxPrice(e.target.value)}
+                  className="w-[75px]"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setMinPrice(tempMinPrice);
+                  setMaxPrice(tempMaxPrice);
+                }}
+                className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
+              >
+                Apply
+              </button>
             </div>
-            <button
-              onClick={() => {
-                setMinPrice(tempMinPrice);
-                setMaxPrice(tempMaxPrice);
-              }}
-              className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
-            >
-              Apply
-            </button>
           </div>
-        </div>
-        <div className="h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto">
+        )}
+        <div className={`w-full h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
 
           {filteredEquipments?.equipments.equipments?.length ? (
