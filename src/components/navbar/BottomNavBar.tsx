@@ -10,7 +10,7 @@ function BottomNavBar() {
 
     const navItems = [
         {to: "/", label: "All Products", Icon: AllProductIcon, includePath: ["/", "/equipment/add"]},
-        {to: "/orders", label: "Order List", Icon: DocumentIcon, includePath: ["/orders"]},
+        {to: "/orders/admin", label: "Order List", Icon: DocumentIcon, includePath: ["/orders"]},
     ];
 
     return (

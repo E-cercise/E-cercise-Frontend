@@ -11,10 +11,11 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.tsx";
 import {Role} from "./enum/Role.ts";
 import {useAuth} from "./hook/UseAuth.ts";
 import Home from "./pages/home/Home.tsx";
-import OrderList from "./pages/order_list/OrderList.tsx";
+import AdminOrderList from "./pages/order_list/AdminOrderList.tsx";
 import AddEquipmentPage from "./pages/add_equipment/AddEquipment.tsx";
 import AdminDetailPage from "./pages/detail/AdminDetail.tsx";
 import UserProfilePage from "./pages/user_profile/UserProfile.tsx";
+import AdminOrderTracking from './pages/tracking/AdminOrderTracking.tsx'
 
 function App() {
     const {userId, role, isLoading} = useAuth()
@@ -39,8 +40,9 @@ function App() {
                     <Route path='/cart' element={<ProtectedRoute><Cart/></ProtectedRoute>}/>
                     <Route path='/purchase' element={<ProtectedRoute><Purchase/></ProtectedRoute>}/>
                     <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking/></ProtectedRoute>}/>
-                    <Route path='/orders'
-                           element={<ProtectedRoute allowedRoles={[Role.Admin]}><OrderList/></ProtectedRoute>}/>
+                    <Route path='/order-tracking/admin' element={<ProtectedRoute allowedRoles={[Role.Admin]}><AdminOrderTracking/></ProtectedRoute>}/>
+                    <Route path='/orders/admin'
+                           element={<ProtectedRoute allowedRoles={[Role.Admin]}><AdminOrderList/></ProtectedRoute>}/>
                     <Route path='/profile'
                            element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><UserProfilePage/>
                            </ProtectedRoute>}/>
