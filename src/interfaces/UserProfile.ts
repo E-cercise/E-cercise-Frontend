@@ -5,3 +5,8 @@ export interface UserProfile {
     address: string;
     phone_number: string;
 }
+
+
+export interface UserGoal { id: string; name: string }
+export interface UserTag { id: string; name: string }
+
