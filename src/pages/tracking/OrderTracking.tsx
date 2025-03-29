@@ -135,7 +135,7 @@ function OrderTracking() {
             </div>
           </div>
           <Steps labelPlacement="vertical" items={stepItems} />
-          {orderDetail?.order_status === "Placed" && (
+          {role === Role.User && orderDetail?.order_status === "Placed" && (
             <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1">
               <button
                 className="text-[14px] text-white bg-[#1890ff] rounded-md px-4 py-2 m-3 float-right"
