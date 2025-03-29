@@ -50,6 +50,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
                 break;
             case "logout":
                 logout();
+                navigate("/")
                 break;
             case "login":
                 navigate("/login");

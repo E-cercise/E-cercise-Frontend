@@ -37,9 +37,9 @@ function App() {
                     <Route path='/equipment/add'
                            element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage/> </ProtectedRoute>}/>
                     <Route path='/comparison' element={<Comparison/>}/>
-                    <Route path='/cart' element={<ProtectedRoute><Cart/></ProtectedRoute>}/>
-                    <Route path='/purchase' element={<ProtectedRoute><Purchase/></ProtectedRoute>}/>
-                    <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking/></ProtectedRoute>}/>
+                    <Route path='/cart' element={<ProtectedRoute allowedRoles={[Role.User]}><Cart/></ProtectedRoute>}/>
+                    <Route path='/purchase' element={<ProtectedRoute allowedRoles={[Role.User]}><Purchase/></ProtectedRoute>}/>
+                    <Route path='/order-tracking' element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><OrderTracking/></ProtectedRoute>}/>
                     <Route path='/orders/admin'
                            element={<ProtectedRoute allowedRoles={[Role.Admin]}><AdminOrderList/></ProtectedRoute>}/>
                     <Route path='/orders' element={<ProtectedRoute allowedRoles={[Role.User]}><OrderList/></ProtectedRoute>}/>
