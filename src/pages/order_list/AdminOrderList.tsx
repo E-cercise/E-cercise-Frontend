@@ -3,15 +3,22 @@ import { useAuth } from "../../hook/UseAuth.ts";
 import { Table, Tag, Image, Typography, Space, Row, Col, Select } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { getOrderList } from "../../api/order/GetOrderList.ts";
+import { FirstLineEquipment, Order } from "../../interfaces/Order.ts";
 
 const { Text } = Typography;
 
 function AdminOrderList() {
   // const {role} = useAuth();
 
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [orderIDs, setOrderIDs] = useState<{ key: string, value: string }[]>([]);
+  const [userIDs, setUserIDs] = useState<{ key: string, value: string }[]>([]);
   const [orderStatus, setOrderStatus] = useState("");
   const [tempOrderStatus, setTempOrderStatus] = useState("");
+  const [userID, setUserID] = useState("");
+  const [tempUserID, setTempUserID] = useState("");
+  const [orderID, setOrderID] = useState("");
+  const [tempOrderID, setTempOrderID] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [tempPaymentType, setTempPaymentType] = useState("");
 
@@ -23,7 +30,34 @@ function AdminOrderList() {
   ) => {
     getOrderList(orderStatus, userId, orderId, paymentType)
       .then((response) => {
+        console.log(response.orders)
         setOrders(response.orders || []);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const fetchUserIDs = () => {
+    getOrderList("", "", "", "")
+      .then((response) => {
+        console.log(response.orders)
+        const uniqueUserIDs = Array.from(
+            new Set(orders.map((order: Order) => order.user_id))
+          ).map((id) => ({ key: id, value: id }));
+        setUserIDs(uniqueUserIDs);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const fetchOrderIDs = () => {
+    getOrderList("", "", "", "")
+      .then((response) => {
+        console.log(response.orders)
+        const orderIDs = response.orders.length != 0 ? response.orders.map((order: Order) => ({ key: order.id, value: order.id })) : []
+        setOrderIDs(orderIDs);
       })
       .catch((err) => {
         console.error(err);
@@ -39,15 +73,22 @@ function AdminOrderList() {
       ellipsis: true,
     },
     {
+      title: "User ID",
+      dataIndex: "user_id",
+      key: "user_id",
+      width: 100,
+      ellipsis: true,
+    },
+    {
       title: "Equipment",
       dataIndex: "first_line_equipment",
       key: "equipment",
       width: 280,
-      render: (equipment: any) => (
+      render: (equipment: FirstLineEquipment) => (
         <Space size="small">
           <Image
-            width={60}
-            height={60}
+            width={50}
+            height={50}
             src={equipment?.img_url}
             alt={equipment?.name}
             style={{ objectFit: "cover", borderRadius: 8 }}
@@ -62,7 +103,7 @@ function AdminOrderList() {
       dataIndex: "total_price",
       key: "total_price",
       render: (price: number) =>
-        `฿ ${price.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+        <Text className="text-[12px]">฿ {price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>,
     },
     {
       title: "Payment Type",
@@ -97,7 +138,7 @@ function AdminOrderList() {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
-      render: (date: any) => {
+      render: (date: string) => {
         return <Text className="text-[12px]">{date}</Text>;
       },
     },
@@ -105,15 +146,17 @@ function AdminOrderList() {
       title: "Updated At",
       dataIndex: "updated_at",
       key: "updated_at",
-      render: (date: any) => {
+      render: (date: string) => {
         return <Text className="text-[12px]">{date}</Text>;
       },
     },
   ];
 
   useEffect(() => {
-    fetchOrders(orderStatus, "", "", paymentType);
-  }, [orderStatus, paymentType]);
+    fetchUserIDs();
+    fetchOrderIDs();
+    fetchOrders(orderStatus, userID, orderID, paymentType);
+  }, [orderStatus, userID, orderID, paymentType]);
 
   return (
     <div>
@@ -139,6 +182,24 @@ function AdminOrderList() {
           <Col>
             <Select
               allowClear
+              placeholder="Filter by User ID"
+              style={{ width: 200 }}
+              onChange={(value) => setTempUserID(value)}
+              options={userIDs}
+            />
+          </Col>
+          <Col>
+            <Select
+              allowClear
+              placeholder="Filter by Order ID"
+              style={{ width: 200 }}
+              onChange={(value) => setTempOrderID(value)}
+              options={orderIDs}
+            />
+          </Col>
+          <Col>
+            <Select
+              allowClear
               placeholder="Filter by Payment Type"
               style={{ width: 200 }}
               onChange={(value) => setTempPaymentType(value)}
@@ -154,6 +215,8 @@ function AdminOrderList() {
               className="flex items-center gap-2 px-4 py-[5.5px] rounded-md bg-[#2F2F2F] text-white font-semibold"
               onClick={() => {
                 setOrderStatus(tempOrderStatus);
+                setUserID(tempUserID);
+                setOrderID(tempOrderID);
                 setPaymentType(tempPaymentType);
               }}
             >

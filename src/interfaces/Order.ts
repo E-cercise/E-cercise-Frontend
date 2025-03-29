@@ -26,3 +26,19 @@ export interface OrderDetailResponse {
     orders: LineEquipment[];
     net_price: number;
 }
+
+export interface FirstLineEquipment {
+    img_url: string;
+    name: string;
+}
+
+export interface Order {
+    created_at: string;
+    first_line_equipment: FirstLineEquipment;
+    id: string
+    order_status: string;
+    payment_type: string
+    total_price: string;
+    updated_at: string;
+    user_id: string
+}
