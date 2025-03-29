@@ -109,6 +109,7 @@ function AdminOrderList() {
       title: "Payment Type",
       dataIndex: "payment_type",
       key: "payment_type",
+      width: 150,
       render: (type: string) => {
         const colorMap: Record<string, string> = {
           Cash: "green",
