@@ -288,7 +288,7 @@ function NavBar({
                         }
                     >
                         <button
-                            className="flex items-center space-x-[3px] absolute right-[400px] text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
+                            className="flex items-center space-x-[3px] absolute right-[420px] text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
              hover:bg-[#d4d4d4] transition-colors duration-200 cursor-pointer"
                             onMouseEnter={() => handleShowMusclesPopover(true)}
                             onMouseLeave={() => handleShowMusclesPopover(false)}
@@ -307,7 +307,7 @@ function NavBar({
                 {role !== Role.Admin && <>
                     <Link
                         to="/comparison"
-                        className="absolute right-[310px] hover:scale-105 transition-transform duration-150 cursor-pointer"
+                        className="absolute right-[200px] hover:scale-105 transition-transform duration-150 cursor-pointer"
                     >
                         <img src={ComparisonLogo} alt="Comparison Logo" className="w-[60px] h-8"/>
                     </Link>
@@ -315,13 +315,13 @@ function NavBar({
                     <img
                         src={Cart}
                         alt="Cart Logo"
-                        className="absolute right-[240px] h-8 cursor-pointer hover:scale-105 transition-transform duration-150"
+                        className="absolute right-[120px] h-9 cursor-pointer hover:scale-105 transition-transform duration-150"
                         onClick={handleCartClick}
                     />
                 </>
                 }
 
-                <div className="absolute right-8 space-x-6">
+                <div className="absolute right-[40px] space-x-6">
                     <UserProfile userId={userId} name={name} logout={logout}/>
                 </div>
             </div>

@@ -12,6 +12,7 @@ import {Role} from "./enum/Role.ts";
 import {useAuth} from "./hook/UseAuth.ts";
 import Home from "./pages/home/Home.tsx";
 import AdminOrderList from "./pages/order_list/AdminOrderList.tsx";
+import OrderList from "./pages/order_list/OrderList.tsx";
 import AddEquipmentPage from "./pages/add_equipment/AddEquipment.tsx";
 import AdminDetailPage from "./pages/detail/AdminDetail.tsx";
 import UserProfilePage from "./pages/user_profile/UserProfile.tsx";
@@ -36,12 +37,12 @@ function App() {
                     <Route path='/equipment/add'
                            element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage/> </ProtectedRoute>}/>
                     <Route path='/comparison' element={<Comparison/>}/>
-                    <Route path='/cart' element={<ProtectedRoute><Cart/></ProtectedRoute>}/>
-                    <Route path='/purchase' element={<ProtectedRoute><Purchase/></ProtectedRoute>}/>
-                    <Route path='/order-tracking' element={<ProtectedRoute><OrderTracking/></ProtectedRoute>}/>
-                    {/* <Route path='/order-tracking/admin' element={<ProtectedRoute allowedRoles={[Role.Admin]}><AdminOrderTracking/></ProtectedRoute>}/> */}
+                    <Route path='/cart' element={<ProtectedRoute allowedRoles={[Role.User]}><Cart/></ProtectedRoute>}/>
+                    <Route path='/purchase' element={<ProtectedRoute allowedRoles={[Role.User]}><Purchase/></ProtectedRoute>}/>
+                    <Route path='/order-tracking' element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><OrderTracking/></ProtectedRoute>}/>
                     <Route path='/orders/admin'
                            element={<ProtectedRoute allowedRoles={[Role.Admin]}><AdminOrderList/></ProtectedRoute>}/>
+                    <Route path='/orders' element={<ProtectedRoute allowedRoles={[Role.User]}><OrderList/></ProtectedRoute>}/>
                     <Route path='/profile'
                            element={<ProtectedRoute allowedRoles={[Role.Admin, Role.User]}><UserProfilePage/>
                            </ProtectedRoute>}/>
