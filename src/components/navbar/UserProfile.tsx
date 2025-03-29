@@ -35,6 +35,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
                 },
                 {type: "divider" as const},
                 {label: "Profile", key: "profile"},
+                {label: "History", key: "history"},
                 {label: "Logout", key: "logout"},
             ]),
     ];
@@ -44,10 +45,12 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
             case "profile":
                 navigate("/profile");
                 break;
+            case "history":
+                navigate("/orders")
+                break;
             case "logout":
                 logout();
                 break;
-
             case "login":
                 navigate("/login");
                 break;
