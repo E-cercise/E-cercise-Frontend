@@ -3,11 +3,33 @@ import NavBar from "../../components/navbar/NavBar.tsx";
 import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 import Dumbbells2 from "../../assets/test/comparison/image 17.png";
 import Dumbbells3 from "../../assets/test/comparison/image 18.png";
+import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
+import { useEffect, useState } from "react";
 
 function Comparison() {
-    const handleChange = (value: string) => {
-        console.log(`selected ${value}`);
+    const [categories, setCategories] = useState([]);
+
+    console.log(categories);
+
+    const handleCategoryChange = (value: string) => {
+        console.log(value);
     };
+
+    const equipmentCategory = async () => {
+        getEquipmentCategory()
+            .then((data) => {
+                setCategories(data.categories);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+    }
+
+    const get 
+
+    useEffect(() => {
+        equipmentCategory();
+    }, [])
 
     return (
         <div>
@@ -15,14 +37,10 @@ function Comparison() {
             <div className="flex flex-col items-center space-y-5">
                 <p className="text-[22px] font-bold pt-5">Compare Equipments</p>
                 <Select
-                    defaultValue="Dumbbells"
-                    onChange={(e: any) => handleChange(e.value)}
+                    defaultValue="dumbbell"
+                    onChange={(value: any) => handleCategoryChange(value)}
                     className="w-[220px] h-[48px]"
-                    options={[
-                        {value: 1, label: "Dumbbells"},
-                        {value: 2, label: "Kettlebells"},
-                        {value: 3, label: "Treadmill"},
-                    ]}
+                    options={categories}
                 />
                 <p className="text-[#0B8AE5]">Shop Equipments {">"}</p>
                 <div className="flex justify-center space-x-[80px]">
