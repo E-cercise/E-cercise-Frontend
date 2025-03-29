@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../hook/UseAuth.ts";
+import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../../hook/UseAuth.ts";
 import { Table, Tag, Image, Typography, Space, Row, Col, Select } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { getOrderList } from "../../api/order/GetOrderList.ts";
@@ -21,6 +22,7 @@ function AdminOrderList() {
   const [tempOrderID, setTempOrderID] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [tempPaymentType, setTempPaymentType] = useState("");
+  const navigate = useNavigate();
 
   const fetchOrders = (
     orderStatus: string,
@@ -231,6 +233,10 @@ function AdminOrderList() {
           rowKey="id"
           bordered
           pagination={{ pageSize: 5 }}
+          onRow={(record) => ({
+            onClick: () => navigate(`/order-tracking`, { state: record.id }),
+            style: { cursor: "pointer" }
+          })}
         />
       </div>
     </div>
