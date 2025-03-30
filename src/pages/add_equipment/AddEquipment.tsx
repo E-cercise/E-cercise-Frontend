@@ -3,7 +3,7 @@ import {Card, Form, notification} from "antd";
 import NavBar from "../../components/navbar/NavBar";
 import HeaderRow from "../../components/headerRow/HeaderRow";
 import {useAuth} from "../../hook/UseAuth.ts";
-import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory";
+import {getEquipmentCategories} from "../../api/equipment/EquipmentCategory";
 import {addEquipment} from "../../api/equipment/AddEquipment";
 import {useNavigate} from "react-router-dom";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
@@ -27,7 +27,7 @@ const AddEquipmentPage = () => {
     const fetchCategories = async () => {
         setLoadingCategories(true);
         try {
-            const res = await getEquipmentCategory();
+            const res = await getEquipmentCategories();
             const mapped = res.categories.map((cat: any) => ({
                 label: cat.label,
                 value: cat.label,

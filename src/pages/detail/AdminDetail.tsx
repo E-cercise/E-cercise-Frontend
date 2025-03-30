@@ -3,7 +3,7 @@ import {CategoryResponse, EquipmentDetailResponse,} from "../../interfaces/equip
 import React, {useEffect, useState} from "react";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 import {Button, Card, Form, Modal, notification} from "antd";
-import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
+import {getEquipmentCategories} from "../../api/equipment/EquipmentCategory.ts";
 import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
 import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
@@ -38,7 +38,7 @@ const AdminDetailPage: React.FC = () => {
     const fetchCategories = async () => {
         setLoadingCategories(true);
         try {
-            const res = await getEquipmentCategory();
+            const res = await getEquipmentCategories();
             const mapped = res.categories.map((cat: any) => ({
                 label: cat.label,
                 value: cat.label,
