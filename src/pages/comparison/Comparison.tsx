@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Divider, message, Select } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import Dumbbells1 from "../../assets/test/comparison/image 16.png";
 import Dumbbells2 from "../../assets/test/comparison/image 17.png";
 import Dumbbells3 from "../../assets/test/comparison/image 18.png";
+import { getEquipmentCategories } from "../../api/equipment/EquipmentCategory.ts";
 import { equipmentInCategory } from "../../api/equipment/EquipmentsInCategory.ts";
-import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
 import { allEquipmentsDetail } from "../../api/equipment/AllEquipmentsDetail.ts";
 import { EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
-import { Link, useNavigate } from "react-router-dom";
 
 interface Equipment {
   ID: string;
@@ -28,7 +28,6 @@ function Comparison() {
   const [equipment1, setEquipment1] = useState<EquipmentDetailResponse>();
   const [equipment2, setEquipment2] = useState<EquipmentDetailResponse>();
   const [equipment3, setEquipment3] = useState<EquipmentDetailResponse>();
-  const navigate = useNavigate();
 
   // console.log(categories);
   // console.log(selectedID1);
@@ -73,8 +72,8 @@ function Comparison() {
     }
 };
 
-  const fetchEquipmentCategory = async () => {
-    getEquipmentCategory()
+  const fetchEquipmentCategories = async () => {
+    getEquipmentCategories()
       .then((data) => {
         setCategories(data.categories);
       })
@@ -118,7 +117,7 @@ function Comparison() {
   };
 
   useEffect(() => {
-    fetchEquipmentCategory();
+    fetchEquipmentCategories();
     if (equipments.length === 0) {
       fetchEquipmentInCategory(category);
     }
@@ -168,13 +167,13 @@ function Comparison() {
             </Link>
             <div className="w-[260px] text-center text-sm">
               <p className="font-bold">{equipment1?.name}</p>
-              <p>Brand: {equipment1?.brand}</p>
+              <p><strong>Brand:</strong> {equipment1?.brand}</p>
               <p>Model: {equipment1?.model}</p>
               <p>Material: {equipment1?.material}</p>
               <p className="mt-2 font-semibold">{equipment1?.option[0]?.name}</p>
               <p>Price: ฿{equipment1?.option[0]?.price?.toFixed(2)}</p>
               <p>Weight: {equipment1?.option[0]?.weight} kg</p>
-
+              <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment1?.additional_field?.map((field) => (
                   <div key={field.id}>
@@ -206,13 +205,13 @@ function Comparison() {
             </Link>
             <div className="w-[260px] text-center text-sm">
               <p className="font-bold">{equipment2?.name}</p>
-              <p>Brand: {equipment2?.brand}</p>
+              <p><strong>Brand:</strong> {equipment2?.brand}</p>
               <p>Model: {equipment2?.model}</p>
               <p>Material: {equipment2?.material}</p>
               <p className="mt-2 font-semibold">{equipment2?.option[0]?.name}</p>
               <p>Price: ฿{equipment2?.option[0]?.price?.toFixed(2)}</p>
               <p>Weight: {equipment2?.option[0]?.weight} kg</p>
-
+              <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment2?.additional_field?.map((field) => (
                   <div key={field.id}>
@@ -244,13 +243,13 @@ function Comparison() {
             </Link>
             <div className="w-[260px] text-center text-sm">
               <p className="font-bold">{equipment3?.name}</p>
-              <p>Brand: {equipment3?.brand}</p>
-              <p>Model: {equipment3?.model}</p>
-              <p>Material: {equipment3?.material}</p>
+              <p><strong>Brand:</strong> {equipment3?.brand}</p>
+              <p><strong>Model:</strong> {equipment3?.model}</p>
+              <p><strong>Material:</strong> {equipment3?.material}</p>
               <p className="mt-2 font-semibold">{equipment3?.option[0]?.name}</p>
-              <p>Price: ฿{equipment3?.option[0]?.price?.toFixed(2)}</p>
-              <p>Weight: {equipment3?.option[0]?.weight} kg</p>
-
+              <p><strong>Price:</strong> ฿{equipment3?.option[0]?.price?.toFixed(2)}</p>
+              <p><strong>Weight:</strong>: {equipment3?.option[0]?.weight} kg</p>
+              <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment3?.additional_field?.map((field) => (
                   <div key={field.id}>
