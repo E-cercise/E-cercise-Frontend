@@ -6,5 +6,4 @@ docker-compose.yml
 .gitignore
 
 node_modules
-.env
 dist
