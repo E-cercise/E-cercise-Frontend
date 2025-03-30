@@ -99,7 +99,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         initialValues={initialValues}
                         disabled={!editing}
                     >
-                        <Card title="Personal Information" className="mb-4">
+                        <Card title="Personal Information" className="mb-4 bg-gray-50">
                             {editing ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <Form.Item name="email" label="Email" rules={[
@@ -159,7 +159,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             )}
                         </Card>
 
-                        <Card title="Fitness Profile" className="mb-4">
+                        <Card title="Fitness Profile" className="mb-4 bg-gray-50">
                             {editing ? (
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <Form.Item name="age" label="Age" rules={[{ required: true }, { type: "number", min: 1, max: 120 }]} hasFeedback>
@@ -237,7 +237,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             )}
                         </Card>
 
-                        <Card title="Goals & Preferences">
+                        <Card title="Goals & Preferences" className="mb-4 bg-gray-50">
                             <Form.Item label="Fitness Goal" required hasFeedback>
                                 {editing ? (
                                     <div className="tag-grid mt-2">
