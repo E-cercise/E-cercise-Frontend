@@ -29,7 +29,9 @@ function Comparison() {
   const [equipment3, setEquipment3] = useState<EquipmentDetailResponse>();
 
   // console.log(categories);
-  console.log(selectedID1);
+  // console.log(selectedID1);
+  // console.log(selectedID2);
+  // console.log(selectedID3);
 
   const handleCategoryChange = (value: string) => {
     setCategory(value);
@@ -139,7 +141,7 @@ function Comparison() {
           options={categories}
         />
         <p className="text-[#0B8AE5]">Shop Equipments {">"}</p>
-        <div className="flex justify-center space-x-[80px]">
+        <div className="flex justify-center space-x-[80px] pb-8">
           <div className="flex flex-col items-center space-y-5">
             <Select
               value={selectedID1}
@@ -158,7 +160,24 @@ function Comparison() {
             <button className="bg-[#0B8AE5] text-[15px] text-white w-[50px] rounded-xl">
               Buy
             </button>
-            <div className="text-[14px]">Show equipment's details</div>
+            {/* <div className="text-[14px]">Show equipment's details</div> */}
+            <div className="w-[260px] text-center text-sm">
+              <p className="font-bold">{equipment1?.name}</p>
+              <p>Brand: {equipment1?.brand}</p>
+              <p>Model: {equipment1?.model}</p>
+              <p>Material: {equipment1?.material}</p>
+              <p className="mt-2 font-semibold">{equipment1?.option[0]?.name}</p>
+              <p>Price: ฿{equipment1?.option[0]?.price?.toFixed(2)}</p>
+              <p>Weight: {equipment1?.option[0]?.weight} kg</p>
+
+              <div className="mt-2 text-xs space-y-2">
+                {equipment1?.additional_field?.map((field) => (
+                  <div key={field.id}>
+                    <strong>{field.key}:</strong> {field.value}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="flex flex-col items-center space-y-5">
             <Select
@@ -178,7 +197,24 @@ function Comparison() {
             <button className="bg-[#0B8AE5] text-[15px] text-white w-[50px] rounded-xl">
               Buy
             </button>
-            <div className="text-[14px]">Show equipment's details</div>
+            {/* <div className="text-[14px]">Show equipment's details</div> */}
+            <div className="w-[260px] text-center text-sm">
+              <p className="font-bold">{equipment2?.name}</p>
+              <p>Brand: {equipment2?.brand}</p>
+              <p>Model: {equipment2?.model}</p>
+              <p>Material: {equipment2?.material}</p>
+              <p className="mt-2 font-semibold">{equipment2?.option[0]?.name}</p>
+              <p>Price: ฿{equipment2?.option[0]?.price?.toFixed(2)}</p>
+              <p>Weight: {equipment2?.option[0]?.weight} kg</p>
+
+              <div className="mt-2 text-xs space-y-2">
+                {equipment2?.additional_field?.map((field) => (
+                  <div key={field.id}>
+                    <strong>{field.key}:</strong> {field.value}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="flex flex-col items-center space-y-5">
             <Select
@@ -198,7 +234,24 @@ function Comparison() {
             <button className="bg-[#0B8AE5] text-[15px] text-white w-[50px] rounded-xl">
               Buy
             </button>
-            <div className="text-[14px]">Show equipment's details</div>
+            {/* <div className="text-[14px]">Show equipment's details</div> */}
+            <div className="w-[260px] text-center text-sm">
+              <p className="font-bold">{equipment3?.name}</p>
+              <p>Brand: {equipment3?.brand}</p>
+              <p>Model: {equipment3?.model}</p>
+              <p>Material: {equipment3?.material}</p>
+              <p className="mt-2 font-semibold">{equipment3?.option[0]?.name}</p>
+              <p>Price: ฿{equipment3?.option[0]?.price?.toFixed(2)}</p>
+              <p>Weight: {equipment3?.option[0]?.weight} kg</p>
+
+              <div className="mt-2 text-xs space-y-2">
+                {equipment3?.additional_field?.map((field) => (
+                  <div key={field.id}>
+                    <strong>{field.key}:</strong> {field.value}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
