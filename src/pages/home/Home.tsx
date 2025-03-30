@@ -25,8 +25,10 @@ const Home: React.FC = () => {
   const searchKeyword = searchParams.get("search") || "";
   const muscleGroup = searchParams.get("muscles") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+//   const [minPrice, setMinPrice] = useState<string>("");
+//   const [maxPrice, setMaxPrice] = useState<string>("");
+  const minPrice = searchParams.get("min_price") || "";
+  const maxPrice = searchParams.get("max_price") || "";
   const [filteredEquipments, setFilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempMinPrice, setTempMinPrice] = useState<string>("");
@@ -73,6 +75,29 @@ const Home: React.FC = () => {
     newParams.set("page", String(newPage));
     setSearchParams(newParams);
   };
+
+  const handlePriceChange = () => {
+    const newParams = new URLSearchParams(searchParams);
+
+    const hasMin = tempMinPrice.trim() !== "";
+    const hasMax = tempMaxPrice.trim() !== "";
+  
+    if (hasMin) {
+      newParams.set("min_price", tempMinPrice.trim());
+    } else {
+      newParams.delete("min_price");
+    }
+  
+    if (hasMax) {
+      newParams.set("max_price", tempMaxPrice.trim());
+    } else {
+      newParams.delete("max_price");
+    }
+  
+    // Always reset pagination when filters are changed
+    newParams.set("page", "1");
+    setSearchParams(newParams)
+  }
 
   useEffect(() => {
     fetchEquipments();
@@ -180,8 +205,9 @@ const Home: React.FC = () => {
               </div>
               <button
                 onClick={() => {
-                  setMinPrice(tempMinPrice);
-                  setMaxPrice(tempMaxPrice);
+                //   setMinPrice(tempMinPrice);
+                //   setMaxPrice(tempMaxPrice);
+                    handlePriceChange();
                 }}
                 className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
               >
