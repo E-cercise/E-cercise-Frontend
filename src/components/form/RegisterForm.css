@@ -1,62 +1,59 @@
-.ant-tag-checkable {
-    border: 1px solid #d9d9d9;
-    padding: 6px 12px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.3s;
-    user-select: none;
-}
-
-.ant-tag-checkable:hover {
-    border-color: #40a9ff;
-    background-color: #e6f7ff;
-}
-
-.ant-tag-checkable-checked {
-    background-color: #1890ff !important;
-    color: white;
-    border-color: #1890ff;
-}
-
+/* More breathing room + minimal feel */
 .tag-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    justify-content: flex-start;
-    margin-top: 8px;
+    gap: 12px 16px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .ant-tag-checkable {
-    border: 1px solid #d9d9d9;
-    padding: 6px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 14px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    font-size: 13px;
+    padding: 5px 13px;
+    border-radius: 16px;
+    border: 1px solid #dcdcdc;
+    background-color: #ffffff;
+    color: #333;
+    transition: all 0.2s ease;
+    line-height: 1.4;
 }
 
 .ant-tag-checkable:hover {
-    border-color: #40a9ff;
-    background-color: #f0faff;
+    background-color: #f3f4f6;
+    border-color: #c5c5c5;
 }
 
 .ant-tag-checkable-checked {
-    background-color: #1890ff !important;
-    color: white;
-    border-color: #1890ff;
+    background-color: #e6f4ff !important;
+    color: #1677ff;
+    border-color: #91caff;
+    font-weight: 500;
 }
 
+/* Gender-specific tags */
 .custom-gender-tag {
-    padding: 6px 18px;
+    padding: 5px 14px;
+    font-size: 13px;
+    border-radius: 16px;
 }
 
 .custom-gender-tag.male.ant-tag-checkable-checked {
-    background-color: #40a9ff !important;
-    border-color: #40a9ff;
+    background-color: #e6f0ff !important;
+    color: #3b82f6;
+    border-color: #a3c6ff;
 }
 
 .custom-gender-tag.female.ant-tag-checkable-checked {
-    background-color: #ff85c0 !important;
-    border-color: #ff85c0;
+    background-color: #ffeaf4 !important;
+    color: #ec4899;
+    border-color: #f8b3d8;
+}
+
+/* Optional: Section spacing */
+.ant-typography + .ant-divider {
+    margin-top: 16px;
+}
+
+.ant-divider-horizontal {
+    margin: 24px 0 8px;
 }
