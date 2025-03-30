@@ -66,3 +66,11 @@
 .ant-divider-horizontal {
     margin: 24px 0 8px;
 }
+
+.font-medium {
+    font-weight: 500;
+}
+
+.text-gray-900 {
+    color: #111827;
+}

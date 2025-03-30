@@ -1,11 +1,12 @@
 import {
     Button,
+    Card,
     Form,
     Input,
     InputNumber,
-    message,
     Tag,
     Tooltip,
+    message,
 } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -14,7 +15,10 @@ import { useFormAutoSync } from "../../hook/useFormAutoSync.ts";
 import "./UserProfileForm.css";
 import { UserGoal, UserTag } from "../../interfaces/UserProfile.ts";
 import React, { useEffect, useState } from "react";
-import {getChangedFields} from "../../helper/formHelper.ts";
+import { getChangedFields } from "../../helper/formHelper.ts";
+import {checkUserEmailExist} from "../../api/user_profile/CheckUserEmailExists.ts";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 interface UserProfileFormProps {
     initialValues: any;
@@ -50,16 +54,13 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
     const handleSubmit = async () => {
         const changedFields = getChangedFields(form, initialValues);
-
         if (Object.keys(changedFields).length === 0) {
             message.info("No changes made.");
             return;
         }
-
         await onSave(changedFields);
         setEditingOff();
     };
-
 
     return (
         <>
@@ -71,159 +72,230 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     </Tooltip>
                 )}
             </div>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={editing ? "edit" : "view"}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Form
+                        layout="vertical"
+                        form={form}
+                        onFinish={handleSubmit}
+                        initialValues={initialValues}
+                        disabled={!editing}
+                    >
+                        <Card title="Personal Information" className="mb-4">
+                            {editing ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <Form.Item name="email" label="Email" rules={[
+                                        { required: true, message: "Email is required" },
+                                        { type: "email", message: "Enter a valid email" },
+                                        {
+                                            validator: async (_, value) => {
+                                                if (!value || value === initialValues.email) return Promise.resolve();
+                                                const exists = await checkUserEmailExist(value);
+                                                if (exists) return Promise.reject(new Error("This email address is already in use."));
+                                                return Promise.resolve();
+                                            }
+                                        }
+                                    ]} hasFeedback>
+                                        <Input />
+                                    </Form.Item>
 
-            <Form
-                layout="vertical"
-                form={form}
-                onFinish={handleSubmit}
-                initialValues={initialValues}
-                disabled={!editing}
-            >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
+                                    <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true }]} hasFeedback>
+                                        <Input />
+                                    </Form.Item>
 
-                    <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
+                                    <Form.Item name="first_name" label="First Name" rules={[{ required: true }]} hasFeedback>
+                                        <Input />
+                                    </Form.Item>
 
-                    <Form.Item name="first_name" label="First Name" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
+                                    <Form.Item name="last_name" label="Last Name" rules={[{ required: true }]} hasFeedback>
+                                        <Input />
+                                    </Form.Item>
 
-                    <Form.Item name="last_name" label="Last Name" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
+                                    <Form.Item name="address" label="Address" className="md:col-span-2" rules={[{ required: true }]} hasFeedback>
+                                        <Input />
+                                    </Form.Item>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="font-medium block mb-1 text-gray-700">Email</label>
+                                        <div className="text-gray-900">{initialValues.email}</div>
+                                    </div>
+                                    <div>
+                                        <label className="font-medium block mb-1 text-gray-700">Phone Number</label>
+                                        <div className="text-gray-900">{initialValues.phone_number}</div>
+                                    </div>
+                                    <div>
+                                        <label className="font-medium block mb-1 text-gray-700">First Name</label>
+                                        <div className="text-gray-900">{initialValues.first_name}</div>
+                                    </div>
+                                    <div>
+                                        <label className="font-medium block mb-1 text-gray-700">Last Name</label>
+                                        <div className="text-gray-900">{initialValues.last_name}</div>
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="font-medium block mb-1 text-gray-700">Address</label>
+                                        <div className="text-gray-900">{initialValues.address}</div>
+                                    </div>
+                                </div>
+                            )}
+                        </Card>
 
-                    <Form.Item name="address" label="Address" className="md:col-span-2" rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
+                        <Card title="Fitness Profile" className="mb-4">
+                            {editing ? (
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <Form.Item name="age" label="Age" rules={[{ required: true }, { type: "number", min: 1, max: 120 }]} hasFeedback>
+                                        <InputNumber className="w-full" min={1} />
+                                    </Form.Item>
+                                    <Form.Item name="height" label="Height (cm)" rules={[{ required: true }]} hasFeedback>
+                                        <InputNumber className="w-full" min={1} />
+                                    </Form.Item>
+                                    <Form.Item name="weight" label="Weight (kg)" rules={[{ required: true }]} hasFeedback>
+                                        <InputNumber className="w-full" min={1} />
+                                    </Form.Item>
 
-                    <Form.Item name="age" label="Age" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" min={0} />
-                    </Form.Item>
+                                    <Form.Item name="gender" label="Gender" className="md:col-span-3" rules={[{ required: true }]} hasFeedback>
+                                        <div className="flex gap-2">
+                                            {['Male', 'Female'].map((g) => (
+                                                <Tag.CheckableTag
+                                                    key={g}
+                                                    checked={selectedGender === g}
+                                                    onChange={() => {
+                                                        setSelectedGender(g);
+                                                        form.setFieldValue('gender', g);
+                                                    }}
+                                                    className={`custom-gender-tag ${g === 'Male' ? 'male' : 'female'}`}
+                                                >
+                                                    {g}
+                                                </Tag.CheckableTag>
+                                            ))}
+                                        </div>
+                                    </Form.Item>
 
-                    <Form.Item name="height" label="Height (cm)" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" min={0} />
-                    </Form.Item>
+                                    <Form.Item name="experience" label="Experience" className="md:col-span-3" rules={[{ required: true }]} hasFeedback>
+                                        <div className="tag-grid">
+                                            {['Beginner', 'Intermediate', 'Advanced', 'Athlete', 'Elderly'].map((exp) => (
+                                                <Tag.CheckableTag
+                                                    key={exp}
+                                                    checked={selectedExperience === exp}
+                                                    onChange={() => {
+                                                        setSelectedExperience(exp);
+                                                        form.setFieldValue('experience', exp);
+                                                    }}
+                                                >
+                                                    {exp}
+                                                </Tag.CheckableTag>
+                                            ))}
+                                        </div>
+                                    </Form.Item>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                        <div>
+                                            <label className="font-medium block mb-1 text-gray-700">Age</label>
+                                            <div className="text-gray-900">{initialValues.age} years</div>
+                                        </div>
+                                        <div>
+                                            <label className="font-medium block mb-1 text-gray-700">Height</label>
+                                            <div className="text-gray-900">{initialValues.height} cm</div>
+                                        </div>
+                                        <div>
+                                            <label className="font-medium block mb-1 text-gray-700">Weight</label>
+                                            <div className="text-gray-900">{initialValues.weight} kg</div>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="font-medium block mb-1 text-gray-700">Gender</label>
+                                            <Tag color={selectedGender === "Female" ? "magenta" : "blue"}>{selectedGender}</Tag>
+                                        </div>
+                                        <div>
+                                            <label className="font-medium block mb-1 text-gray-700">Experience</label>
+                                            <Tag color="blue">{selectedExperience || "Not selected"}</Tag>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </Card>
 
-                    <Form.Item name="weight" label="Weight (kg)" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" min={0} />
-                    </Form.Item>
+                        <Card title="Goals & Preferences">
+                            <Form.Item label="Fitness Goal" required hasFeedback>
+                                {editing ? (
+                                    <div className="tag-grid mt-2">
+                                        {availableGoals.map((goal) => (
+                                            <Tag.CheckableTag
+                                                key={goal.id}
+                                                checked={selectedGoal === goal.id}
+                                                onChange={() => {
+                                                    setSelectedGoal(goal.id);
+                                                    form.setFieldValue("goal_id", goal.id);
+                                                }}
+                                            >
+                                                {goal.name}
+                                            </Tag.CheckableTag>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <Tag color="blue">
+                                        {availableGoals.find((g) => g.id === selectedGoal)?.name || 'Not selected'}
+                                    </Tag>
+                                )}
+                            </Form.Item>
 
-                    <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-                        {editing ? (
-                            <div className="flex gap-2">
-                                {['Male', 'Female'].map((g) => (
-                                    <Tag.CheckableTag
-                                        key={g}
-                                        checked={selectedGender === g}
-                                        onChange={() => {
-                                            setSelectedGender(g);
-                                            form.setFieldValue('gender', g);
-                                        }}
-                                        className={`custom-gender-tag ${g === 'Male' ? 'male' : 'female'}`}
-                                    >
-                                        {g}
-                                    </Tag.CheckableTag>
-                                ))}
+                            <Form.Item name="goal_id" hidden rules={[{ required: true, message: "Please select a goal" }]}  hasFeedback />
+
+                            <Form.Item name="preferences" label="Exercise Preferences" rules={[{ required: true }]} hasFeedback>
+                                {editing ? (
+                                    <div className="tag-grid mt-2">
+                                        {availableTags.map((tag) => {
+                                            const selected = selectedPreferences.includes(tag.id);
+                                            return (
+                                                <Tag.CheckableTag
+                                                    key={tag.id}
+                                                    checked={selected}
+                                                    onChange={(checked) => {
+                                                        const updated = checked
+                                                            ? [...selectedPreferences, tag.id]
+                                                            : selectedPreferences.filter((id) => id !== tag.id);
+                                                        setSelectedPreferences(updated);
+                                                        form.setFieldValue("preferences", updated);
+                                                    }}
+                                                >
+                                                    {tag.name}
+                                                </Tag.CheckableTag>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-wrap gap-2">
+                                        {availableTags
+                                            .filter((tag) => selectedPreferences.includes(tag.id))
+                                            .map((tag) => (
+                                                <Tag key={tag.id} color="blue">{tag.name}</Tag>
+                                            ))}
+                                    </div>
+                                )}
+                            </Form.Item>
+                        </Card>
+
+                        {editing && (
+                            <div className="sticky bottom-0 bg-white py-3 flex justify-end border-t mt-6 shadow-md z-10">
+                                <Button type="primary" htmlType="submit">
+                                    Save Changes
+                                </Button>
                             </div>
-                        ) : (
-                            <Tag color={selectedGender === "Female" ? "magenta" : "blue"}>
-                                {selectedGender}
-                            </Tag>
                         )}
-                    </Form.Item>
+                    </Form>
 
-                    <Form.Item name="experience" label="Experience" rules={[{ required: true }]}>
-                        {editing ? (
-                            <div className="tag-grid">
-                                {['Beginner', 'Intermediate', 'Advanced', 'Athlete', 'Elderly'].map((exp) => (
-                                    <Tag.CheckableTag
-                                        key={exp}
-                                        checked={selectedExperience === exp}
-                                        onChange={() => {
-                                            setSelectedExperience(exp);
-                                            form.setFieldValue('experience', exp);
-                                        }}
-                                    >
-                                        {exp}
-                                    </Tag.CheckableTag>
-                                ))}
-                            </div>
-                        ) : (
-                            <Tag color="blue">{selectedExperience || "Not selected"}</Tag>
-                        )}
-                    </Form.Item>
-
-                    <Form.Item label="Fitness Goal" required>
-                        {editing ? (
-                            <div className="tag-grid mt-2">
-                                {availableGoals.map((goal) => (
-                                    <Tag.CheckableTag
-                                        key={goal.id}
-                                        checked={selectedGoal === goal.id}
-                                        onChange={() => {
-                                            setSelectedGoal(goal.id);
-                                            form.setFieldValue("goal_id", goal.id);
-                                        }}
-                                    >
-                                        {goal.name}
-                                    </Tag.CheckableTag>
-                                ))}
-                            </div>
-                        ) : (
-                            <Tag color="blue">
-                                {availableGoals.find((g) => g.id === selectedGoal)?.name || 'Not selected'}
-                            </Tag>
-                        )}
-                    </Form.Item>
-
-                    <Form.Item name="goal_id" hidden rules={[{ required: true, message: "Please select a goal" }]} />
-
-                    <Form.Item name="preferences" label="Exercise Preferences" rules={[{ required: true }]}>
-                        {editing ? (
-                            <div className="tag-grid mt-2">
-                                {availableTags.map((tag) => {
-                                    const selected = selectedPreferences.includes(tag.id);
-                                    return (
-                                        <Tag.CheckableTag
-                                            key={tag.id}
-                                            checked={selected}
-                                            onChange={(checked) => {
-                                                const updated = checked
-                                                    ? [...selectedPreferences, tag.id]
-                                                    : selectedPreferences.filter((id) => id !== tag.id);
-                                                setSelectedPreferences(updated);
-                                                form.setFieldValue("preferences", updated);
-                                            }}
-                                        >
-                                            {tag.name}
-                                        </Tag.CheckableTag>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <div className="flex flex-wrap gap-2">
-                                {availableTags
-                                    .filter((tag) => selectedPreferences.includes(tag.id))
-                                    .map((tag) => (
-                                        <Tag key={tag.id} color="blue">{tag.name}</Tag>
-                                    ))}
-                            </div>
-                        )}
-                    </Form.Item>
-                </div>
-
-                {editing && (
-                    <div className="sticky bottom-0 bg-white py-3 flex justify-end border-t mt-6">
-                        <Button type="primary" htmlType="submit">
-                            Save Changes
-                        </Button>
-                    </div>
-                )}
-            </Form>
+                </motion.div>
+            </AnimatePresence>
         </>
     );
 };

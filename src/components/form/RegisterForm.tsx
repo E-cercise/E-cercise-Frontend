@@ -85,10 +85,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                                            return Promise.resolve();
                                        },
                                    },
-                               ]}>
+                               ]} hasFeedback>
                         <Input placeholder="example@email.com"/>
                     </Form.Item>
-                    <Form.Item name="password" label="Password" rules={[{required: true}]}>
+                    <Form.Item name="password" label="Password" rules={[{required: true}]} hasFeedback>
                         <Input.Password placeholder="Choose a strong password"/>
                     </Form.Item>
                     <Form.Item
@@ -105,7 +105,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                                 },
                             }),
                         ]}
-                    >
+                        hasFeedback>
                         <Input.Password placeholder="Repeat your password"/>
                     </Form.Item>
                 </>
@@ -116,13 +116,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             content: (
                 <>
                     <Title level={4}>Tell Us About You</Title>
-                    <Form.Item name="first_name" label="First Name" rules={[{required: true}]}>
+                    <Form.Item name="first_name" label="First Name" rules={[{required: true}]} hasFeedback>
                         <Input/>
                     </Form.Item>
-                    <Form.Item name="last_name" label="Last Name" rules={[{required: true}]}>
+                    <Form.Item name="last_name" label="Last Name" rules={[{required: true}]} hasFeedback>
                         <Input/>
                     </Form.Item>
-                    <Form.Item name="address" label="Address" rules={[{required: true}]}>
+                    <Form.Item name="address" label="Address" rules={[{required: true}]} hasFeedback>
                         <Input/>
                     </Form.Item>
                     <Form.Item
@@ -135,7 +135,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                                 message: 'Enter a valid number (10 digits or start with +6X)',
                             },
                         ]}
-                    >
+                        hasFeedback>
                         <Input placeholder="e.g., +60123456789 or 0123456789"/>
                     </Form.Item>
                 </>
@@ -148,17 +148,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     <Title level={4}>Your Fitness Profile</Title>
                     <Row gutter={16}>
                         <Col span={8}>
-                            <Form.Item name="Age" label="Age" rules={[{required: true}]}>
+                            <Form.Item name="Age" label="Age" rules={[{required: true},
+                                { type: "number", min: 1, max: 120, message: "Age must be between 1 and 120" }
+                            ]}  hasFeedback>
                                 <InputNumber className="w-full" min={0}/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item name="height" label="Height (cm)" rules={[{required: true}]}>
+                            <Form.Item name="height" label="Height (cm)" rules={[{required: true}]} hasFeedback>
                                 <InputNumber className="w-full" min={0} placeholder="e.g., 170"/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item name="weight" label="Weight (kg)" rules={[{required: true}]}>
+                            <Form.Item name="weight" label="Weight (kg)" rules={[{required: true}]} hasFeedback>
                                 <InputNumber className="w-full" min={0} placeholder="e.g., 65"/>
                             </Form.Item>
                         </Col>
@@ -166,7 +168,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
                     <Divider orientation="left">Gender</Divider>
                     <Text type="secondary">Select your gender</Text>
-                    <Form.Item name="gender" rules={[{required: true}]}>
+                    <Form.Item name="gender" rules={[{required: true}]} hasFeedback>
                         <div className="flex gap-2 mt-2">
                             {genderOptions.map((g) => (
                                 <Tag.CheckableTag
@@ -186,7 +188,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
                     <Divider orientation="left">Experience</Divider>
                     <Text type="secondary">How would you describe your current experience?</Text>
-                    <Form.Item name="experience" rules={[{required: true}]}>
+                    <Form.Item name="experience" rules={[{required: true}]} hasFeedback>
                         <div className="tag-grid mt-2">
                             {experienceOptions.map((exp) => (
                                 <Tag.CheckableTag
@@ -211,7 +213,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 <>
                     <Divider orientation="left">Fitness Goal</Divider>
                     <Text type="secondary">What’s your main objective for exercising?</Text>
-                    <Form.Item required>
+                    <Form.Item required hasFeedback>
                         <div className="tag-grid mt-2">
                             {goals.map((g) => (
                                 <Tag.CheckableTag
@@ -227,11 +229,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                             ))}
                         </div>
                     </Form.Item>
-                    <Form.Item name="goal_id" hidden rules={[{required: true, message: 'Please select a goal'}]}/>
+                    <Form.Item name="goal_id" hidden rules={[{required: true, message: 'Please select a goal'}]} hasFeedback/>
 
                     <Divider orientation="left">Exercise Preferences</Divider>
                     <Text type="secondary">Choose what kind of exercises or activities you enjoy.</Text>
-                    <Form.Item required>
+                    <Form.Item required hasFeedback>
                         <div className="tag-grid mt-2">
                             {tags.map((tag) => {
                                 const selected = selectedPreferences.includes(tag.id);
@@ -257,6 +259,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                         name="preferences"
                         hidden
                         rules={[{required: true, message: 'Please select at least one preference'}]}
+                        hasFeedback
                     />
                 </>
             ),

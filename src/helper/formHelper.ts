@@ -15,8 +15,7 @@ export const getChangedFields = (
         const current = form.getFieldValue(key);
         const initial = initialValues[key];
 
-        const bothArrays = Array.isArray(current) && Array.isArray(initial);
-        if (bothArrays) {
+        if (Array.isArray(current) && Array.isArray(initial)) {
             const arraysEqual =
                 current.length === initial.length &&
                 current.every((v: any, i: number) => v === initial[i]);
@@ -24,7 +23,10 @@ export const getChangedFields = (
             if (!arraysEqual) {
                 changedFields[key] = current;
             }
-        } else if (current !== initial) {
+        } else if (
+            current !== initial &&
+            JSON.stringify(current) !== JSON.stringify(initial)
+        ) {
             changedFields[key] = current;
         }
     });
