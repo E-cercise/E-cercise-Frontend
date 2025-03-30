@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Input, Popover, Tag} from "antd";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import {FiFilter} from "react-icons/fi";
 import {IoIosArrowDown} from "react-icons/io";
@@ -10,7 +10,6 @@ import Cart from "../../assets/navbar/Cart.png";
 import {backAttributes, frontAttributes} from "../muscles/muscles";
 import "./NavBar.css";
 import {useAuth} from "../../hook/UseAuth.ts";
-import { useSearch } from "../../hook/useSearch.ts";
 import BottomNavBar from "./BottomNavBar.tsx";
 import {Role} from "../../enum/Role.ts";
 import UserProfile from "./UserProfile.tsx";
@@ -20,12 +19,15 @@ function NavBar() {
     const [, setShowPopOver] = useState<boolean>(false);
     const [, setShowMusclesPopover] = useState<boolean>(false);
     const [tempKeyword, setTempKeyword] = useState<string>("");
-    const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
+    // const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [clickedMuscles, setClickedMuscles] = useState<string[]>(
+        (searchParams.get("muscles") || "").split(",").filter(Boolean)
+    );
     const navigate = useNavigate();
     const location = useLocation();
     const isHomePage = location.pathname === "/";
-    const {userId, name, role, logout} = useAuth();
-    const { setSearchKeyword, setMuscleGroup, setCurrentPage } = useSearch();
+    const {userId, name, role, logout} = useAuth()
 
     const handleMouseEnter = (id: any) => {
         setActivePath(id);
@@ -40,7 +42,11 @@ function NavBar() {
     };
 
     const handleSearchClick = () => {
-        setSearchKeyword(tempKeyword);
+        // setSearchKeyword(tempKeyword);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("search", tempKeyword);
+        newParams.set("page", "1"); // reset page on new search
+        setSearchParams(newParams);
     };
 
     const handleShowPopOver = (value: boolean) => {
@@ -52,25 +58,36 @@ function NavBar() {
     };
 
     const handleClickedMuscles = (id: string) => {
-        if (!clickedMuscles.includes(id)) {
-            clickedMuscles.push(id);
-        } else {
-            const index = clickedMuscles.indexOf(id, 0);
-            clickedMuscles.splice(index, 1);
-        }
+        // if (!clickedMuscles.includes(id)) {
+        //     clickedMuscles.push(id);
+        // } else {
+        //     const index = clickedMuscles.indexOf(id, 0);
+        //     clickedMuscles.splice(index, 1);
+        // }
+        const updated = clickedMuscles.includes(id)
+            ? clickedMuscles.filter((m) => m !== id)
+            : [...clickedMuscles, id];
+        setClickedMuscles(updated);
     };
 
-    const handleMuscleGroup = (value: string) => {
-        setMuscleGroup(value);
+    const handleApplyMusclesFilter = () => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("muscles", clickedMuscles.join(","));
+        newParams.set("page", "1");
+        setSearchParams(newParams);
     };
+
+    // const handleMuscleGroup = (value: string) => {
+    //     setMuscleGroup(value);
+    // };
 
     const clearAllClickedMuscles = () => {
         setClickedMuscles([]);
     };
 
-    const handleCurrentPage = (value: number) => {
-        setCurrentPage(value);
-    }
+    // const handleCurrentPage = (value: number) => {
+    //     setCurrentPage(value);
+    // }
 
     const handleCartClick = () => {
         const token = localStorage.getItem("accessToken")
@@ -110,7 +127,7 @@ function NavBar() {
                     onChange={(e) => handleKeywordOnChange(e.target.value)}
                     onSearch={() => {
                         handleSearchClick();
-                        handleCurrentPage(1);
+                        // handleCurrentPage(1);
                     }}
                 />
                 {isHomePage && (
@@ -272,7 +289,8 @@ function NavBar() {
                                             Clear All
                                         </Button>
                                         <Button
-                                            onClick={() => handleMuscleGroup(clickedMuscles.join(","))}
+                                            // onClick={() => handleMuscleGroup(clickedMuscles.join(","))}
+                                            onClick={() => handleApplyMusclesFilter()}
                                         >
                                             Filter
                                         </Button>
