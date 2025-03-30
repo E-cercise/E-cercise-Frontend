@@ -6,7 +6,7 @@ import {
     InputNumber,
     Tag,
     Tooltip,
-    message,
+    message, Skeleton,
 } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -33,6 +33,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                                                              availableTags,
                                                              availableGoals,
                                                          }) => {
+
     const [form] = useForm();
     const { editing, toggleEditing, setEditingOff } = useToggleEditing();
     const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
@@ -40,7 +41,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
     const [selectedGender, setSelectedGender] = useState<string>(initialValues?.gender || 'Male');
     const [selectedExperience, setSelectedExperience] = useState<string>(initialValues?.experience || 'Beginner');
 
+    const isLoading = !initialValues;
+
     useFormAutoSync(form, initialValues);
+
 
     useEffect(() => {
         if (initialValues) {
@@ -61,6 +65,14 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
         await onSave(changedFields);
         setEditingOff();
     };
+
+    if (isLoading) {
+        return (
+            <Card>
+                <Skeleton active paragraph={{ rows: 6 }} />
+            </Card>
+        );
+    }
 
     return (
         <>
@@ -124,23 +136,23 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="font-medium block mb-1 text-gray-700">Email</label>
+                                        <label className="text-sm font-semibold text-gray-900 mb-1 block">Email</label>
                                         <div className="text-gray-900">{initialValues.email}</div>
                                     </div>
                                     <div>
-                                        <label className="font-medium block mb-1 text-gray-700">Phone Number</label>
+                                        <label className="text-sm font-semibold text-gray-900 mb-1 block">Phone Number</label>
                                         <div className="text-gray-900">{initialValues.phone_number}</div>
                                     </div>
                                     <div>
-                                        <label className="font-medium block mb-1 text-gray-700">First Name</label>
+                                        <label className="text-sm font-semibold text-gray-900 mb-1 block">First Name</label>
                                         <div className="text-gray-900">{initialValues.first_name}</div>
                                     </div>
                                     <div>
-                                        <label className="font-medium block mb-1 text-gray-700">Last Name</label>
+                                        <label className="text-sm font-semibold text-gray-900 mb-1 block">Last Name</label>
                                         <div className="text-gray-900">{initialValues.last_name}</div>
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="font-medium block mb-1 text-gray-700">Address</label>
+                                        <label className="text-sm font-semibold text-gray-900 mb-1 block">Address</label>
                                         <div className="text-gray-900">{initialValues.address}</div>
                                     </div>
                                 </div>
@@ -199,25 +211,25 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                                 <>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                         <div>
-                                            <label className="font-medium block mb-1 text-gray-700">Age</label>
+                                            <label className="text-sm font-semibold text-gray-900 mb-1 block">Age</label>
                                             <div className="text-gray-900">{initialValues.age} years</div>
                                         </div>
                                         <div>
-                                            <label className="font-medium block mb-1 text-gray-700">Height</label>
+                                            <label className="text-sm font-semibold text-gray-900 mb-1 block">Height</label>
                                             <div className="text-gray-900">{initialValues.height} cm</div>
                                         </div>
                                         <div>
-                                            <label className="font-medium block mb-1 text-gray-700">Weight</label>
+                                            <label className="text-sm font-semibold text-gray-900 mb-1 block">Weight</label>
                                             <div className="text-gray-900">{initialValues.weight} kg</div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="font-medium block mb-1 text-gray-700">Gender</label>
+                                            <label className="text-sm font-semibold text-gray-900 mb-1 block">Gender</label>
                                             <Tag color={selectedGender === "Female" ? "magenta" : "blue"}>{selectedGender}</Tag>
                                         </div>
                                         <div>
-                                            <label className="font-medium block mb-1 text-gray-700">Experience</label>
+                                            <label className="text-sm font-semibold text-gray-900 mb-1 block">Experience</label>
                                             <Tag color="blue">{selectedExperience || "Not selected"}</Tag>
                                         </div>
                                     </div>
