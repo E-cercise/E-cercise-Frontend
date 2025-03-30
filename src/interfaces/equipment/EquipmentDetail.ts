@@ -55,6 +55,19 @@ export interface EquipmentDetailResponse {
     additional_field: AdditionalField[];
 }
 
+export interface EquipmentDetailForComparison {
+    id: string;
+    brand: string;
+    color: string;
+    material: string;
+    description: string;
+    category: string;
+    model: string;
+    name: string;
+    option: Option[];
+    additional_field: AdditionalField[];
+}
+
 export interface Category {
     label: string;
     value: number;

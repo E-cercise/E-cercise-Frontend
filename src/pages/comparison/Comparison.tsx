@@ -20,10 +20,10 @@ interface Equipment {
 function Comparison() {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState<string>("dumbbell");
-  const [equipments, setEquipments] = useState([]);
-  const [selectedID1, setSelectedID1] = useState<string | null>(null);
-  const [selectedID2, setSelectedID2] = useState<string | null>(null);
-  const [selectedID3, setSelectedID3] = useState<string | null>(null);
+  const [equipments, setEquipments] = useState<{ label: string; value: string; }[]>([]);
+  const [selectedID1, setSelectedID1] = useState<string>("");
+  const [selectedID2, setSelectedID2] = useState<string>("");
+  const [selectedID3, setSelectedID3] = useState<string>("");
   const [equipment1, setEquipment1] = useState<EquipmentDetailResponse>();
   const [equipment2, setEquipment2] = useState<EquipmentDetailResponse>();
   const [equipment3, setEquipment3] = useState<EquipmentDetailResponse>();
@@ -34,6 +34,40 @@ function Comparison() {
   const handleCategoryChange = (value: string) => {
     setCategory(value);
   };
+
+  const handleSelectChange = (slot: number, newValue: string) => {
+    if (slot === 1) {
+        if (newValue === selectedID2) {
+            setSelectedID1(selectedID2);
+            setSelectedID2(selectedID1);
+        } else if (newValue === selectedID3) {
+            setSelectedID1(selectedID3);
+            setSelectedID3(selectedID1);
+        } else {
+            setSelectedID1(newValue);
+        }
+    } else if (slot === 2) {
+        if (newValue === selectedID1) {
+            setSelectedID2(selectedID1);
+            setSelectedID1(selectedID2);
+        } else if (newValue === selectedID3) {
+            setSelectedID2(selectedID3);
+            setSelectedID3(selectedID2);
+        } else {
+            setSelectedID2(newValue);
+        }
+    } else if (slot === 3) {
+        if (newValue === selectedID1) {
+            setSelectedID3(selectedID1);
+            setSelectedID1(selectedID3);
+        } else if (newValue === selectedID2) {
+            setSelectedID3(selectedID2);
+            setSelectedID2(selectedID3);
+        } else {
+            setSelectedID3(newValue);
+        }
+    }
+};
 
   const fetchEquipmentCategory = async () => {
     getEquipmentCategory()
@@ -54,6 +88,7 @@ function Comparison() {
           value: equipment.ID,
         })
       );
+      console.log(formattedEquipments)
       setEquipments(formattedEquipments);
       if (formattedEquipments && formattedEquipments.length >= 3) {
         setSelectedID1(formattedEquipments[0].value);
@@ -80,7 +115,9 @@ function Comparison() {
 
   useEffect(() => {
     fetchEquipmentCategory();
-    fetchEquipmentInCategory(category);
+    if (equipments.length === 0) {
+      fetchEquipmentInCategory(category);
+    }
     if (selectedID1 && selectedID2 && selectedID3) {
       const idString = `${selectedID1},${selectedID2},${selectedID3}`;
       fetchAllEquipmentsDetail(idString);
@@ -94,7 +131,10 @@ function Comparison() {
         <p className="text-[22px] font-bold pt-5">Compare Equipments</p>
         <Select
           defaultValue="dumbbell"
-          onChange={(value: any) => handleCategoryChange(value)}
+          onChange={(value: any) => {
+            handleCategoryChange(value);
+            setEquipments([]);
+          }}
           className="w-[220px] h-[48px]"
           options={categories}
         />
@@ -102,10 +142,10 @@ function Comparison() {
         <div className="flex justify-center space-x-[80px]">
           <div className="flex flex-col items-center space-y-5">
             <Select
-              value={equipments[0]}
+              value={selectedID1}
               className="w-[220px] h-[48px]"
               options={equipments}
-              onChange={setSelectedID1}
+              onChange={(value) => handleSelectChange(1, value)}
             />
             <div className="flex flex-col justify-center h-[200px]">
               <img
@@ -122,10 +162,10 @@ function Comparison() {
           </div>
           <div className="flex flex-col items-center space-y-5">
             <Select
-              value={equipments[1]}
+              value={selectedID2}
               className="w-[220px] h-[48px]"
               options={equipments}
-              onChange={setSelectedID2}
+              onChange={(value) => handleSelectChange(2, value)}
             />
             <div className="flex flex-col justify-center h-[200px]">
               <img
@@ -142,10 +182,10 @@ function Comparison() {
           </div>
           <div className="flex flex-col items-center space-y-5">
             <Select
-              value={equipments[2]}
+              value={selectedID3}
               className="w-[220px] h-[48px]"
               options={equipments}
-              onChange={setSelectedID3}
+              onChange={(value) => handleSelectChange(3, value)}
             />
             <div className="flex flex-col justify-center h-[200px]">
               <img
