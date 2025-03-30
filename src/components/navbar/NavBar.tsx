@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Input, Popover, Tag} from "antd";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import {FiFilter} from "react-icons/fi";
 import {IoIosArrowDown} from "react-icons/io";
@@ -14,20 +14,16 @@ import BottomNavBar from "./BottomNavBar.tsx";
 import {Role} from "../../enum/Role.ts";
 import UserProfile from "./UserProfile.tsx";
 
-function NavBar({
-                    setSearchKeyword,
-                    setMuscleGroup,
-                    setCurrentPage,
-                }: {
-    setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
-    setMuscleGroup: React.Dispatch<React.SetStateAction<string>>;
-    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-}) {
+function NavBar() {
     const [activePath, setActivePath] = useState<string>("");
     const [, setShowPopOver] = useState<boolean>(false);
     const [, setShowMusclesPopover] = useState<boolean>(false);
     const [tempKeyword, setTempKeyword] = useState<string>("");
-    const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
+    // const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [clickedMuscles, setClickedMuscles] = useState<string[]>(
+        (searchParams.get("muscles") || "").split(",").filter(Boolean)
+    );
     const navigate = useNavigate();
     const location = useLocation();
     const isHomePage = location.pathname === "/";
@@ -45,8 +41,50 @@ function NavBar({
         setTempKeyword(keyword); // Store typed input but don't trigger search yet
     };
 
+    // const handleSearchClick = () => {
+    //     // setSearchKeyword(tempKeyword);
+    //     const newParams = new URLSearchParams(searchParams);
+    //     if (tempKeyword.trim() === "") {
+    //         newParams.delete("search");
+    //         newParams.set("page", "1");
+    //         setSearchParams(newParams);
+    //     } else {
+    //         newParams.set("search", tempKeyword);
+    //         newParams.set("page", "1"); // reset page on new search
+    //         // setSearchParams(newParams);
+    //         if (location.pathname !== "/") {
+    //             navigate({
+    //                 pathname: "/",
+    //                 search: `?${newParams.toString()}`,
+    //             });
+    //         } else {
+    //             setSearchParams(newParams);
+    //         }
+    //     }
+    // };
+
     const handleSearchClick = () => {
-        setSearchKeyword(tempKeyword);
+        const newParams = new URLSearchParams(searchParams);
+        const keyword = tempKeyword.trim();
+    
+        if (keyword) {
+            newParams.set("search", keyword);
+        } else {
+            newParams.delete("search");
+        }
+    
+        newParams.set("page", "1");
+    
+        const sortedQuery = sortParamsWithPageLast(newParams);
+    
+        if (location.pathname !== "/") {
+            navigate({
+                pathname: "/",
+                search: `?${sortedQuery}`,
+            });
+        } else {
+            setSearchParams(new URLSearchParams(sortedQuery));
+        }
     };
 
     const handleShowPopOver = (value: boolean) => {
@@ -58,25 +96,41 @@ function NavBar({
     };
 
     const handleClickedMuscles = (id: string) => {
-        if (!clickedMuscles.includes(id)) {
-            clickedMuscles.push(id);
-        } else {
-            const index = clickedMuscles.indexOf(id, 0);
-            clickedMuscles.splice(index, 1);
-        }
+        // if (!clickedMuscles.includes(id)) {
+        //     clickedMuscles.push(id);
+        // } else {
+        //     const index = clickedMuscles.indexOf(id, 0);
+        //     clickedMuscles.splice(index, 1);
+        // }
+        const updated = clickedMuscles.includes(id)
+            ? clickedMuscles.filter((m) => m !== id)
+            : [...clickedMuscles, id];
+        setClickedMuscles(updated);
     };
 
-    const handleMuscleGroup = (value: string) => {
-        setMuscleGroup(value);
+    const handleApplyMusclesFilter = () => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("muscles", clickedMuscles.join(","));
+        newParams.set("page", "1");
+        const sortedQuery = sortParamsWithPageLast(newParams);
+        setSearchParams(new URLSearchParams(sortedQuery));
     };
+
+    // const handleMuscleGroup = (value: string) => {
+    //     setMuscleGroup(value);
+    // };
 
     const clearAllClickedMuscles = () => {
         setClickedMuscles([]);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.delete("muscles");
+        newParams.set("page", "1");
+        setSearchParams(newParams);
     };
 
-    const handleCurrentPage = (value: number) => {
-        setCurrentPage(value);
-    }
+    // const handleCurrentPage = (value: number) => {
+    //     setCurrentPage(value);
+    // }
 
     const handleCartClick = () => {
         const token = localStorage.getItem("accessToken")
@@ -100,6 +154,23 @@ function NavBar({
         }
     }
 
+    const sortParamsWithPageLast = (params: URLSearchParams): string => {
+        const entries = Array.from(params.entries());
+        const filtered = entries.filter(([key]) => key !== "page");
+        const pageEntry = entries.find(([key]) => key === "page");
+    
+        const sorted = [...filtered];
+        if (pageEntry) { 
+            sorted.push(pageEntry)
+        };
+        return new URLSearchParams(sorted).toString();
+    };
+
+    useEffect(() => {
+        const currentSearch = searchParams.get("search") || "";
+        setTempKeyword(currentSearch);
+    }, [searchParams]);
+
     return (
         <>
             <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-[999]">
@@ -116,7 +187,7 @@ function NavBar({
                     onChange={(e) => handleKeywordOnChange(e.target.value)}
                     onSearch={() => {
                         handleSearchClick();
-                        handleCurrentPage(1);
+                        // handleCurrentPage(1);
                     }}
                 />
                 {isHomePage && (
@@ -278,7 +349,8 @@ function NavBar({
                                             Clear All
                                         </Button>
                                         <Button
-                                            onClick={() => handleMuscleGroup(clickedMuscles.join(","))}
+                                            // onClick={() => handleMuscleGroup(clickedMuscles.join(","))}
+                                            onClick={() => handleApplyMusclesFilter()}
                                         >
                                             Filter
                                         </Button>
