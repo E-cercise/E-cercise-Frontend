@@ -26,8 +26,8 @@ FROM nginx:alpine
 # Copy the production build from the "build" stage to Nginx's default html folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 8000
-EXPOSE 8000
+# Expose port 80
+EXPOSE 80
 
 # Start Nginx in the foreground (so Docker doesn’t exit)
 CMD ["nginx", "-g", "daemon off;"]

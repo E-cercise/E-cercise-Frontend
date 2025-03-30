@@ -40,5 +40,5 @@ jobs:
             --platform=managed \
             --region=asia-southeast1 \
             --allow-unauthenticated \
-            --port=8000 \
+            --port=80 \
             --set-env-vars "API_BASE_URL=${{ secrets.API_BASE_URL }}"
