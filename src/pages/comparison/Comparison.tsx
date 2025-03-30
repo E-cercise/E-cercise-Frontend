@@ -241,7 +241,7 @@ function Comparison() {
               <p><strong>Material:</strong> {equipment3?.material}</p>
               <p><strong>Option:</strong> {equipment3?.option[0]?.name}</p>
               <p><strong>Price:</strong> ฿{equipment3?.option[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong>: {equipment3?.option[0]?.weight} kg</p>
+              <p><strong>Weight:</strong> {equipment3?.option[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment3?.additional_field?.map((field) => (
