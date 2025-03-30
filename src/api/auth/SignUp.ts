@@ -1,27 +1,9 @@
-import axios from "axios";
+import API from "../index.ts";
+import {RegisterPayload} from "../../interfaces/Auth.ts";
 
-export const signUp = async (
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
-    address: string,
-    phoneNumber: string
-) => {
-    const response = await axios.post(
-        `${process.env.API_BASE_URL}/api/auth/register`,
-        {
-            "email": email,
-            "password": password,
-            "first_name": firstName,
-            "last_name": lastName,
-            "address": address,
-            "phone_number": phoneNumber,
-        },
-        {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-        }
-    );
-    return response.data;
+export const registerUser = async (data: RegisterPayload) => {
+    const payload = { ...data };
+    delete payload.confirm_password;
+    const res = await API.post('/auth/register', payload);
+    return res.data;
 };
