@@ -117,7 +117,11 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({
                                         <Input />
                                     </Form.Item>
 
-                                    <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true }]} hasFeedback>
+                                    <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true },
+                                        {
+                                        pattern: /^(\+6\d{8,}|[0-9]{10})$/,
+                                        message: 'Enter a valid number (10 digits or start with +6X)',
+                                    },]} hasFeedback>
                                         <Input />
                                     </Form.Item>
 
