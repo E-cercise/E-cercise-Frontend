@@ -161,10 +161,11 @@ function Comparison() {
               />
             </div>
             <Divider style={{ borderColor: "#8C8C8C" }} />
-            <button className="bg-[#0B8AE5] text-[15px] text-white w-[50px] rounded-xl">
-              Buy
-            </button>
-            {/* <div className="text-[14px]">Show equipment's details</div> */}
+            <Link to={`/equipment/${selectedID1}`}>
+              <button className="bg-[#0B8AE5] text-[15px] text-white w-[140px] px-2 py-[2px] rounded-xl">
+                See more details
+              </button>
+            </Link>
             <div className="w-[260px] text-center text-sm">
               <p className="font-bold">{equipment1?.name}</p>
               <p>Brand: {equipment1?.brand}</p>
@@ -198,10 +199,11 @@ function Comparison() {
               />
             </div>
             <Divider style={{ borderColor: "#8C8C8C" }} />
-            <button className="bg-[#0B8AE5] text-[15px] text-white w-[50px] rounded-xl">
-              Buy
-            </button>
-            {/* <div className="text-[14px]">Show equipment's details</div> */}
+            <Link to={`/equipment/${selectedID2}`}>
+              <button className="bg-[#0B8AE5] text-[15px] text-white w-[140px] px-2 py-[2px] rounded-xl">
+                See more details
+              </button>
+            </Link>
             <div className="w-[260px] text-center text-sm">
               <p className="font-bold">{equipment2?.name}</p>
               <p>Brand: {equipment2?.brand}</p>
@@ -235,10 +237,11 @@ function Comparison() {
               />
             </div>
             <Divider style={{ borderColor: "#8C8C8C" }} />
-            <button className="bg-[#0B8AE5] text-[15px] text-white w-[50px] rounded-xl">
-              Buy
-            </button>
-            {/* <div className="text-[14px]">Show equipment's details</div> */}
+            <Link to={`/equipment/${selectedID3}`}>
+              <button className="bg-[#0B8AE5] text-[15px] text-white w-[140px] px-2 py-[2px] rounded-xl">
+                See more details
+              </button>
+            </Link>
             <div className="w-[260px] text-center text-sm">
               <p className="font-bold">{equipment3?.name}</p>
               <p>Brand: {equipment3?.brand}</p>
