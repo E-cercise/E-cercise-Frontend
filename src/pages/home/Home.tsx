@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { Input, message, Pagination, Spin } from "antd";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
@@ -14,19 +14,15 @@ import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
   const [titleHover, setTitleHover] = useState<boolean>(false);
-  //   const [currentPage, setCurrentPage] = useState<number>(1);
-  //   const [searchKeyword, setSearchKeyword] = useState<string>("");
-  //   const [muscleGroup, setMuscleGroup] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
   const searchKeyword = searchParams.get("search") || "";
   const muscleGroup = searchParams.get("muscles") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
-  //   const [minPrice, setMinPrice] = useState<string>("");
-  //   const [maxPrice, setMaxPrice] = useState<string>("");
   const minPrice = searchParams.get("min_price") || "";
   const maxPrice = searchParams.get("max_price") || "";
   const [filteredEquipments, setFilteredEquipments] =
@@ -41,8 +37,16 @@ const Home: React.FC = () => {
   const pageSize = 50;
   const headingText =
     role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
+  const recommendationScrollRef = useRef<HTMLDivElement>(null);
+  const scrollByAmount = (amount: number) => {
+    if (recommendationScrollRef.current) {
+      recommendationScrollRef.current.scrollBy({
+        left: amount,
+        behavior: "smooth",
+      });
+    }
+  };
 
-  console.log(filteredEquipments);
 
   const fetchEquipments = async () => {
     try {
@@ -148,7 +152,6 @@ const Home: React.FC = () => {
             err?.message ||
             "Failed to add item to cart.";
       message.error(msg);
-      console.error(err);
     } finally {
       setAddingToCartId(null);
     }
@@ -230,8 +233,6 @@ const Home: React.FC = () => {
               </div>
               <button
                 onClick={() => {
-                  //   setMinPrice(tempMinPrice);
-                  //   setMaxPrice(tempMaxPrice);
                   handlePriceChange();
                 }}
                 className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
@@ -243,7 +244,55 @@ const Home: React.FC = () => {
         )}
         <div className={`w-full h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
+          {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (
+              <>
+                <Divider orientation="left" orientationMargin={"left"}>🔥 Recommended For You</Divider>
+                <div className="relative w-full">
+                  <button
+                      onClick={() => scrollByAmount(-300)}
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    <LeftOutlined />
+                  </button>
 
+                  <button
+                      onClick={() => scrollByAmount(300)}
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    <RightOutlined />
+                  </button>
+                    <div
+                        ref={recommendationScrollRef}
+                        className="overflow-x-auto scrollbar-hide w-full"
+                    >
+                        <div
+                            className="flex gap-4 px-3 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400 w-max min-w-full"
+                        >
+                            {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
+                                (equipment, index) => (
+                                    <div
+                                        key={equipment.ID}
+                                        className="bg-[#F3F3F3] rounded-md w-[180px] h-[350px] flex-shrink-0 shadow"
+                                    >
+                                        <EquipmentCard
+                                            equipment={equipment}
+                                            index={index}
+                                            equipmentId={equipmentId}
+                                            titleHover={titleHover}
+                                            setEquipmentId={setEquipmentId}
+                                            setTitleHover={setTitleHover}
+                                            role={role}
+                                            onAddToCart={(eqId) => handleAddToCart(eqId)}
+                                            isAddingToCart={addingToCartId === equipment.ID}
+                                        />
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    </div>
+                </div>
+              </>
+          )}
           {filteredEquipments?.equipments.equipments?.length ? (
             <>
               {renderEquipmentGrid()}

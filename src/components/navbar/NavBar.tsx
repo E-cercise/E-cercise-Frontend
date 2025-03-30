@@ -41,27 +41,6 @@ function NavBar() {
         setTempKeyword(keyword); // Store typed input but don't trigger search yet
     };
 
-    // const handleSearchClick = () => {
-    //     // setSearchKeyword(tempKeyword);
-    //     const newParams = new URLSearchParams(searchParams);
-    //     if (tempKeyword.trim() === "") {
-    //         newParams.delete("search");
-    //         newParams.set("page", "1");
-    //         setSearchParams(newParams);
-    //     } else {
-    //         newParams.set("search", tempKeyword);
-    //         newParams.set("page", "1"); // reset page on new search
-    //         // setSearchParams(newParams);
-    //         if (location.pathname !== "/") {
-    //             navigate({
-    //                 pathname: "/",
-    //                 search: `?${newParams.toString()}`,
-    //             });
-    //         } else {
-    //             setSearchParams(newParams);
-    //         }
-    //     }
-    // };
 
     const handleSearchClick = () => {
         const newParams = new URLSearchParams(searchParams);
@@ -96,12 +75,6 @@ function NavBar() {
     };
 
     const handleClickedMuscles = (id: string) => {
-        // if (!clickedMuscles.includes(id)) {
-        //     clickedMuscles.push(id);
-        // } else {
-        //     const index = clickedMuscles.indexOf(id, 0);
-        //     clickedMuscles.splice(index, 1);
-        // }
         const updated = clickedMuscles.includes(id)
             ? clickedMuscles.filter((m) => m !== id)
             : [...clickedMuscles, id];
@@ -116,10 +89,6 @@ function NavBar() {
         setSearchParams(new URLSearchParams(sortedQuery));
     };
 
-    // const handleMuscleGroup = (value: string) => {
-    //     setMuscleGroup(value);
-    // };
-
     const clearAllClickedMuscles = () => {
         setClickedMuscles([]);
         const newParams = new URLSearchParams(searchParams);
@@ -127,10 +96,6 @@ function NavBar() {
         newParams.set("page", "1");
         setSearchParams(newParams);
     };
-
-    // const handleCurrentPage = (value: number) => {
-    //     setCurrentPage(value);
-    // }
 
     const handleCartClick = () => {
         const token = localStorage.getItem("accessToken")
