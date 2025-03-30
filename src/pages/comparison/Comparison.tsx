@@ -8,6 +8,7 @@ import { equipmentInCategory } from "../../api/equipment/EquipmentsInCategory.ts
 import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
 import { allEquipmentsDetail } from "../../api/equipment/AllEquipmentsDetail.ts";
 import { EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Equipment {
   ID: string;
@@ -27,6 +28,7 @@ function Comparison() {
   const [equipment1, setEquipment1] = useState<EquipmentDetailResponse>();
   const [equipment2, setEquipment2] = useState<EquipmentDetailResponse>();
   const [equipment3, setEquipment3] = useState<EquipmentDetailResponse>();
+  const navigate = useNavigate();
 
   // console.log(categories);
   // console.log(selectedID1);
@@ -140,7 +142,9 @@ function Comparison() {
           className="w-[220px] h-[48px]"
           options={categories}
         />
-        <p className="text-[#0B8AE5]">Shop Equipments {">"}</p>
+        <Link to="/">
+          <p className="text-[#0B8AE5]">Shop Equipments {">"}</p>
+        </Link>
         <div className="flex justify-center space-x-[80px] pb-8">
           <div className="flex flex-col items-center space-y-5">
             <Select
