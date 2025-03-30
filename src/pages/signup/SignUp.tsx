@@ -14,7 +14,7 @@ function SignUp() {
     const [tags, setTags] = useState<UserTag[]>([]);
     const [loading, setLoading] = useState(false);
     const [errorFields, setErrorFields] = useState<Record<string, string>>({});
-    const [navigate] = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {

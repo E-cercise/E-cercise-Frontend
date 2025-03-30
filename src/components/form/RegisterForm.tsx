@@ -1,23 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Form,
-    Input,
-    Button,
-    InputNumber,
-    Steps,
-    Tag,
-    Typography,
-    Divider,
-    message, Col,
-    Row,
-} from 'antd';
-import { UserGoal, UserTag } from '../../interfaces/UserProfile.ts';
+import React, {useEffect, useState} from 'react';
+import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Steps, Tag, Typography,} from 'antd';
+import {UserGoal, UserTag} from '../../interfaces/UserProfile.ts';
 import './RegisterForm.css';
 import {checkUserEmailExist} from "../../api/user_profile/CheckUserEmailExists.ts";
-import {debounce} from "lodash";
 
-const { Step } = Steps;
-const { Title, Text } = Typography;
+const {Step} = Steps;
+const {Title, Text} = Typography;
 
 const experienceOptions = ['Beginner', 'Intermediate', 'Advanced', 'Athlete', 'Elderly'];
 const genderOptions = ['Male', 'Female'];
@@ -43,25 +31,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
     const [selectedExperience, setSelectedExperience] = useState<string>('Beginner');
     const [genderValue, setGenderValue] = useState<string>('Male');
-    const emailCache: Record<string, boolean> = {};
-
-    const checkEmailExists = debounce(async (_: any, value: string) => {
-        if (!value) return Promise.reject('Email is required');
-
-        if (emailCache[value] !== undefined) {
-            return emailCache[value]
-                ? Promise.reject('Email already registered')
-                : Promise.resolve();
-        }
-
-        try {
-            const exists = await checkUserEmailExist(value);
-            emailCache[value] = exists;
-            return exists ? Promise.reject('Email already registered') : Promise.resolve();
-        } catch (error) {
-            return Promise.reject('Failed to validate email');
-        }
-    }, 500);
 
     const stepFields = [
         ['email', 'password', 'confirm_password'],
@@ -98,22 +67,37 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 <>
                     <Title level={4}>Create Your Account</Title>
                     <Form.Item name="email" label="Email"
-                               rules={[{ required: true, type: 'email' },
-                                   { type: 'email', message: 'Enter a valid email' },
-                                   { validator: checkEmailExists },
+                               rules={[{required: true, type: 'email'},
+                                   {type: 'email', message: 'Enter a valid email'},
+                                   {
+                                       validator: async (_, value) => {
+                                           if (!value) {
+                                               return Promise.resolve();
+                                           }
+                                           const exists = await checkUserEmailExist(value);
+
+                                           if (exists) {
+                                               return Promise.reject(
+                                                   new Error('This email address is already in use.')
+                                               );
+                                           }
+
+                                           return Promise.resolve();
+                                       },
+                                   },
                                ]}>
-                        <Input placeholder="example@email.com" />
+                        <Input placeholder="example@email.com"/>
                     </Form.Item>
-                    <Form.Item name="password" label="Password" rules={[{ required: true }]}>
-                        <Input.Password placeholder="Choose a strong password" />
+                    <Form.Item name="password" label="Password" rules={[{required: true}]}>
+                        <Input.Password placeholder="Choose a strong password"/>
                     </Form.Item>
                     <Form.Item
                         name="confirm_password"
                         label="Confirm Password"
                         dependencies={['password']}
                         rules={[
-                            { required: true },
-                            ({ getFieldValue }) => ({
+                            {required: true},
+                            ({getFieldValue}) => ({
                                 validator(_, value) {
                                     return value === getFieldValue('password')
                                         ? Promise.resolve()
@@ -122,7 +106,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                             }),
                         ]}
                     >
-                        <Input.Password placeholder="Repeat your password" />
+                        <Input.Password placeholder="Repeat your password"/>
                     </Form.Item>
                 </>
             ),
@@ -132,27 +116,27 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             content: (
                 <>
                     <Title level={4}>Tell Us About You</Title>
-                    <Form.Item name="first_name" label="First Name" rules={[{ required: true }]}>
-                        <Input />
+                    <Form.Item name="first_name" label="First Name" rules={[{required: true}]}>
+                        <Input/>
                     </Form.Item>
-                    <Form.Item name="last_name" label="Last Name" rules={[{ required: true }]}>
-                        <Input />
+                    <Form.Item name="last_name" label="Last Name" rules={[{required: true}]}>
+                        <Input/>
                     </Form.Item>
-                    <Form.Item name="address" label="Address" rules={[{ required: true }]}>
-                        <Input />
+                    <Form.Item name="address" label="Address" rules={[{required: true}]}>
+                        <Input/>
                     </Form.Item>
                     <Form.Item
                         name="phone_number"
                         label="Phone Number"
                         rules={[
-                            { required: true },
+                            {required: true},
                             {
                                 pattern: /^(\+6\d{8,}|[0-9]{10})$/,
                                 message: 'Enter a valid number (10 digits or start with +6X)',
                             },
                         ]}
                     >
-                        <Input placeholder="e.g., +60123456789 or 0123456789" />
+                        <Input placeholder="e.g., +60123456789 or 0123456789"/>
                     </Form.Item>
                 </>
             ),
@@ -163,26 +147,26 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                 <>
                     <Title level={4}>Your Fitness Profile</Title>
                     <Row gutter={16}>
-                    <Col span={8}>
-                    <Form.Item name="Age" label="Age" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" min={0} />
-                    </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                    <Form.Item name="height" label="Height (cm)" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" min={0} placeholder="e.g., 170" />
-                    </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                    <Form.Item name="weight" label="Weight (kg)" rules={[{ required: true }]}>
-                        <InputNumber className="w-full" min={0} placeholder="e.g., 65" />
-                    </Form.Item>
-                    </Col>
+                        <Col span={8}>
+                            <Form.Item name="Age" label="Age" rules={[{required: true}]}>
+                                <InputNumber className="w-full" min={0}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item name="height" label="Height (cm)" rules={[{required: true}]}>
+                                <InputNumber className="w-full" min={0} placeholder="e.g., 170"/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item name="weight" label="Weight (kg)" rules={[{required: true}]}>
+                                <InputNumber className="w-full" min={0} placeholder="e.g., 65"/>
+                            </Form.Item>
+                        </Col>
                     </Row>
 
                     <Divider orientation="left">Gender</Divider>
                     <Text type="secondary">Select your gender</Text>
-                    <Form.Item name="gender" rules={[{ required: true }]}>
+                    <Form.Item name="gender" rules={[{required: true}]}>
                         <div className="flex gap-2 mt-2">
                             {genderOptions.map((g) => (
                                 <Tag.CheckableTag
@@ -202,7 +186,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
                     <Divider orientation="left">Experience</Divider>
                     <Text type="secondary">How would you describe your current experience?</Text>
-                    <Form.Item name="experience" rules={[{ required: true }]}>
+                    <Form.Item name="experience" rules={[{required: true}]}>
                         <div className="tag-grid mt-2">
                             {experienceOptions.map((exp) => (
                                 <Tag.CheckableTag
@@ -243,7 +227,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                             ))}
                         </div>
                     </Form.Item>
-                    <Form.Item name="goal_id" hidden rules={[{ required: true, message: 'Please select a goal' }]} />
+                    <Form.Item name="goal_id" hidden rules={[{required: true, message: 'Please select a goal'}]}/>
 
                     <Divider orientation="left">Exercise Preferences</Divider>
                     <Text type="secondary">Choose what kind of exercises or activities you enjoy.</Text>
@@ -272,7 +256,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     <Form.Item
                         name="preferences"
                         hidden
-                        rules={[{ required: true, message: 'Please select at least one preference' }]}
+                        rules={[{required: true, message: 'Please select at least one preference'}]}
                     />
                 </>
             ),
@@ -283,17 +267,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <>
             <Steps current={current} className="mb-6">
                 {steps.map((item, index) => (
-                    <Step key={index} title={item.title} />
+                    <Step key={index} title={item.title}/>
                 ))}
             </Steps>
 
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={(values) => {
-                    console.log('Submitted:', values);
-                    onSubmit(values);
-                }}                initialValues={{
+                onFinish={onSubmit}
+                initialValues={{
                     gender: 'Male',
                     experience: 'Beginner',
                 }}
@@ -311,25 +293,26 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                             Next
                         </Button>
                     )}
-                    <Form.Item noStyle shouldUpdate>
-                        {() => {
-                            const allFields = form.getFieldsValue(true);
-                            return (
-                                <>
-                                    {Object.entries(allFields).map(([key, value]) => (
-                                        <Form.Item key={key} name={key} hidden>
-                                            <Input />
-                                        </Form.Item>
-                                    ))}
-                                </>
-                            );
-                        }}
-                    </Form.Item>
-
                     {current === steps.length - 1 && (
-                        <Button type="primary" htmlType="submit" size="large" loading={loading}>
-                            Register
-                        </Button>
+                        <>
+                            <Form.Item noStyle shouldUpdate>
+                            {() => {
+                                const allFields = form.getFieldsValue(true);
+                                return (
+                                    <>
+                                        {Object.entries(allFields).map(([key]) => (
+                                            <Form.Item key={key} name={key} hidden>
+                                                <Input/>
+                                            </Form.Item>
+                                        ))}
+                                    </>
+                                );
+                            }}
+                        </Form.Item>
+                            <Button type="primary" htmlType="submit" size="large" loading={loading}>
+                                Register
+                            </Button>
+                        </>
                     )}
                 </div>
             </Form>
