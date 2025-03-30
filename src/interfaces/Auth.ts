@@ -15,5 +15,5 @@ export interface RegisterPayload {
     goal_id: string;
     preferences: string[]; // array of tag IDs (UUIDs)
     gender: Gender;
-    Age: number;
+    age: number;
 }
