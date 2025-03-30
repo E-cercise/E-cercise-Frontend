@@ -29,11 +29,6 @@ function Comparison() {
   const [equipment2, setEquipment2] = useState<EquipmentDetailResponse>();
   const [equipment3, setEquipment3] = useState<EquipmentDetailResponse>();
 
-  // console.log(categories);
-  // console.log(selectedID1);
-  // console.log(selectedID2);
-  // console.log(selectedID3);
-
   const handleCategoryChange = (value: string) => {
     setCategory(value);
   };
@@ -91,7 +86,6 @@ function Comparison() {
           value: equipment.ID,
         })
       );
-      console.log(formattedEquipments)
       setEquipments(formattedEquipments);
       if (formattedEquipments && formattedEquipments.length >= 3) {
         setSelectedID1(formattedEquipments[0].value);
@@ -107,7 +101,6 @@ function Comparison() {
   const fetchAllEquipmentsDetail = async (equipmentIDs: string) => {
     try {
       const response = await allEquipmentsDetail(equipmentIDs);
-      console.log(response);
       setEquipment1(response.equipments[0]);
       setEquipment2(response.equipments[1]);
       setEquipment3(response.equipments[2]);
