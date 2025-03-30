@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Input, Popover, Tag} from "antd";
 import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
@@ -46,7 +46,15 @@ function NavBar() {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("search", tempKeyword);
         newParams.set("page", "1"); // reset page on new search
-        setSearchParams(newParams);
+        // setSearchParams(newParams);
+        if (location.pathname !== "/") {
+            navigate({
+                pathname: "/",
+                search: `?${newParams.toString()}`,
+            });
+        } else {
+            setSearchParams(newParams);
+        }
     };
 
     const handleShowPopOver = (value: boolean) => {
@@ -110,6 +118,11 @@ function NavBar() {
             navigate("/login")
         }
     }
+
+    useEffect(() => {
+        const currentSearch = searchParams.get("search") || "";
+        setTempKeyword(currentSearch);
+    }, [searchParams]);
 
     return (
         <>
