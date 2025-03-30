@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import { Divider, Input, message, Pagination, Spin } from "antd";
+import { Input, message, Pagination, Spin } from "antd";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";

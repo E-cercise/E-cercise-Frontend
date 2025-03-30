@@ -201,9 +201,14 @@ function Detail() {
                         <span className="text-[12px] font-bold">Style:</span>
                         {detail.option.length !== 1 ? (
                           <span className="text-[12px]">
-                            <Select
+                            <Select<string, Category>
                               value={options[selectedOption].value}
-                              onChange={handleOptionChange}
+                              onChange={(val: string) => {
+                                const index = options.findIndex((opt) => opt.value === val);
+                                if (index !== -1) {
+                                    handleOptionChange(index);
+                                }
+                              }}
                               options={options}
                               className="h-7"
                             />
@@ -232,12 +237,8 @@ function Detail() {
                               type="text"
                               value={
                                 quantity >
-                                parseInt(
-                                  detail.option[selectedOption].available
-                                )
-                                  ? parseInt(
-                                      detail.option[selectedOption].available
-                                    )
+                                detail.option[selectedOption].available
+                                  ? detail.option[selectedOption].available
                                   : quantity === 0
                                   ? ""
                                   : quantity
@@ -258,9 +259,7 @@ function Detail() {
                               onClick={() =>
                                 handleQuantityChange(
                                   quantity <
-                                    parseInt(
-                                      detail.option[selectedOption].available
-                                    )
+                                    detail.option[selectedOption].available
                                     ? quantity + 1
                                     : quantity
                                 )
