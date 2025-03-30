@@ -41,19 +41,49 @@ function NavBar() {
         setTempKeyword(keyword); // Store typed input but don't trigger search yet
     };
 
+    // const handleSearchClick = () => {
+    //     // setSearchKeyword(tempKeyword);
+    //     const newParams = new URLSearchParams(searchParams);
+    //     if (tempKeyword.trim() === "") {
+    //         newParams.delete("search");
+    //         newParams.set("page", "1");
+    //         setSearchParams(newParams);
+    //     } else {
+    //         newParams.set("search", tempKeyword);
+    //         newParams.set("page", "1"); // reset page on new search
+    //         // setSearchParams(newParams);
+    //         if (location.pathname !== "/") {
+    //             navigate({
+    //                 pathname: "/",
+    //                 search: `?${newParams.toString()}`,
+    //             });
+    //         } else {
+    //             setSearchParams(newParams);
+    //         }
+    //     }
+    // };
+
     const handleSearchClick = () => {
-        // setSearchKeyword(tempKeyword);
         const newParams = new URLSearchParams(searchParams);
-        newParams.set("search", tempKeyword);
-        newParams.set("page", "1"); // reset page on new search
-        // setSearchParams(newParams);
+        const keyword = tempKeyword.trim();
+    
+        if (keyword) {
+            newParams.set("search", keyword);
+        } else {
+            newParams.delete("search");
+        }
+    
+        newParams.set("page", "1");
+    
+        const sortedQuery = sortParamsWithPageLast(newParams);
+    
         if (location.pathname !== "/") {
             navigate({
                 pathname: "/",
-                search: `?${newParams.toString()}`,
+                search: `?${sortedQuery}`,
             });
         } else {
-            setSearchParams(newParams);
+            setSearchParams(new URLSearchParams(sortedQuery));
         }
     };
 
@@ -82,7 +112,8 @@ function NavBar() {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("muscles", clickedMuscles.join(","));
         newParams.set("page", "1");
-        setSearchParams(newParams);
+        const sortedQuery = sortParamsWithPageLast(newParams);
+        setSearchParams(new URLSearchParams(sortedQuery));
     };
 
     // const handleMuscleGroup = (value: string) => {
@@ -91,6 +122,10 @@ function NavBar() {
 
     const clearAllClickedMuscles = () => {
         setClickedMuscles([]);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.delete("muscles");
+        newParams.set("page", "1");
+        setSearchParams(newParams);
     };
 
     // const handleCurrentPage = (value: number) => {
@@ -118,6 +153,18 @@ function NavBar() {
             navigate("/login")
         }
     }
+
+    const sortParamsWithPageLast = (params: URLSearchParams): string => {
+        const entries = Array.from(params.entries());
+        const filtered = entries.filter(([key]) => key !== "page");
+        const pageEntry = entries.find(([key]) => key === "page");
+    
+        const sorted = [...filtered];
+        if (pageEntry) { 
+            sorted.push(pageEntry)
+        };
+        return new URLSearchParams(sorted).toString();
+    };
 
     useEffect(() => {
         const currentSearch = searchParams.get("search") || "";

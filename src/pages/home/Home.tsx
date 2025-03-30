@@ -13,7 +13,7 @@ import { Role } from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
@@ -25,8 +25,8 @@ const Home: React.FC = () => {
   const searchKeyword = searchParams.get("search") || "";
   const muscleGroup = searchParams.get("muscles") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
-//   const [minPrice, setMinPrice] = useState<string>("");
-//   const [maxPrice, setMaxPrice] = useState<string>("");
+  //   const [minPrice, setMinPrice] = useState<string>("");
+  //   const [maxPrice, setMaxPrice] = useState<string>("");
   const minPrice = searchParams.get("min_price") || "";
   const maxPrice = searchParams.get("max_price") || "";
   const [filteredEquipments, setFilteredEquipments] =
@@ -35,6 +35,7 @@ const Home: React.FC = () => {
   const [tempMaxPrice, setTempMaxPrice] = useState<string>("");
   const [tempState, setTempState] = useState<boolean>(false);
   const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const { role } = useAuth();
   const pageSize = 50;
@@ -81,27 +82,51 @@ const Home: React.FC = () => {
 
     const hasMin = tempMinPrice.trim() !== "";
     const hasMax = tempMaxPrice.trim() !== "";
-  
+
     if (hasMin) {
       newParams.set("min_price", tempMinPrice.trim());
     } else {
       newParams.delete("min_price");
     }
-  
+
     if (hasMax) {
       newParams.set("max_price", tempMaxPrice.trim());
     } else {
       newParams.delete("max_price");
     }
-  
+
     // Always reset pagination when filters are changed
     newParams.set("page", "1");
-    setSearchParams(newParams)
-  }
+    const sortedQuery = sortParamsWithPageLast(newParams);
+    setSearchParams(new URLSearchParams(sortedQuery));
+  };
+
+  const sortParamsWithPageLast = (params: URLSearchParams): string => {
+    const entries = Array.from(params.entries());
+    const filtered = entries.filter(([key]) => key !== "page");
+    const pageEntry = entries.find(([key]) => key === "page");
+
+    const sorted = [...filtered];
+    if (pageEntry) {
+      sorted.push(pageEntry);
+    }
+    return new URLSearchParams(sorted).toString();
+  };
 
   useEffect(() => {
     fetchEquipments();
   }, [searchKeyword, muscleGroup, currentPage, minPrice, maxPrice]);
+
+  useEffect(() => {
+    if (location.pathname === "/" && searchParams.toString() === "") {
+      const newParams = new URLSearchParams();
+      newParams.set("page", "1");
+      navigate({
+        pathname: "/",
+        search: `?${newParams.toString()}`,
+      }, { replace: true });
+    }
+  }, [location.pathname, searchParams, navigate]);
 
   const handleAddToCart = async (eqId: string) => {
     setAddingToCartId(eqId);
@@ -205,9 +230,9 @@ const Home: React.FC = () => {
               </div>
               <button
                 onClick={() => {
-                //   setMinPrice(tempMinPrice);
-                //   setMaxPrice(tempMaxPrice);
-                    handlePriceChange();
+                  //   setMinPrice(tempMinPrice);
+                  //   setMaxPrice(tempMaxPrice);
+                  handlePriceChange();
                 }}
                 className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
               >
