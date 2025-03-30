@@ -3,16 +3,16 @@ import {Card, Form, notification} from "antd";
 import NavBar from "../../components/navbar/NavBar";
 import HeaderRow from "../../components/headerRow/HeaderRow";
 import {useAuth} from "../../hook/UseAuth.ts";
-import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory";
+import {getEquipmentCategories} from "../../api/equipment/EquipmentCategory";
 import {addEquipment} from "../../api/equipment/AddEquipment";
 import {useNavigate} from "react-router-dom";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
-import {CategoryResponse} from "../../interfaces/equipment/EquipmentDetail.ts";
+import {Category, Feature} from "../../interfaces/equipment/EquipmentDetail.ts";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 
 const AddEquipmentPage = () => {
     const {role} = useAuth();
-    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
@@ -27,7 +27,7 @@ const AddEquipmentPage = () => {
     const fetchCategories = async () => {
         setLoadingCategories(true);
         try {
-            const res = await getEquipmentCategory();
+            const res = await getEquipmentCategories();
             const mapped = res.categories.map((cat: any) => ({
                 label: cat.label,
                 value: cat.label,
@@ -48,7 +48,9 @@ const AddEquipmentPage = () => {
     };
 
     const handleAddNewCategory = () => {
-        if (!searchCategory) return;
+        if (!searchCategory) {
+            return;
+        }
         const newCat = {label: searchCategory, value: searchCategory};
         setCategories((prev) => [...prev, newCat]);
         notificationApi.success({
@@ -62,7 +64,7 @@ const AddEquipmentPage = () => {
         try {
             const transformedPayload = {
                 ...values,
-                features: values.features.map((f) => f.description),
+                features: values.features.map((feature: Feature) => feature.description),
                 options: values.options?.map((opt: any) => {
                     const {primaryImage, galleryImages, ...rest} = opt;
                     const mergedImages: any[] = [];

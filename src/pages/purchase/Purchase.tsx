@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Input, Modal} from "antd";
 import {FaLocationDot} from "react-icons/fa6";

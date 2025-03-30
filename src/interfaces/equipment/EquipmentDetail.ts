@@ -21,21 +21,21 @@ interface Image {
     is_primary: boolean;
 }
 
-interface Option {
+export interface Option {
     id: string;
     name: string;
-    available: string;
+    available: number;
     price: number;
     weight: number;
     images: Image[];
 }
 
-interface Feature {
+export interface Feature {
     id: string;
     description: string;
 }
 
-interface AdditionalField {
+export interface AdditionalField {
     id: string;
     key: string;
     value: string;
@@ -55,9 +55,22 @@ export interface EquipmentDetailResponse {
     additional_field: AdditionalField[];
 }
 
+export interface EquipmentDetailForComparison {
+    id: string;
+    brand: string;
+    color: string;
+    material: string;
+    description: string;
+    category: string;
+    model: string;
+    name: string;
+    option: Option[];
+    additional_field: AdditionalField[];
+}
+
 export interface Category {
     label: string;
-    value: number;
+    value: string;
 }
 
 export interface CategoryResponse {

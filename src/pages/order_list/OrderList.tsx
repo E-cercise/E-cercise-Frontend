@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { useAuth } from "../../hook/UseAuth.ts";
-import { Table, Tag, Image, Typography, Space, Row, Col, Select, Tabs, TabsProps } from "antd";
+import { Table, Tag, Image, Typography, Space, Row, Col, Tabs, TabsProps } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { getMyOrders } from "../../api/order/GetMyOrders.ts";
 import { FirstLineEquipment, Order } from "../../interfaces/Order.ts";
