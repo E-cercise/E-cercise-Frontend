@@ -7,11 +7,12 @@ import UserProfileForm from "../../components/form/UserProfileForm.tsx";
 import {useAuth} from "../../hook/UseAuth.ts";
 import {getUserProfile} from "../../api/user_profile/GetUserProfile.ts";
 import {updateUserProfile} from "../../api/user_profile/UpdateUserProfile.ts";
+import { UserProfile } from "../../interfaces/UserProfile.ts";
 
 
 const UserProfilePage = () => {
     const {role} = useAuth();
-    const [initialData, setInitialData] = useState(null);
+    const [initialData, setInitialData] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {

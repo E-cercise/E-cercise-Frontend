@@ -1,4 +1,4 @@
-import {CategoryResponse} from "./EquipmentDetail.ts";
+import {Category} from "./EquipmentDetail.ts";
 import {FormInstance} from "antd";
 
 export interface EquipmentFormProps {
@@ -6,7 +6,7 @@ export interface EquipmentFormProps {
     form: FormInstance<any>;
     isEditing: boolean;
     loadingCategories: boolean;
-    categories: CategoryResponse[];
+    categories: Category[];
     initialValues?: any;
     onSubmit: (formValues: any) => Promise<void>;
     onCategorySearch: (val: string) => void;
@@ -24,16 +24,16 @@ export interface EquipmentFormValues {
     category: string;
     description: string;
     muscle_group_used: string[];
-    features: {
+    feature: {
         __id?: string;
         description: string;
     }[];
-    additional_fields: {
+    additional_field: {
         __id?: string;
         key: string;
         value: string;
     }[];
-    options: {
+    option: {
         __id?: string;
         name: string;
         price: number;

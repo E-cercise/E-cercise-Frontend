@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {CategoryResponse, EquipmentDetailResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
+import {AdditionalField, Category, EquipmentDetailResponse, Feature, Option,} from "../../interfaces/equipment/EquipmentDetail.ts";
 import React, {useEffect, useState} from "react";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 import {Button, Card, Form, Modal, notification} from "antd";
@@ -19,7 +19,7 @@ const AdminDetailPage: React.FC = () => {
     const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
     const [initialFormValues, setInitialFormValues] =
         useState<EquipmentFormValues>();
-    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
@@ -68,18 +68,18 @@ const AdminDetailPage: React.FC = () => {
                 category: data.category,
                 description: data.description,
                 muscle_group_used: data.muscle_group_used || [],
-                features: (data.feature || []).map((f) => ({
-                    __id: f.id,
-                    description: f.description,
+                feature: (data.feature || []).map((feature: Feature) => ({
+                    __id: feature.id,
+                    description: feature.description,
                 })),
-                additional_fields: (data.additional_field || []).map((af) => ({
-                    __id: af.id,
-                    key: af.key,
-                    value: af.value,
+                additional_field: (data.additional_field || []).map((field: AdditionalField) => ({
+                    __id: field.id,
+                    key: field.key,
+                    value: field.value,
                 })),
-                options: (data.option || []).map((opt) => {
-                    const primaryImg = opt.images.find((img) => img.is_primary);
-                    const galleryImgs = opt.images.filter((img) => !img.is_primary);
+                option: (data.option || []).map((opt: Option) => {
+                    const primaryImg = opt.images.find((img: any) => img.is_primary);
+                    const galleryImgs = opt.images.filter((img: any) => !img.is_primary);
                     return {
                         __id: opt.id,
                         name: opt.name,
@@ -116,7 +116,9 @@ const AdminDetailPage: React.FC = () => {
     };
 
     const handleAddNewCategory = () => {
-        if (!searchCategory) return;
+        if (!searchCategory) {
+            return;
+        }
         const newCat = {label: searchCategory, value: searchCategory};
         setCategories((prev) => [...prev, newCat]);
         notificationApi.success({
@@ -144,7 +146,9 @@ const AdminDetailPage: React.FC = () => {
     };
 
     const handleUpdateSubmit = async (values: EquipmentFormValues) => {
-        if (!originalData || !equipment_id) return;
+        if (!originalData || !equipment_id) {
+            return;
+        }
 
         setSubmitting(true);
         try {
@@ -171,16 +175,16 @@ const AdminDetailPage: React.FC = () => {
                 ...originalData,
                 ...values,
                 category: categoryObj?.value || values.category,
-                feature: values.features.map((f) => ({
+                feature: values.feature.map((f) => ({
                     id: f.__id ?? Math.random().toString(),
                     description: f.description,
                 })),
-                additional_field: values.additional_fields?.map((f) => ({
+                additional_field: values.additional_field?.map((f) => ({
                     id: f.__id ?? Math.random().toString(),
                     key: f.key,
                     value: f.value,
                 })),
-                option: values.options?.map((opt) => ({
+                option: values.option?.map((opt) => ({
                     id: opt.__id ?? Math.random().toString(),
                     name: opt.name,
                     price: opt.price,
@@ -191,14 +195,14 @@ const AdminDetailPage: React.FC = () => {
                             ? [
                                 {
                                     id: opt.primaryImage.fileID,
-                                    url: opt.primaryImage.thumbnail,
+                                    url: opt.primaryImage.thumbnail || "",
                                     is_primary: true,
                                 },
                             ]
                             : []),
                         ...(opt.galleryImages || []).map((g) => ({
                             id: g.fileID,
-                            url: g.thumbnail,
+                            url: g.thumbnail || "",
                             is_primary: false,
                         })),
                     ],
@@ -277,7 +281,6 @@ const AdminDetailPage: React.FC = () => {
                     searchCategory={searchCategory}
                     initialValues={initialFormValues}
                     onSubmit={handleUpdateSubmit}
-                    onCancelEdit={handleCancelEdit}
                     submitting={submitting}
                 />
             </Card>

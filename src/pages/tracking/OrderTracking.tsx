@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Modal, message, Steps } from "antd";
+import { useEffect, useState } from "react";
+import { Modal, message, Steps, StepProps } from "antd";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hook/UseAuth.ts";
 import { RiFileList2Line, RiTruckLine } from "react-icons/ri";
@@ -26,13 +26,13 @@ const statusMap: Record<string, number> = {
 function OrderTracking() {
   const [orderDetail, setOrderDetail] = useState<OrderDetailResponse>();
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
-  const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
+//   const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
   const [received, setReceived] = useState<boolean>(true);
   const location = useLocation();
   const orderID = location.state;
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
   const { role } = useAuth();
-  const stepItems = [
+  const stepItems: StepProps[] = [
     {
       title: "Order Placed",
       icon: <RiFileList2Line size={30} />,
@@ -88,7 +88,7 @@ function OrderTracking() {
     getOrderDetail(id)
       .then((response) => {
         if (response?.order_status === "To Receive") {
-          setShowReceiveButton(true);
+        //   setShowReceiveButton(true);
           setReceived(false);
         } else {
           setReceived(true);

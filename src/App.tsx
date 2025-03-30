@@ -18,7 +18,7 @@ import AdminDetailPage from "./pages/detail/AdminDetail.tsx";
 import UserProfilePage from "./pages/user_profile/UserProfile.tsx";
 
 function App() {
-    const {userId, role, isLoading} = useAuth()
+    const { role, isLoading } = useAuth()
 
     if (isLoading) {
         return <div>Loading...</div>;

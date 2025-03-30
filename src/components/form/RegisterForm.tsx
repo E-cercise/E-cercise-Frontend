@@ -54,7 +54,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             await form.validateFields(stepFields[current]);
             setCurrent(current + 1);
         } catch (err) {
-            message.error(err.message);
+            if (err instanceof Error) {
+                message.error(err.message);
+            } else {
+                message.error("Validation failed. Please check the form.");
+            }
         }
     };
 
