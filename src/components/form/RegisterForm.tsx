@@ -12,7 +12,9 @@ import {
     Row,
 } from 'antd';
 import { UserGoal, UserTag } from '../../interfaces/UserProfile.ts';
-import './RegisterForm.css'; // Add styling here
+import './RegisterForm.css';
+import {checkUserEmailExist} from "../../api/user_profile/CheckUserEmailExists.ts";
+import {debounce} from "lodash";
 
 const { Step } = Steps;
 const { Title, Text } = Typography;
@@ -41,7 +43,25 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
     const [selectedExperience, setSelectedExperience] = useState<string>('Beginner');
     const [genderValue, setGenderValue] = useState<string>('Male');
+    const emailCache: Record<string, boolean> = {};
 
+    const checkEmailExists = debounce(async (_: any, value: string) => {
+        if (!value) return Promise.reject('Email is required');
+
+        if (emailCache[value] !== undefined) {
+            return emailCache[value]
+                ? Promise.reject('Email already registered')
+                : Promise.resolve();
+        }
+
+        try {
+            const exists = await checkUserEmailExist(value);
+            emailCache[value] = exists;
+            return exists ? Promise.reject('Email already registered') : Promise.resolve();
+        } catch (error) {
+            return Promise.reject('Failed to validate email');
+        }
+    }, 500);
 
     const stepFields = [
         ['email', 'password', 'confirm_password'],
@@ -64,7 +84,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         try {
             await form.validateFields(stepFields[current]);
             setCurrent(current + 1);
-        } catch (err) {}
+        } catch (err) {
+            message.error(err.message);
+        }
     };
 
     const prev = () => setCurrent(current - 1);
@@ -75,7 +97,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             content: (
                 <>
                     <Title level={4}>Create Your Account</Title>
-                    <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email' }]}>
+                    <Form.Item name="email" label="Email"
+                               rules={[{ required: true, type: 'email' },
+                                   { type: 'email', message: 'Enter a valid email' },
+                                   { validator: checkEmailExists },
+                               ]}>
                         <Input placeholder="example@email.com" />
                     </Form.Item>
                     <Form.Item name="password" label="Password" rules={[{ required: true }]}>
@@ -264,8 +290,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={onSubmit}
-                initialValues={{
+                onFinish={(values) => {
+                    console.log('Submitted:', values);
+                    onSubmit(values);
+                }}                initialValues={{
                     gender: 'Male',
                     experience: 'Beginner',
                 }}
@@ -283,6 +311,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                             Next
                         </Button>
                     )}
+                    <Form.Item noStyle shouldUpdate>
+                        {() => {
+                            const allFields = form.getFieldsValue(true);
+                            return (
+                                <>
+                                    {Object.entries(allFields).map(([key, value]) => (
+                                        <Form.Item key={key} name={key} hidden>
+                                            <Input />
+                                        </Form.Item>
+                                    ))}
+                                </>
+                            );
+                        }}
+                    </Form.Item>
+
                     {current === steps.length - 1 && (
                         <Button type="primary" htmlType="submit" size="large" loading={loading}>
                             Register

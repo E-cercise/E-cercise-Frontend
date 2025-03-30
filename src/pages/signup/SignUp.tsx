@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {notification} from "antd";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "./SignUp.css";
 import RegisterForm from "../../components/form/RegisterForm.tsx";
 import {UserGoal, UserTag} from "../../interfaces/UserProfile.ts";
@@ -14,6 +14,7 @@ function SignUp() {
     const [tags, setTags] = useState<UserTag[]>([]);
     const [loading, setLoading] = useState(false);
     const [errorFields, setErrorFields] = useState<Record<string, string>>({});
+    const [navigate] = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,6 +40,7 @@ function SignUp() {
         try {
             await registerUser(values);
             notification.success({ message: 'Registered successfully!' });
+            navigate("/login");
         } catch (error: any) {
             const isFieldError = typeof error === 'object' && error.message === 'Validation failed';
             if (isFieldError && error.response?.data?.errors) {
