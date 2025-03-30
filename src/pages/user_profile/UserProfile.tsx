@@ -11,9 +11,10 @@ import { getTags } from "../../api/tag/getTag.ts";
 import { getGoals } from "../../api/goal/getGoal.ts";
 import { UserGoal, UserTag } from "../../interfaces/UserProfile.ts";
 
+
 const UserProfilePage = () => {
-    const { role } = useAuth();
-    const [initialData, setInitialData] = useState(null);
+    const {role} = useAuth();
+    const [initialData, setInitialData] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(false);
     const [tags, setTags] = useState<UserTag[]>([]);
     const [goals, setGoals] = useState<UserGoal[]>([]);

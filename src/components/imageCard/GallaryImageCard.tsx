@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {message, Upload} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
-import type {RcCustomRequestOptions, UploadFile} from "antd/es/upload/interface";
+import type { UploadRequestOption } from 'rc-upload/lib/interface';
+import type { UploadFile } from "antd/es/upload/interface";
 import {uploadEquipmentImage} from "../../api/image/UploadEquipmentImage";
 import {UploadedImage} from "./PrimaryImageCard";
 import {validateFileTypeAndSize} from "./util";
@@ -56,10 +57,12 @@ const GalleryImageCard: React.FC<GalleryImageCardProps> = ({
         const deleted = initialImages.filter(
             (init) => !currentFiles.find((curr) => curr.fileID === init.fileID)
         );
-        if (deleted.length > 0) onDelete?.(deleted);
+        if (deleted.length > 0) {
+            onDelete?.(deleted);
+        }
     };
 
-    const customRequest = (options: RcCustomRequestOptions) => {
+    const customRequest = (options: UploadRequestOption) => {
         const {file, onSuccess, onError} = options;
 
         uploadEquipmentImage(file as File)

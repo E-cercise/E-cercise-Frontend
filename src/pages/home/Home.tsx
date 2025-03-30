@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import { Divider, Input, message, Pagination, Spin } from "antd";
+import { Input, message, Pagination, Spin } from "antd";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";
@@ -13,21 +13,29 @@ import { Role } from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
   const [titleHover, setTitleHover] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const [muscleGroup, setMuscleGroup] = useState<string>("");
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+  //   const [currentPage, setCurrentPage] = useState<number>(1);
+  //   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  //   const [muscleGroup, setMuscleGroup] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchKeyword = searchParams.get("search") || "";
+  const muscleGroup = searchParams.get("muscles") || "";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  //   const [minPrice, setMinPrice] = useState<string>("");
+  //   const [maxPrice, setMaxPrice] = useState<string>("");
+  const minPrice = searchParams.get("min_price") || "";
+  const maxPrice = searchParams.get("max_price") || "";
   const [filteredEquipments, setFilteredEquipments] =
     useState<FilteredEquipmentResponse>();
   const [tempMinPrice, setTempMinPrice] = useState<string>("");
   const [tempMaxPrice, setTempMaxPrice] = useState<string>("");
   const [tempState, setTempState] = useState<boolean>(false);
   const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const { role } = useAuth();
   const pageSize = 50;
@@ -63,9 +71,62 @@ const Home: React.FC = () => {
     }
   };
 
+  const handlePageChange = (newPage: number) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", String(newPage));
+    setSearchParams(newParams);
+  };
+
+  const handlePriceChange = () => {
+    const newParams = new URLSearchParams(searchParams);
+
+    const hasMin = tempMinPrice.trim() !== "";
+    const hasMax = tempMaxPrice.trim() !== "";
+
+    if (hasMin) {
+      newParams.set("min_price", tempMinPrice.trim());
+    } else {
+      newParams.delete("min_price");
+    }
+
+    if (hasMax) {
+      newParams.set("max_price", tempMaxPrice.trim());
+    } else {
+      newParams.delete("max_price");
+    }
+
+    // Always reset pagination when filters are changed
+    newParams.set("page", "1");
+    const sortedQuery = sortParamsWithPageLast(newParams);
+    setSearchParams(new URLSearchParams(sortedQuery));
+  };
+
+  const sortParamsWithPageLast = (params: URLSearchParams): string => {
+    const entries = Array.from(params.entries());
+    const filtered = entries.filter(([key]) => key !== "page");
+    const pageEntry = entries.find(([key]) => key === "page");
+
+    const sorted = [...filtered];
+    if (pageEntry) {
+      sorted.push(pageEntry);
+    }
+    return new URLSearchParams(sorted).toString();
+  };
+
   useEffect(() => {
     fetchEquipments();
   }, [searchKeyword, muscleGroup, currentPage, minPrice, maxPrice]);
+
+  useEffect(() => {
+    if (location.pathname === "/" && searchParams.toString() === "") {
+      const newParams = new URLSearchParams();
+      newParams.set("page", "1");
+      navigate({
+        pathname: "/",
+        search: `?${newParams.toString()}`,
+      }, { replace: true });
+    }
+  }, [location.pathname, searchParams, navigate]);
 
   const handleAddToCart = async (eqId: string) => {
     setAddingToCartId(eqId);
@@ -102,7 +163,11 @@ const Home: React.FC = () => {
     const displayed = equipmentArray.slice(0, pageSize);
 
     return (
-      <div className={`grid grid-cols-5 gap-4 w-full bg-[#D9D9D9] pt-4 pb-4 pl-3 ${role === Role.Admin ? "": "pr-3"} rounded-md`}>
+      <div
+        className={`grid grid-cols-5 gap-4 w-full bg-[#D9D9D9] pt-4 pb-4 pl-3 ${
+          role === Role.Admin ? "" : "pr-3"
+        } rounded-md`}
+      >
         {displayed.map((equipment, index) => (
           <EquipmentCard
             key={equipment.ID}
@@ -142,11 +207,7 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <NavBar
-        setSearchKeyword={setSearchKeyword}
-        setMuscleGroup={setMuscleGroup}
-        setCurrentPage={setCurrentPage}
-      />
+      <NavBar />
       <div className="flex flex-grow">
         {role == Role.User && (
           <div className="flex-shrink-0 w-[200px] h-[560px] bg-zinc-800">
@@ -169,8 +230,9 @@ const Home: React.FC = () => {
               </div>
               <button
                 onClick={() => {
-                  setMinPrice(tempMinPrice);
-                  setMaxPrice(tempMaxPrice);
+                  //   setMinPrice(tempMinPrice);
+                  //   setMaxPrice(tempMaxPrice);
+                  handlePriceChange();
                 }}
                 className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
               >
@@ -192,7 +254,7 @@ const Home: React.FC = () => {
                   total={filteredEquipments?.total_rows || 0}
                   pageSize={pageSize}
                   current={currentPage}
-                  onChange={(page) => setCurrentPage(page)}
+                  onChange={(page) => handlePageChange(page)}
                   className="m-auto"
                 />
               </div>

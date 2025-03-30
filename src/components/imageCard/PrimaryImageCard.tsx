@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {message, Upload} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
-import type {RcCustomRequestOptions, UploadFile} from "antd/es/upload/interface";
+import type { UploadRequestOption } from 'rc-upload/lib/interface';
+import type { UploadFile } from "antd/es/upload/interface";
 import {uploadEquipmentImage} from "../../api/image/UploadEquipmentImage.ts";
 import {validateFileTypeAndSize} from "./util.ts";
 
@@ -48,7 +49,7 @@ const PrimaryImageCard: React.FC<PrimaryImageCardProps> = ({
         }
     };
 
-    const customRequest = (options: RcCustomRequestOptions) => {
+    const customRequest = (options: UploadRequestOption) => {
         const {file, onSuccess, onError} = options;
 
         uploadEquipmentImage(file as File)

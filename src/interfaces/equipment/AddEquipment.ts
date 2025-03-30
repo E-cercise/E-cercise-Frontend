@@ -3,7 +3,7 @@ interface AdditionalFieldAdd {
     value: string;
 }
 
-interface OptionAdd {
+export interface OptionAdd {
     available: number;
     images?: ImageAdd[];
     name: string;
