@@ -10,19 +10,12 @@ import Cart from "../../assets/navbar/Cart.png";
 import {backAttributes, frontAttributes} from "../muscles/muscles";
 import "./NavBar.css";
 import {useAuth} from "../../hook/UseAuth.ts";
+import { useSearch } from "../../hook/useSearch.ts";
 import BottomNavBar from "./BottomNavBar.tsx";
 import {Role} from "../../enum/Role.ts";
 import UserProfile from "./UserProfile.tsx";
 
-function NavBar({
-                    setSearchKeyword,
-                    setMuscleGroup,
-                    setCurrentPage,
-                }: {
-    setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
-    setMuscleGroup: React.Dispatch<React.SetStateAction<string>>;
-    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-}) {
+function NavBar() {
     const [activePath, setActivePath] = useState<string>("");
     const [, setShowPopOver] = useState<boolean>(false);
     const [, setShowMusclesPopover] = useState<boolean>(false);
@@ -31,7 +24,8 @@ function NavBar({
     const navigate = useNavigate();
     const location = useLocation();
     const isHomePage = location.pathname === "/";
-    const {userId, name, role, logout} = useAuth()
+    const {userId, name, role, logout} = useAuth();
+    const { setSearchKeyword, setMuscleGroup, setCurrentPage } = useSearch();
 
     const handleMouseEnter = (id: any) => {
         setActivePath(id);

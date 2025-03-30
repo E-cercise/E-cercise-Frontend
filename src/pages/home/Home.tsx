@@ -13,13 +13,14 @@ import { Role } from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
+import { useSearch } from "../../hook/useSearch.ts";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
   const [titleHover, setTitleHover] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const [muscleGroup, setMuscleGroup] = useState<string>("");
+//   const [currentPage, setCurrentPage] = useState<number>(1);
+//   const [searchKeyword, setSearchKeyword] = useState<string>("");
+//   const [muscleGroup, setMuscleGroup] = useState<string>("");
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
   const [filteredEquipments, setFilteredEquipments] =
@@ -30,6 +31,7 @@ const Home: React.FC = () => {
   const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
 
   const { role } = useAuth();
+  const { currentPage, searchKeyword, muscleGroup } = useSearch();
   const pageSize = 50;
   const headingText =
     role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
@@ -143,9 +145,6 @@ const Home: React.FC = () => {
   return (
     <div>
       <NavBar
-        setSearchKeyword={setSearchKeyword}
-        setMuscleGroup={setMuscleGroup}
-        setCurrentPage={setCurrentPage}
       />
       <div className="flex flex-grow">
         {role == Role.User && (
