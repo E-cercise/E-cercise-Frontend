@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { Divider, Input, message, Pagination, Spin } from "antd";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
@@ -14,6 +14,7 @@ import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
@@ -36,6 +37,16 @@ const Home: React.FC = () => {
   const pageSize = 50;
   const headingText =
     role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
+  const recommendationScrollRef = useRef<HTMLDivElement>(null);
+  const scrollByAmount = (amount: number) => {
+    if (recommendationScrollRef.current) {
+      recommendationScrollRef.current.scrollBy({
+        left: amount,
+        behavior: "smooth",
+      });
+    }
+  };
+
 
   const fetchEquipments = async () => {
     try {
@@ -235,31 +246,51 @@ const Home: React.FC = () => {
           <HeaderRow role={role} title={headingText} />
           {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (
               <>
-                <Divider orientation="left">🔥 Recommended For You</Divider>
-                <div className="overflow-x-auto w-full">
-                  <div className="flex space-x-4 w-max min-w-full px-2 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400">
-                    {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
-                        (equipment, index) => (
-                            <div className="flex-shrink-0 w-[250px]" key={equipment.ID}>
-                              <EquipmentCard
-                                  equipment={equipment}
-                                  index={index}
-                                  equipmentId={equipmentId}
-                                  titleHover={titleHover}
-                                  setEquipmentId={setEquipmentId}
-                                  setTitleHover={setTitleHover}
-                                  role={role}
-                                  onAddToCart={(eqId) => handleAddToCart(eqId)}
-                                  isAddingToCart={addingToCartId === equipment.ID}
-                              />
-                            </div>
-                        )
-                    )}
+                <Divider orientation="left" orientationMargin={"left"}>🔥 Recommended For You</Divider>
+                <div className="relative w-full">
+                  <button
+                      onClick={() => scrollByAmount(-300)}
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    <LeftOutlined />
+                  </button>
+
+                  <button
+                      onClick={() => scrollByAmount(300)}
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    <RightOutlined />
+                  </button>
+
+                  <div
+                      ref={recommendationScrollRef}
+                      className="overflow-x-auto scrollbar-hide w-full"
+                  >
+                    <div
+                        className="grid grid-flow-col gap-4 px-2 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400"
+                    >
+                      {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
+                          (equipment, index) => (
+                              <div key={equipment.ID}>
+                                <EquipmentCard
+                                    equipment={equipment}
+                                    index={index}
+                                    equipmentId={equipmentId}
+                                    titleHover={titleHover}
+                                    setEquipmentId={setEquipmentId}
+                                    setTitleHover={setTitleHover}
+                                    role={role}
+                                    onAddToCart={(eqId) => handleAddToCart(eqId)}
+                                    isAddingToCart={addingToCartId === equipment.ID}
+                                />
+                              </div>
+                          )
+                      )}
+                    </div>
                   </div>
                 </div>
               </>
           )}
-
           {filteredEquipments?.equipments.equipments?.length ? (
             <>
               {renderEquipmentGrid()}
