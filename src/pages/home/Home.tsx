@@ -261,33 +261,35 @@ const Home: React.FC = () => {
                   >
                     <RightOutlined />
                   </button>
-
-                  <div
-                      ref={recommendationScrollRef}
-                      className="overflow-x-auto scrollbar-hide w-full"
-                  >
                     <div
-                        className="grid grid-flow-col gap-4 px-2 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400"
+                        ref={recommendationScrollRef}
+                        className="overflow-x-auto scrollbar-hide w-full"
                     >
-                      {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
-                          (equipment, index) => (
-                              <div key={equipment.ID}>
-                                <EquipmentCard
-                                    equipment={equipment}
-                                    index={index}
-                                    equipmentId={equipmentId}
-                                    titleHover={titleHover}
-                                    setEquipmentId={setEquipmentId}
-                                    setTitleHover={setTitleHover}
-                                    role={role}
-                                    onAddToCart={(eqId) => handleAddToCart(eqId)}
-                                    isAddingToCart={addingToCartId === equipment.ID}
-                                />
-                              </div>
-                          )
-                      )}
+                        <div
+                            className="flex gap-4 px-3 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400 w-max min-w-full"
+                        >
+                            {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
+                                (equipment, index) => (
+                                    <div
+                                        key={equipment.ID}
+                                        className="bg-[#F3F3F3] rounded-md w-[180px] h-[350px] flex-shrink-0 shadow"
+                                    >
+                                        <EquipmentCard
+                                            equipment={equipment}
+                                            index={index}
+                                            equipmentId={equipmentId}
+                                            titleHover={titleHover}
+                                            setEquipmentId={setEquipmentId}
+                                            setTitleHover={setTitleHover}
+                                            role={role}
+                                            onAddToCart={(eqId) => handleAddToCart(eqId)}
+                                            isAddingToCart={addingToCartId === equipment.ID}
+                                        />
+                                    </div>
+                                )
+                            )}
+                        </div>
                     </div>
-                  </div>
                 </div>
               </>
           )}
