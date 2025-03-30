@@ -8,6 +8,7 @@ interface EquipmentDetail {
 }
 
 export interface FilteredEquipmentResponse {
+    recommendation_equipments:{ equipments: EquipmentDetail[] };
     equipments: { equipments: EquipmentDetail[] };
     page: number;
     limit: number;

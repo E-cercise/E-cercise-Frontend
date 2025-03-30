@@ -18,15 +18,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
   const [titleHover, setTitleHover] = useState<boolean>(false);
-  //   const [currentPage, setCurrentPage] = useState<number>(1);
-  //   const [searchKeyword, setSearchKeyword] = useState<string>("");
-  //   const [muscleGroup, setMuscleGroup] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
   const searchKeyword = searchParams.get("search") || "";
   const muscleGroup = searchParams.get("muscles") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
-  //   const [minPrice, setMinPrice] = useState<string>("");
-  //   const [maxPrice, setMaxPrice] = useState<string>("");
   const minPrice = searchParams.get("min_price") || "";
   const maxPrice = searchParams.get("max_price") || "";
   const [filteredEquipments, setFilteredEquipments] =
@@ -41,8 +36,6 @@ const Home: React.FC = () => {
   const pageSize = 50;
   const headingText =
     role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
-
-  console.log(filteredEquipments);
 
   const fetchEquipments = async () => {
     try {
@@ -148,7 +141,6 @@ const Home: React.FC = () => {
             err?.message ||
             "Failed to add item to cart.";
       message.error(msg);
-      console.error(err);
     } finally {
       setAddingToCartId(null);
     }
@@ -230,8 +222,6 @@ const Home: React.FC = () => {
               </div>
               <button
                 onClick={() => {
-                  //   setMinPrice(tempMinPrice);
-                  //   setMaxPrice(tempMaxPrice);
                   handlePriceChange();
                 }}
                 className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
@@ -243,6 +233,32 @@ const Home: React.FC = () => {
         )}
         <div className={`w-full h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
+          {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (
+              <>
+                <Divider orientation="left">🔥 Recommended For You</Divider>
+                <div className="overflow-x-auto w-full">
+                  <div className="flex space-x-4 w-max min-w-full px-2 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400">
+                    {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
+                        (equipment, index) => (
+                            <div className="flex-shrink-0 w-[250px]" key={equipment.ID}>
+                              <EquipmentCard
+                                  equipment={equipment}
+                                  index={index}
+                                  equipmentId={equipmentId}
+                                  titleHover={titleHover}
+                                  setEquipmentId={setEquipmentId}
+                                  setTitleHover={setTitleHover}
+                                  role={role}
+                                  onAddToCart={(eqId) => handleAddToCart(eqId)}
+                                  isAddingToCart={addingToCartId === equipment.ID}
+                              />
+                            </div>
+                        )
+                    )}
+                  </div>
+                </div>
+              </>
+          )}
 
           {filteredEquipments?.equipments.equipments?.length ? (
             <>
