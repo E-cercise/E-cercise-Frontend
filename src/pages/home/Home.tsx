@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {LeftOutlined, RightOutlined} from "@ant-design/icons";
+import { Divider, Input, message, Pagination, Spin } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import { Input, message, Pagination, Spin } from "antd";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";
@@ -13,8 +15,6 @@ import { Role } from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import {LeftOutlined, RightOutlined} from "@ant-design/icons";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
@@ -245,7 +245,7 @@ const Home: React.FC = () => {
         <div className={`w-full h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
           {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (
-              <>
+              <React.Fragment>
                 <Divider orientation="left" orientationMargin={"left"}>🔥 Recommended For You</Divider>
                 <div className="relative w-full">
                   <button
@@ -291,7 +291,7 @@ const Home: React.FC = () => {
                         </div>
                     </div>
                 </div>
-              </>
+              </React.Fragment>
           )}
           {filteredEquipments?.equipments.equipments?.length ? (
             <>
