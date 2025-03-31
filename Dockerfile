@@ -6,6 +6,10 @@ FROM node:18 AS build
 # Create and use the working directory
 WORKDIR /app
 
+ARG API_BASE_URL
+
+ENV API_BASE_URL=$API_BASE_URL
+
 # Copy package and lock files first (for efficient caching of dependencies)
 COPY package.json ./
 
