@@ -27,11 +27,6 @@
   "include": [
     "src"
   ],
-  // "references": [
-  //   {
-  //     "path": "./tsconfig.app.json"
-  //   }
-  // ],
   "typeRoots": [
     "./src/vite-env.d.ts",
     "./node_modules/@types"

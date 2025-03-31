@@ -15,19 +15,22 @@ RUN npm install
 # Copy the rest of the source code
 COPY . .
 
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 # Build the project (this will create a production-ready bundle in /app/dist)
 RUN npm run build
 
-# =============================
-#    STAGE 2: Serve with Nginx
-# =============================
 FROM nginx:alpine
 
-# Copy the production build from the "build" stage to Nginx's default html folder
+# Copy the production build from the "build" stage
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx in the foreground (so Docker doesn’t exit)
+# Run Nginx
 CMD ["nginx", "-g", "daemon off;"]
