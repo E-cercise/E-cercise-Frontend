@@ -212,36 +212,34 @@ const Home: React.FC = () => {
     <div>
       <NavBar />
       <div className="flex flex-grow">
-        {role == Role.User && (
-          <div className="flex-shrink-0 w-[200px] h-[560px] bg-zinc-800">
-            <div className="pt-3 px-3 space-y-3">
-              <span className="text-white text-sm">Price Range</span>
-              <div className="flex items-center w-full space-x-2">
-                <Input
-                  placeholder="฿ MIN"
-                  value={tempMinPrice}
-                  onChange={(e) => setTempMinPrice(e.target.value)}
-                  className="w-[75px]"
-                />
-                <div className="w-10 text-white border border-solid"></div>
-                <Input
-                  placeholder="฿ MAX"
-                  value={tempMaxPrice}
-                  onChange={(e) => setTempMaxPrice(e.target.value)}
-                  className="w-[75px]"
-                />
-              </div>
-              <button
-                onClick={() => {
-                  handlePriceChange();
-                }}
-                className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
-              >
-                Apply
-              </button>
+        <div className="flex-shrink-0 w-[200px] h-[560px] bg-zinc-800">
+          <div className="pt-3 px-3 space-y-3">
+            <span className="text-white text-sm">Price Range</span>
+            <div className="flex items-center w-full space-x-2">
+              <Input
+                placeholder="฿ MIN"
+                value={tempMinPrice}
+                onChange={(e) => setTempMinPrice(e.target.value)}
+                className="w-[75px]"
+              />
+              <div className="w-10 text-white border border-solid"></div>
+              <Input
+                placeholder="฿ MAX"
+                value={tempMaxPrice}
+                onChange={(e) => setTempMaxPrice(e.target.value)}
+                className="w-[75px]"
+              />
             </div>
+            <button
+              onClick={() => {
+                handlePriceChange();
+              }}
+              className="w-full h-[25px] bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md"
+            >
+              Apply
+            </button>
           </div>
-        )}
+        </div>
         <div className={`w-full h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
           {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (

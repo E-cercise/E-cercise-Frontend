@@ -1,14 +1,15 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {Button} from "antd";
 import "./NavBar.css";
 import {NavItemProps} from "../../interfaces/Navbar.ts";
 
 const NavItem: React.FC<NavItemProps> = ({to, label, Icon, isActive}) => {
     const [isHovered, setIsHovered] = useState(false);
+    const navigate = useNavigate();
 
     return (
-        <Link to={to}>
+        <div onClick={() => navigate(to)}>
             <Button
                 className={`h-7 text-sm font-bold flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
                     isActive
@@ -31,7 +32,7 @@ const NavItem: React.FC<NavItemProps> = ({to, label, Icon, isActive}) => {
                 />
                 <span className="text-[13px]">{label}</span>
             </Button>
-        </Link>
+        </div>
     );
 };
 

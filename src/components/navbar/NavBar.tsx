@@ -139,11 +139,11 @@ function NavBar() {
     return (
         <>
             <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-[999]">
-                <Link to="/" className="hover:opacity-80 transition-opacity">
+                <div onClick={() => {navigate("/")}} className="hover:opacity-80 transition-opacity">
                     <div className="flex items-center space-x-4 ml-4 cursor-pointer">
                         <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4"/>
                     </div>
-                </Link>
+                </div>
                 <Input.Search
                     allowClear
                     value={tempKeyword}
@@ -325,8 +325,8 @@ function NavBar() {
                         }
                     >
                         <button
-                            className="flex items-center space-x-[3px] absolute right-[420px] text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
-             hover:bg-[#d4d4d4] transition-colors duration-200 cursor-pointer"
+                            className={`flex items-center space-x-[3px] absolute ${role === Role.Admin? "right-[400px]" : "right-[420px]"} text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
+             hover:bg-[#d4d4d4] transition-colors duration-200 cursor-pointer`}
                             onMouseEnter={() => handleShowMusclesPopover(true)}
                             onMouseLeave={() => handleShowMusclesPopover(false)}
                         >

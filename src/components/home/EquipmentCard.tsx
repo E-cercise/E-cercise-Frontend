@@ -27,7 +27,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
   };
 
   return (
-    <div className={`${role === Role.Admin ? "w-[190px]" : ""} bg-[#F2EFEF] p-4 space-y-2 rounded-md`}>
+    <div className={`bg-[#F2EFEF] p-4 space-y-2 rounded-md`}>
       <img
         src={equipment.image_path}
         alt=""
@@ -70,8 +70,8 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
 
       {role === Role.Admin ? (
         <div className="w-full inline-flex items-center px-2 py-1 border border-gray-300 bg-gray-100 rounded-lg text-sm whitespace-nowrap">
-          <span className="text-[12px] mr-2">Remaining Products</span>
-          <span className="font-bold">{equipment.remaining_product}</span>
+          <span className="text-[10px] mr-2">Remaining Products</span>
+          <span className="text-[12px] font-bold">{equipment.remaining_product}</span>
         </div>
       ) : (
         <button
