@@ -118,7 +118,9 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchEquipments();
+    if (filteredEquipments === undefined) {
+      fetchEquipments();
+    }
   }, [searchKeyword, muscleGroup, currentPage, minPrice, maxPrice]);
 
   useEffect(() => {
