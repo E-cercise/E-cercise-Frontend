@@ -9,7 +9,7 @@ import { getUserProfile } from "../../api/user_profile/GetUserProfile.ts";
 import { updateUserProfile } from "../../api/user_profile/UpdateUserProfile.ts";
 import { getTags } from "../../api/tag/getTag.ts";
 import { getGoals } from "../../api/goal/getGoal.ts";
-import { UserGoal, UserTag } from "../../interfaces/UserProfile.ts";
+import { UserGoal, UserProfile, UserTag } from "../../interfaces/UserProfile.ts";
 
 
 const UserProfilePage = () => {
@@ -31,9 +31,9 @@ const UserProfilePage = () => {
 
                 const normalized = {
                     ...profile,
-                    goal_id: profile.goal?.id ?? null,
-                    gender: typeof profile.gender === 'string' ? profile.gender : profile.gender?.name ?? 'Male',
-                    experience: typeof profile.experience === 'string' ? profile.experience : profile.experience?.name ?? 'Beginner',
+                    goal_id: profile.goal_id ?? null,
+                    gender: typeof profile.gender === 'string' ? profile.gender : profile.gender ?? 'Male',
+                    experience: typeof profile.experience === 'string' ? profile.experience : profile.experience ?? 'Beginner',
                     preferences: profile.preferences?.map((p: any) => p.id) ?? [],
                 };
 
