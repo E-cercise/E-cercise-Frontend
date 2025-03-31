@@ -214,7 +214,7 @@ const Home: React.FC = () => {
     <div>
       <NavBar />
       <div className="flex flex-grow">
-        <div className="flex-shrink-0 w-[200px] h-[560px] bg-zinc-800">
+        <div className="flex-shrink-0 w-[200px] h-screen bg-zinc-800">
           <div className="pt-3 px-3 space-y-3">
             <span className="text-white text-sm">Price Range</span>
             <div className="flex items-center w-full space-x-2">
@@ -242,7 +242,7 @@ const Home: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className={`w-full h-[560px] pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
+        <div className={`w-full h-screen pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
           {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (
               <React.Fragment>
