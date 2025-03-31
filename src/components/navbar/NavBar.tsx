@@ -139,7 +139,7 @@ function NavBar() {
     return (
         <>
             <div className="flex items-center bg-[#2D2A32] p-2 space-x-10 sticky top-0 z-[999]">
-                <div onClick={() => {navigate("/")}} className="hover:opacity-80 transition-opacity">
+                <div onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity">
                     <div className="flex items-center space-x-4 ml-4 cursor-pointer">
                         <img src={ECerciseLogo} alt="E-Cercise Logo" className="h-14 ml-4"/>
                     </div>
