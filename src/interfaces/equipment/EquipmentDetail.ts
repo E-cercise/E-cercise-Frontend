@@ -22,7 +22,7 @@ interface Image {
     is_primary: boolean;
 }
 
-export interface Option {
+interface Option {
     id: string;
     name: string;
     available: number;
@@ -36,7 +36,7 @@ export interface Feature {
     description: string;
 }
 
-export interface AdditionalField {
+interface AdditionalField {
     id: string;
     key: string;
     value: string;
@@ -72,9 +72,5 @@ export interface EquipmentDetailForComparison {
 export interface Category {
     label: string;
     value: string;
-}
-
-export interface CategoryResponse {
-    categories: Category[]
 }
 

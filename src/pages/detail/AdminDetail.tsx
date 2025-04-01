@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {CategoryResponse, EquipmentDetailResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
+import {Category, EquipmentDetailResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
 import React, {useEffect, useState} from "react";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 import {Button, Card, Form, Modal, notification} from "antd";
@@ -19,7 +19,7 @@ const AdminDetailPage: React.FC = () => {
     const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
     const [initialFormValues, setInitialFormValues] =
         useState<EquipmentFormValues>();
-    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
@@ -277,7 +277,6 @@ const AdminDetailPage: React.FC = () => {
                     searchCategory={searchCategory}
                     initialValues={initialFormValues}
                     onSubmit={handleUpdateSubmit}
-                    onCancelEdit={handleCancelEdit}
                     submitting={submitting}
                 />
             </Card>

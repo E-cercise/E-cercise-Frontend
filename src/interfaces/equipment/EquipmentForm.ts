@@ -24,16 +24,16 @@ export interface EquipmentFormValues {
     category: string;
     description: string;
     muscle_group_used: string[];
-    feature: {
+    features: {
         __id?: string;
         description: string;
     }[];
-    additional_field: {
+    additional_fields: {
         __id?: string;
         key: string;
         value: string;
     }[];
-    option: {
+    options: {
         __id?: string;
         name: string;
         price: number;
