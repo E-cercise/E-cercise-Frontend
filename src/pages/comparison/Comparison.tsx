@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Divider, message, Select } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import { getEquipmentCategories } from "../../api/equipment/EquipmentCategory.ts";
 import { equipmentInCategory } from "../../api/equipment/EquipmentsInCategory.ts";
 import { allEquipmentsDetail } from "../../api/equipment/AllEquipmentsDetail.ts";
 import { EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
+import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
 
 interface Equipment {
   ID: string;
@@ -65,7 +65,7 @@ function Comparison() {
 };
 
   const fetchEquipmentCategories = async () => {
-    getEquipmentCategories()
+    getEquipmentCategory()
       .then((data) => {
         setCategories(data.categories);
       })

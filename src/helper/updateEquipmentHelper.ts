@@ -31,7 +31,7 @@ export const handleUpdateSubmitPartial = async (
 
     // === Additional Fields ===
     const originalAtts = originalData.additional_field || [];
-    const updatedAtts = values.additional_field || [];
+    const updatedAtts = values.additional_fields || [];
 
     const updatedFields = updatedAtts.filter(field =>
         originalAtts.some(orig => orig.id === field.__id && (orig.key !== field.key || orig.value !== field.value))
@@ -63,16 +63,16 @@ export const handleUpdateSubmitPartial = async (
     }
 
     // === Features ===
-    const updatedFeatures = values.feature?.filter(f => {
+    const updatedFeatures = values.features?.filter(f => {
         const orig = originalData.feature?.find(of => of.id === f.__id);
         return orig && orig.description !== f.description;
     }) || [];
 
     const deletedFeatures = (originalData.feature || []).filter(orig =>
-        !values.feature?.find(v => v.__id === orig.id)
+        !values.features?.find(v => v.__id === orig.id)
     ).map(f => f.id);
 
-    const createdFeatures = values.feature?.filter(f =>
+    const createdFeatures = values.features?.filter(f =>
         !originalData.feature?.some(orig => orig.id === f.__id)
     ).map(f => f.description) || [];
 
@@ -92,7 +92,7 @@ export const handleUpdateSubmitPartial = async (
         }
     }
 
-    const updatedOptions = values.option?.map(opt => {
+    const updatedOptions = values.options?.map(opt => {
         const orig = originalData.option?.find(o => o.id === opt.__id);
         if (!orig) return null;
 
@@ -148,7 +148,7 @@ export const handleUpdateSubmitPartial = async (
         };
     }).filter(Boolean) || [];
 
-    const createdOptions = values.option?.filter(opt =>
+    const createdOptions = values.options?.filter(opt =>
         !originalData.option?.some(o => o.id === opt.__id)
     ).map(opt => {
         const mergedImages: any[] = [];
@@ -179,7 +179,7 @@ export const handleUpdateSubmitPartial = async (
     }) || [];
 
     const deletedOptions = originalData.option?.filter(opt =>
-        !values.option?.find(o => o.__id === opt.id)
+        !values.options?.find(o => o.__id === opt.id)
     ).map(opt => opt.id) || [];
 
     if (updatedOptions.length || createdOptions.length || deletedOptions.length) {

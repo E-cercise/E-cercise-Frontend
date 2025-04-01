@@ -1,9 +1,9 @@
 import {useParams} from "react-router-dom";
-import {AdditionalField, Category, EquipmentDetailResponse, Feature, Option,} from "../../interfaces/equipment/EquipmentDetail.ts";
+import {CategoryResponse, EquipmentDetailResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
 import React, {useEffect, useState} from "react";
 import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
 import {Button, Card, Form, Modal, notification} from "antd";
-import {getEquipmentCategories} from "../../api/equipment/EquipmentCategory.ts";
+import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
 import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
 import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
@@ -19,7 +19,7 @@ const AdminDetailPage: React.FC = () => {
     const [originalData, setOriginalData] = useState<EquipmentDetailResponse>();
     const [initialFormValues, setInitialFormValues] =
         useState<EquipmentFormValues>();
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [notificationApi, contextHolder] = notification.useNotification();
     const [searchCategory, setSearchCategory] = useState("");
@@ -38,7 +38,7 @@ const AdminDetailPage: React.FC = () => {
     const fetchCategories = async () => {
         setLoadingCategories(true);
         try {
-            const res = await getEquipmentCategories();
+            const res = await getEquipmentCategory();
             const mapped = res.categories.map((cat: any) => ({
                 label: cat.label,
                 value: cat.label,
@@ -68,18 +68,18 @@ const AdminDetailPage: React.FC = () => {
                 category: data.category,
                 description: data.description,
                 muscle_group_used: data.muscle_group_used || [],
-                feature: (data.feature || []).map((feature: Feature) => ({
-                    __id: feature.id,
-                    description: feature.description,
+                features: (data.feature || []).map((f) => ({
+                    __id: f.id,
+                    description: f.description,
                 })),
-                additional_field: (data.additional_field || []).map((field: AdditionalField) => ({
-                    __id: field.id,
-                    key: field.key,
-                    value: field.value,
+                additional_fields: (data.additional_field || []).map((af) => ({
+                    __id: af.id,
+                    key: af.key,
+                    value: af.value,
                 })),
-                option: (data.option || []).map((opt: Option) => {
-                    const primaryImg = opt.images.find((img: any) => img.is_primary);
-                    const galleryImgs = opt.images.filter((img: any) => !img.is_primary);
+                options: (data.option || []).map((opt) => {
+                    const primaryImg = opt.images.find((img) => img.is_primary);
+                    const galleryImgs = opt.images.filter((img) => !img.is_primary);
                     return {
                         __id: opt.id,
                         name: opt.name,
@@ -116,9 +116,7 @@ const AdminDetailPage: React.FC = () => {
     };
 
     const handleAddNewCategory = () => {
-        if (!searchCategory) {
-            return;
-        }
+        if (!searchCategory) return;
         const newCat = {label: searchCategory, value: searchCategory};
         setCategories((prev) => [...prev, newCat]);
         notificationApi.success({
@@ -146,9 +144,7 @@ const AdminDetailPage: React.FC = () => {
     };
 
     const handleUpdateSubmit = async (values: EquipmentFormValues) => {
-        if (!originalData || !equipment_id) {
-            return;
-        }
+        if (!originalData || !equipment_id) return;
 
         setSubmitting(true);
         try {
@@ -175,16 +171,16 @@ const AdminDetailPage: React.FC = () => {
                 ...originalData,
                 ...values,
                 category: categoryObj?.value || values.category,
-                feature: values.feature.map((f) => ({
+                feature: values.features.map((f) => ({
                     id: f.__id ?? Math.random().toString(),
                     description: f.description,
                 })),
-                additional_field: values.additional_field?.map((f) => ({
+                additional_field: values.additional_fields?.map((f) => ({
                     id: f.__id ?? Math.random().toString(),
                     key: f.key,
                     value: f.value,
                 })),
-                option: values.option?.map((opt) => ({
+                option: values.options?.map((opt) => ({
                     id: opt.__id ?? Math.random().toString(),
                     name: opt.name,
                     price: opt.price,
@@ -195,14 +191,14 @@ const AdminDetailPage: React.FC = () => {
                             ? [
                                 {
                                     id: opt.primaryImage.fileID,
-                                    url: opt.primaryImage.thumbnail || "",
+                                    url: opt.primaryImage.thumbnail,
                                     is_primary: true,
                                 },
                             ]
                             : []),
                         ...(opt.galleryImages || []).map((g) => ({
                             id: g.fileID,
-                            url: g.thumbnail || "",
+                            url: g.thumbnail,
                             is_primary: false,
                         })),
                     ],
@@ -281,6 +277,7 @@ const AdminDetailPage: React.FC = () => {
                     searchCategory={searchCategory}
                     initialValues={initialFormValues}
                     onSubmit={handleUpdateSubmit}
+                    onCancelEdit={handleCancelEdit}
                     submitting={submitting}
                 />
             </Card>
