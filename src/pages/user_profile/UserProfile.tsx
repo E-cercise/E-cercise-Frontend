@@ -31,7 +31,7 @@ const UserProfilePage = () => {
 
                 const normalized = {
                     ...profile,
-                    goal_id: profile.goal_id ?? null,
+                    goal_id: profile.goal.id ?? null,
                     gender: typeof profile.gender === 'string' ? profile.gender : profile.gender ?? 'Male',
                     experience: typeof profile.experience === 'string' ? profile.experience : profile.experience ?? 'Beginner',
                     preferences: profile.preferences?.map((p: any) => p.id) ?? [],

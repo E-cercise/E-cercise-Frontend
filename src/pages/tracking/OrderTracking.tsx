@@ -80,9 +80,6 @@ function OrderTracking() {
     },
   ];
 
-  console.log(orderID);
-  console.log(orderDetail);
-  console.log(received);
 
   const detail = (id: string) => {
     getOrderDetail(id)
