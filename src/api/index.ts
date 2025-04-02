@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 
 const API = axios.create({
@@ -25,6 +26,7 @@ API.interceptors.response.use(
     async (error) => {
         if (error.response && error.response.status === 401) {
             console.warn('Unauthorized! Redirecting to login...');
+            message.error("Unauthorized! Redirecting to login...")
             localStorage.removeItem('token');
             window.location.href = '/login';
         }
