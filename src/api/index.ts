@@ -25,8 +25,8 @@ API.interceptors.response.use(
     async (error) => {
         if (error.response && error.response.status === 401) {
             console.warn('Unauthorized! Redirecting to login...');
-            localStorage.removeItem('token'); // delete token
-            window.location.href = '/';
+            localStorage.removeItem('token');
+            window.location.href = '/login';
         }
         const errorMessage = error.response?.data?.message || error.message || 'An unknown error occurred';
         console.error('API error:', errorMessage);
