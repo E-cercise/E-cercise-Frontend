@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, message, Steps, StepProps } from "antd";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hook/UseAuth.ts";
 import { RiFileList2Line, RiTruckLine } from "react-icons/ri";
 import { MdOutlinePaid } from "react-icons/md";
@@ -28,6 +28,8 @@ function OrderTracking() {
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
 //   const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
   const [received, setReceived] = useState<boolean>(true);
+  const [adminReceived, setAdminReceived] = useState<boolean>(true);
+  // const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const orderID = location.state;
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
@@ -82,6 +84,9 @@ function OrderTracking() {
 
 
   const detail = (id: string) => {
+    // const newParams = new URLSearchParams(searchParams);
+    // newParams.set("order_id", id);
+    // setSearchParams(newParams);
     getOrderDetail(id)
       .then((response) => {
         if (response?.order_status === "To Receive") {
@@ -89,6 +94,11 @@ function OrderTracking() {
           setReceived(false);
         } else {
           setReceived(true);
+        }
+        if (response?.order_status === "Paid" || response?.order_status === "Shipped out") {
+          setAdminReceived(false);
+        } else {
+          setAdminReceived(true);
         }
         setOrderDetail(response);
       })
@@ -103,15 +113,17 @@ function OrderTracking() {
         setIsShowModal(false);
         message.success(response.message);
         setReceived(true);
+        setAdminReceived(true);
       })
       .catch((error) => {
         console.error(error);
       });
   };
+  
 
   useEffect(() => {
     detail(orderID);
-  }, [received, isShowModal]);
+  }, [adminReceived, received, isShowModal]);
 
   return (
     <div>
