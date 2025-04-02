@@ -41,7 +41,6 @@ function NavBar() {
         setTempKeyword(keyword); // Store typed input but don't trigger search yet
     };
 
-
     const handleSearchClick = () => {
         const newParams = new URLSearchParams(searchParams);
         const keyword = tempKeyword.trim();
@@ -325,7 +324,7 @@ function NavBar() {
                         }
                     >
                         <button
-                            className={`flex items-center space-x-[3px] absolute ${role === Role.Admin? "right-[400px]" : "right-[420px]"} text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
+                            className={`flex items-center space-x-[3px] absolute right-[400px] text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
              hover:bg-[#d4d4d4] transition-colors duration-200 cursor-pointer`}
                             onMouseEnter={() => handleShowMusclesPopover(true)}
                             onMouseLeave={() => handleShowMusclesPopover(false)}

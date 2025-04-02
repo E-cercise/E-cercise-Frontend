@@ -47,7 +47,6 @@ const Home: React.FC = () => {
     }
   };
 
-
   const fetchEquipments = async () => {
     try {
       const res = await filteredEquipment(
@@ -118,9 +117,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    if (filteredEquipments === undefined) {
-      fetchEquipments();
-    }
+    fetchEquipments();
   }, [searchKeyword, muscleGroup, currentPage, minPrice, maxPrice]);
 
   useEffect(() => {
