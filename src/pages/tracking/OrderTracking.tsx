@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, message, Steps, StepProps } from "antd";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hook/UseAuth.ts";
 import { RiFileList2Line, RiTruckLine } from "react-icons/ri";
 import { MdOutlinePaid } from "react-icons/md";
@@ -30,8 +30,6 @@ function OrderTracking() {
   const [received, setReceived] = useState<boolean>(true);
   const [adminReceived, setAdminReceived] = useState<boolean>(true);
   const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
-  // const orderID = location.state;
   const orderID = searchParams.get("order_id");
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
   const { role } = useAuth();
@@ -111,7 +109,7 @@ const detail = async (id: string) => {
 };
 
 
-  const updateStatus = (id: string) => {
+  const updateStatus = (id: string | null) => {
     updateOrderStatus(id)
       .then((response) => {
         setIsShowModal(false);
