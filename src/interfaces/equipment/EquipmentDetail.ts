@@ -36,7 +36,7 @@ export interface Feature {
     description: string;
 }
 
-interface AdditionalField {
+export interface AdditionalField {
     id: string;
     key: string;
     value: string;

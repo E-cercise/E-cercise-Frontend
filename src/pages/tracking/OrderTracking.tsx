@@ -29,7 +29,7 @@ function OrderTracking() {
 //   const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
   const [received, setReceived] = useState<boolean>(true);
   const [adminReceived, setAdminReceived] = useState<boolean>(true);
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const orderID = location.state;
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
@@ -83,29 +83,32 @@ function OrderTracking() {
   ];
 
 
-  const detail = (id: string) => {
-    // const newParams = new URLSearchParams(searchParams);
-    // newParams.set("order_id", id);
-    // setSearchParams(newParams);
-    getOrderDetail(id)
-      .then((response) => {
-        if (response?.order_status === "To Receive") {
-        //   setShowReceiveButton(true);
-          setReceived(false);
-        } else {
-          setReceived(true);
-        }
-        if (response?.order_status === "Paid" || response?.order_status === "Shipped out") {
-          setAdminReceived(false);
-        } else {
-          setAdminReceived(true);
-        }
-        setOrderDetail(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+const detail = async (id: string) => {
+  try {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("order_id", id);
+    setSearchParams(newParams);
+
+    const response = await getOrderDetail(id);
+
+    if (!response) {
+      return;
+    }
+
+    const { order_status } = response;
+
+    const isToReceive = order_status === "To Receive";
+    const isPaidOrShipped = order_status === "Paid" || order_status === "Shipped out";
+
+    setReceived(!isToReceive);
+    setAdminReceived(!isPaidOrShipped);
+
+    setOrderDetail(response);
+  } catch (error) {
+    console.error("Failed to fetch order details:", error);
+  }
+};
+
 
   const updateStatus = (id: string) => {
     updateOrderStatus(id)
