@@ -70,18 +70,10 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
     setPreviewVisible(true);
   };
 
-  // Add a safeguard to ensure modal closes
   const handleModalClose = () => {
     setPreviewVisible(false);
-    setPreviewImage(null); // Reset preview image too
+    setPreviewImage(null);
   };
-
-  useEffect(() => {
-    console.log('EquipmentForm mounted in', mode);
-    return () => {
-      console.log('EquipmentForm unmounted in', mode);
-    };
-  }, [mode]);
 
   return (
     <div>
