@@ -3,9 +3,10 @@ import {useNavigate} from "react-router-dom";
 import {Avatar, Dropdown} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import {UserProfileProps} from "../../interfaces/Navbar.ts";
+import { Role } from "../../enum/Role.ts";
 
 
-const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
+const UserProfile: React.FC<UserProfileProps> = ({userId, role, name, logout}) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userId, name, logout}) => {
                 },
                 {type: "divider" as const},
                 {label: "Profile", key: "profile"},
-                {label: "History", key: "history"},
+                ...(role === Role.User ? [{label: "History", key: "history"}] : []),
                 {label: "Logout", key: "logout"},
             ]),
     ];

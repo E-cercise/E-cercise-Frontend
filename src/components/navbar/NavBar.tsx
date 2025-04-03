@@ -358,7 +358,7 @@ function NavBar() {
                 }
 
                 <div className="absolute right-[40px] space-x-6">
-                    <UserProfile userId={userId} name={name} logout={logout}/>
+                    <UserProfile userId={userId} role={role} name={name} logout={logout}/>
                 </div>
             </div>
             {role === Role.Admin ? <BottomNavBar/> : <></>}
