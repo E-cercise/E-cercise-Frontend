@@ -47,6 +47,7 @@ const Home: React.FC = () => {
     }
   };
 
+
   const fetchEquipments = async () => {
     try {
       const res = await filteredEquipment(

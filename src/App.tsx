@@ -31,10 +31,10 @@ function App() {
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/signup' element={<SignUp/>}/>
                 <Route path='/' element={<Home/>}/>
+                <Route path='/equipment/add'
+                       element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage/> </ProtectedRoute>}/>
                 <Route path='/equipment/:equipment_id' element={role === Role.Admin ?
                     <ProtectedRoute allowedRoles={[Role.Admin]}><AdminDetailPage/></ProtectedRoute> : <Detail/>}/>
-                <Route path='/equipment/add'
-                        element={<ProtectedRoute allowedRoles={[Role.Admin]}><AddEquipmentPage/> </ProtectedRoute>}/>
                 <Route path='/comparison' element={<Comparison/>}/>
                 <Route path='/cart' element={<ProtectedRoute allowedRoles={[Role.User]}><Cart/></ProtectedRoute>}/>
                 <Route path='/purchase' element={<ProtectedRoute allowedRoles={[Role.User]}><Purchase/></ProtectedRoute>}/>

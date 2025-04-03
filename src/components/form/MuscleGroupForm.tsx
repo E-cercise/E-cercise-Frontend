@@ -16,8 +16,10 @@ const MuscleGroupForm: React.FC<MuscleGroupFormProps> = ({value = [], onChange, 
     const [, setShowPopOver] = useState<boolean>(false);
 
     useEffect(() => {
-        setSelected(value || []);
-    }, [value]);
+        if (JSON.stringify(selected) !== JSON.stringify(value || [])) {
+            setSelected(value || []);
+        }
+    }, [value, selected]);
 
     const toggleMuscle = (id: string) => {
         const newSelected = selected.includes(id)

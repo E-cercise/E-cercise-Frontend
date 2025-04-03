@@ -21,6 +21,13 @@ const AddEquipmentPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log('AddEquipmentPage mounted');
+        return () => {
+            console.log('AddEquipmentPage unmounted');
+        };
+    }, []);
+
+    useEffect(() => {
         fetchCategories();
     }, []);
 

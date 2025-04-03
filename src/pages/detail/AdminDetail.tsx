@@ -9,7 +9,6 @@ import {handleUpdateSubmitPartial} from "../../helper/updateEquipmentHelper.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import EquipmentForm from "../../components/form/EquipmentForm.tsx";
-import {useUnsavedChangesWarning} from "../../hook/useUnsavedChangesWarning.ts";
 import {useAuth} from "../../hook/UseAuth.ts";
 
 const AdminDetailPage: React.FC = () => {
@@ -223,10 +222,6 @@ const AdminDetailPage: React.FC = () => {
         }
     };
 
-    useUnsavedChangesWarning(
-        isEditing,
-        "You have unsaved changes. Are you sure you want to leave this page?"
-    );
 
     if (!initialFormValues) {
         return (
