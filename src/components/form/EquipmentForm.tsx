@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Button,
   Card,
@@ -21,7 +21,6 @@ import {
   EquipmentFormValues,
 } from "../../interfaces/equipment/EquipmentForm";
 import "./EquipmentForm.css";
-import { useUnsavedChangesWarning } from "../../hook/useUnsavedChangesWarning.ts";
 import { AdditionalField } from "../../interfaces/equipment/EquipmentDetail.ts";
 
 const EquipmentForm: React.FC<EquipmentFormProps> = ({
@@ -41,12 +40,6 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
   const [notificationApi, contextHolder] = notification.useNotification();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
-  const shouldWarn = form.isFieldsTouched(true);
-  useUnsavedChangesWarning(
-    shouldWarn,
-    "You have unsaved changes. Are you sure you want to leave?"
-  );
 
   const handleFinish = async (values: any) => {
     try {
@@ -75,6 +68,11 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
   const handleImageClick = (url: string) => {
     setPreviewImage(url);
     setPreviewVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setPreviewVisible(false);
+    setPreviewImage(null);
   };
 
   return (
@@ -492,7 +490,7 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({
         <Modal
           open={previewVisible}
           footer={null}
-          onCancel={() => setPreviewVisible(false)}
+          onCancel={handleModalClose}
           centered
           width={600}
           bodyStyle={{ padding: 0, textAlign: "center" }}

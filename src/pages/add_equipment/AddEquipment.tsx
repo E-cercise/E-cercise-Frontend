@@ -20,6 +20,7 @@ const AddEquipmentPage = () => {
     const [form] = Form.useForm<EquipmentFormValues>();
     const navigate = useNavigate();
 
+
     useEffect(() => {
         fetchCategories();
     }, []);
