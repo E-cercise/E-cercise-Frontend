@@ -161,7 +161,7 @@ function OrderList() {
           bordered
           pagination={{ pageSize: 5 }}
           onRow={(record) => ({
-            onClick: () => navigate(`/order-tracking?order_id=${record.id}`),
+            onClick: () => navigate(`/order/${record.id}`),
             style: { cursor: "pointer" }
           })}
         />
