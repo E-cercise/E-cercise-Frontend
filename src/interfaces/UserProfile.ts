@@ -10,6 +10,7 @@ export interface UserProfile {
     gender: string;
     experience: string;
     goal_id: string;
+    goal: UserGoal;
     preferences: string[];
 }
 
