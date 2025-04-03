@@ -234,7 +234,7 @@ function AdminOrderList() {
           bordered
           pagination={{ pageSize: 5 }}
           onRow={(record) => ({
-            onClick: () => navigate(`/order-tracking`, { state: record.id }),
+            onClick: () => navigate(`/order-tracking/?order_id=${record.id}`),
             style: { cursor: "pointer" }
           })}
         />

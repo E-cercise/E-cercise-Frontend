@@ -31,7 +31,8 @@ function OrderTracking() {
   const [adminReceived, setAdminReceived] = useState<boolean>(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const orderID = location.state;
+  // const orderID = location.state;
+  const orderID = searchParams.get("order_id");
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
   const { role } = useAuth();
   const stepItems: StepProps[] = [
@@ -125,7 +126,9 @@ const detail = async (id: string) => {
   
 
   useEffect(() => {
-    detail(orderID);
+    if (orderID) {
+      detail(orderID);
+    }
   }, [adminReceived, received, isShowModal]);
 
   return (
