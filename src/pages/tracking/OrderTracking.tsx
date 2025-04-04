@@ -30,7 +30,6 @@ function OrderTracking() {
   const [received, setReceived] = useState<boolean>(true);
   const [adminReceived, setAdminReceived] = useState<boolean>(true);
   const { order_id } = useParams();
-  console.log(order_id);
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
   const { role } = useAuth();
   const stepItems: StepProps[] = [
@@ -84,10 +83,6 @@ function OrderTracking() {
 
 const detail = async (id: string) => {
   try {
-    // const newParams = new URLSearchParams(searchParams);
-    // newParams.set("order_id", id);
-    // setSearchParams(newParams);
-
     const response = await getOrderDetail(id);
 
     if (!response) {
@@ -152,7 +147,6 @@ const detail = async (id: string) => {
             <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1">
               <button
                 className="text-[14px] text-white bg-[#1890ff] rounded-md px-4 py-2 m-3 float-right"
-                // onClick={() => updateStatus(order_id)}
                 onClick={() => setIsShowModal(true)}
               >
                 Pay Now
@@ -180,8 +174,6 @@ const detail = async (id: string) => {
               >
                 Confirm
               </button>
-              {/* <Divider></Divider>
-                  <button></button> */}
             </div>
           )}
           {role === Role.User && (
