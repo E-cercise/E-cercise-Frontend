@@ -498,7 +498,8 @@ const Home: React.FC = () => {
                 </div>
               </React.Fragment>
             )}
-          {filteredEquipments?.equipments.equipments?.length ? (
+          {Array.isArray(filteredEquipments?.equipments?.equipments) &&
+          filteredEquipments.equipments.equipments.length > 0 ? (
             <>
               {renderEquipmentGrid()}
               <div className="flex items-center mt-3">
