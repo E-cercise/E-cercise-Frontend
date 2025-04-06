@@ -117,7 +117,7 @@ function NavBar() {
         />
 
         {role !== Role.Admin && (
-          <>
+          <React.Fragment>
             <Link
               to="/comparison"
               className="absolute right-[200px] hover:scale-105 transition-transform duration-150 cursor-pointer"
@@ -135,7 +135,7 @@ function NavBar() {
               className="absolute right-[120px] h-9 cursor-pointer hover:scale-105 transition-transform duration-150"
               onClick={handleCartClick}
             />
-          </>
+          </React.Fragment>
         )}
 
         <div className="absolute right-[40px] space-x-6">
