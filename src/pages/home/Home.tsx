@@ -266,8 +266,6 @@ const Home: React.FC = () => {
     );
   };
 
-  console.log("clickedMuscles", clickedMuscles);
-
   return (
     <div className="flex flex-col h-screen">
       <NavBar />
