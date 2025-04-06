@@ -179,7 +179,7 @@ const AdminDetailPage: React.FC = () => {
                     key: f.key,
                     value: f.value,
                 })),
-                option: values.options?.map((opt) => ({
+                options: values.options?.map((opt) => ({
                     id: opt.__id ?? Math.random().toString(),
                     name: opt.name,
                     price: opt.price,

@@ -93,7 +93,7 @@ export const handleUpdateSubmitPartial = async (
     }
 
     const updatedOptions = values.options?.map(opt => {
-        const orig = originalData.option?.find(o => o.id === opt.__id);
+        const orig = originalData.options?.find(o => o.id === opt.__id);
         if (!orig) return null;
 
         const baseChanged =
@@ -149,7 +149,7 @@ export const handleUpdateSubmitPartial = async (
     }).filter(Boolean) || [];
 
     const createdOptions = values.options?.filter(opt =>
-        !originalData.option?.some(o => o.id === opt.__id)
+        !originalData.options?.some(o => o.id === opt.__id)
     ).map(opt => {
         const mergedImages: any[] = [];
 
@@ -178,7 +178,7 @@ export const handleUpdateSubmitPartial = async (
         };
     }) || [];
 
-    const deletedOptions = originalData.option?.filter(opt =>
+    const deletedOptions = originalData.options?.filter(opt =>
         !values.options?.find(o => o.__id === opt.id)
     ).map(opt => opt.id) || [];
 

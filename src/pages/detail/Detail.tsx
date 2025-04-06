@@ -140,7 +140,7 @@ function Detail() {
                   showStatus={false}
                   thumbWidth={72}
                 >
-                  {detail?.option[selectedOption].images
+                  {detail?.options[selectedOption].images
                     ?.slice()
                     .sort(
                       (a, b) => (b.is_primary ? 0 : 1) - (a.is_primary ? 0 : 1)
@@ -187,7 +187,7 @@ function Detail() {
                     <div className="flex items-center space-x-2">
                       <span>฿</span>
                       <p>
-                        {detail?.option[selectedOption].price.toLocaleString(
+                        {detail?.options[selectedOption].price.toLocaleString(
                           "en-US",
                           {
                             minimumFractionDigits: 2,
@@ -199,7 +199,7 @@ function Detail() {
                     <div className="flex flex-col space-y-3">
                       <div className="flex items-center space-x-2">
                         <span className="text-[12px] font-bold">Style:</span>
-                        {detail.option.length !== 1 ? (
+                        {detail.options.length !== 1 ? (
                           <span className="text-[12px]">
                             <Select<string, Category>
                               value={options[selectedOption].value}
@@ -215,7 +215,7 @@ function Detail() {
                           </span>
                         ) : (
                           <div className="text-[12px]">
-                            {detail.option[0].name}
+                            {detail.options[0].name}
                           </div>
                         )}
                       </div>
@@ -237,8 +237,8 @@ function Detail() {
                               type="text"
                               value={
                                 quantity >
-                                detail.option[selectedOption].available
-                                  ? detail.option[selectedOption].available
+                                detail.options[selectedOption].available
+                                  ? detail.options[selectedOption].available
                                   : quantity === 0
                                   ? ""
                                   : quantity
@@ -259,7 +259,7 @@ function Detail() {
                               onClick={() =>
                                 handleQuantityChange(
                                   quantity <
-                                    detail.option[selectedOption].available
+                                    detail.options[selectedOption].available
                                     ? quantity + 1
                                     : quantity
                                 )
@@ -271,7 +271,7 @@ function Detail() {
                         </div>
                       </div>
                       <div className="flex text-[12px] space-x-1 ml-[60px]">
-                        <span>{detail.option[selectedOption].available}</span>
+                        <span>{detail.options[selectedOption].available}</span>
                         <span>pieces available</span>
                       </div>
                     </div>
@@ -294,7 +294,7 @@ function Detail() {
                           Item Weight
                         </span>
                         <span className="text-[12px]">
-                          {detail?.option[selectedOption].weight} Pounds
+                          {detail?.options[selectedOption].weight} Pounds
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -485,7 +485,7 @@ function Detail() {
                     onClick={async () => {
                       await addToCart(
                         equipment_id.equipment_id,
-                        detail.option[selectedOption].id,
+                        detail.options[selectedOption].id,
                         quantity
                       );
                     }}

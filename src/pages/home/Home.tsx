@@ -137,8 +137,8 @@ const Home: React.FC = () => {
     try {
       const detail: EquipmentDetailResponse | undefined =
         await getEquipmentDetail(eqId);
-      if (detail?.option?.length) {
-        await addEquipmentToCart(eqId, detail.option[0].id, 1);
+      if (detail?.options?.length) {
+        await addEquipmentToCart(eqId, detail.options[0].id, 1);
         message.success("Added to cart!");
       } else {
         message.warning("No options available for this equipment.");

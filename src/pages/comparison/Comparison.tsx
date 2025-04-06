@@ -144,7 +144,7 @@ function Comparison() {
             />
             <div className="flex flex-col justify-center h-[200px]">
               <img
-                src={equipment1?.option[0].images[0].url}
+                src={equipment1?.options[0].images[0].url}
                 alt=""
                 className="w-[200px]"
               />
@@ -160,9 +160,9 @@ function Comparison() {
               <p><strong>Brand:</strong> {equipment1?.brand}</p>
               <p><strong>Weight:</strong> {equipment1?.model}</p>
               <p><strong>Material:</strong> {equipment1?.material}</p>
-              <p><strong>Option:</strong> {equipment1?.option[0]?.name}</p>
-              <p><strong>Price:</strong> ฿{equipment1?.option[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong> {equipment1?.option[0]?.weight} kg</p>
+              <p><strong>Option:</strong> {equipment1?.options[0]?.name}</p>
+              <p><strong>Price:</strong> ฿{equipment1?.options[0]?.price?.toFixed(2)}</p>
+              <p><strong>Weight:</strong> {equipment1?.options[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment1?.additional_field?.map((field) => (
@@ -182,7 +182,7 @@ function Comparison() {
             />
             <div className="flex flex-col justify-center h-[200px]">
               <img
-                src={equipment2?.option[0].images[0].url}
+                src={equipment2?.options[0].images[0].url}
                 alt=""
                 className="w-[200px]"
               />
@@ -198,9 +198,9 @@ function Comparison() {
               <p><strong>Brand:</strong> {equipment2?.brand}</p>
               <p><strong>Model:</strong> {equipment2?.model}</p>
               <p><strong>Material:</strong> {equipment2?.material}</p>
-              <p><strong>Option:</strong> {equipment2?.option[0]?.name}</p>
-              <p><strong>Price:</strong> ฿{equipment2?.option[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong> {equipment2?.option[0]?.weight} kg</p>
+              <p><strong>Option:</strong> {equipment2?.options[0]?.name}</p>
+              <p><strong>Price:</strong> ฿{equipment2?.options[0]?.price?.toFixed(2)}</p>
+              <p><strong>Weight:</strong> {equipment2?.options[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment2?.additional_field?.map((field) => (
@@ -220,7 +220,7 @@ function Comparison() {
             />
             <div className="flex flex-col justify-center h-[200px]">
               <img
-                src={equipment3?.option[0].images[0].url}
+                src={equipment3?.options[0].images[0].url}
                 alt=""
                 className="w-[200px]"
               />
@@ -236,9 +236,9 @@ function Comparison() {
               <p><strong>Brand:</strong> {equipment3?.brand}</p>
               <p><strong>Model:</strong> {equipment3?.model}</p>
               <p><strong>Material:</strong> {equipment3?.material}</p>
-              <p><strong>Option:</strong> {equipment3?.option[0]?.name}</p>
-              <p><strong>Price:</strong> ฿{equipment3?.option[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong> {equipment3?.option[0]?.weight} kg</p>
+              <p><strong>Option:</strong> {equipment3?.options[0]?.name}</p>
+              <p><strong>Price:</strong> ฿{equipment3?.options[0]?.price?.toFixed(2)}</p>
+              <p><strong>Weight:</strong> {equipment3?.options[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
                 {equipment3?.additional_field?.map((field) => (
