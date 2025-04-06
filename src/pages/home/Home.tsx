@@ -215,10 +215,13 @@ const Home: React.FC = () => {
   };
 
   const renderEquipmentGrid = () => {
-    if (!filteredEquipments?.equipments.equipments) return null;
+    // if (!filteredEquipments?.equipments.equipments) return null;
 
-    const equipmentArray = filteredEquipments.equipments.equipments;
-    if (!Array.isArray(equipmentArray)) return null;
+    const equipmentArray = filteredEquipments?.equipments?.equipments ?? [];
+
+    if (!Array.isArray(equipmentArray) || equipmentArray.length === 0) {
+      return renderNoResultsOrLoading();
+    }
 
     const displayed = equipmentArray.slice(0, pageSize);
 
@@ -272,9 +275,15 @@ const Home: React.FC = () => {
         <div className="flex-shrink-0 w-[200px] bg-zinc-800 overflow-y-auto pb-5">
           <div className="">
             <div className="pt-3 px-3 space-y-3 mb-4">
-              <span className="text-white text-sm font-semibold">Muscle Group</span>
+              <span className="text-white text-sm font-semibold">
+                Muscle Group
+              </span>
 
-              <div className={`flex flex-wrap gap-1 bg-[#D9D9D9] rounded-md p-2 ${clickedMuscles.length > 5 ? "overflow-auto h-[150px]" : ""}`}>
+              <div
+                className={`flex flex-wrap gap-1 bg-[#D9D9D9] rounded-md p-2 ${
+                  clickedMuscles.length > 5 ? "overflow-auto h-[150px]" : ""
+                }`}
+              >
                 {clickedMuscles.map((id: string) => {
                   const found = [...frontAttributes, ...backAttributes].find(
                     (m) => m.id === id
@@ -404,7 +413,9 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className="pt-3 px-3 space-y-3">
-            <span className="text-white text-sm font-semibold">Price Range</span>
+            <span className="text-white text-sm font-semibold">
+              Price Range
+            </span>
             <div className="flex items-center w-full space-x-2">
               <Input
                 placeholder="฿ MIN"
@@ -433,8 +444,11 @@ const Home: React.FC = () => {
         <div className={`w-full pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
           {role === Role.User &&
-            (filteredEquipments?.recommendation_equipments?.equipments
-              ?.length ?? 0) > 0 && (
+            Array.isArray(
+              filteredEquipments?.recommendation_equipments?.equipments
+            ) &&
+            filteredEquipments.recommendation_equipments.equipments.length >
+              0 && (
               <React.Fragment>
                 <Divider orientation="left" orientationMargin={"left"}>
                   🔥 Recommended For You
