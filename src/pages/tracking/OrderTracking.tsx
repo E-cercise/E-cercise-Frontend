@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, message, Steps, StepProps } from "antd";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../../hook/UseAuth.ts";
 import { RiFileList2Line, RiTruckLine } from "react-icons/ri";
 import { MdOutlinePaid } from "react-icons/md";
@@ -29,9 +29,7 @@ function OrderTracking() {
 //   const [showReceivedButton, setShowReceiveButton] = useState<boolean>(false);
   const [received, setReceived] = useState<boolean>(true);
   const [adminReceived, setAdminReceived] = useState<boolean>(true);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
-  const orderID = location.state;
+  const { order_id } = useParams();
   const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
   const { role } = useAuth();
   const stepItems: StepProps[] = [
@@ -85,10 +83,6 @@ function OrderTracking() {
 
 const detail = async (id: string) => {
   try {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("order_id", id);
-    setSearchParams(newParams);
-
     const response = await getOrderDetail(id);
 
     if (!response) {
@@ -110,7 +104,7 @@ const detail = async (id: string) => {
 };
 
 
-  const updateStatus = (id: string) => {
+  const updateStatus = (id: string | undefined) => {
     updateOrderStatus(id)
       .then((response) => {
         setIsShowModal(false);
@@ -125,7 +119,9 @@ const detail = async (id: string) => {
   
 
   useEffect(() => {
-    detail(orderID);
+    if (order_id) {
+      detail(order_id);
+    }
   }, [adminReceived, received, isShowModal]);
 
   return (
@@ -136,7 +132,7 @@ const detail = async (id: string) => {
           <div className="flex items-center space-x-2 bg-[#F2EFEF] rounded-md p-2">
             <div className="flex items-center text-[12px] space-x-2">
               <p className="font-bold">ORDER ID:</p>
-              <p>{orderID}</p>
+              <p>{order_id}</p>
             </div>
             <div>|</div>
             <div className="flex items-center text-[12px] space-x-2">
@@ -151,7 +147,6 @@ const detail = async (id: string) => {
             <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1">
               <button
                 className="text-[14px] text-white bg-[#1890ff] rounded-md px-4 py-2 m-3 float-right"
-                // onClick={() => updateStatus(orderID)}
                 onClick={() => setIsShowModal(true)}
               >
                 Pay Now
@@ -159,7 +154,7 @@ const detail = async (id: string) => {
               <Modal
                 title="This is just a mock up of Promptpay"
                 open={isShowModal}
-                onOk={() => updateStatus(orderID)}
+                onOk={() => updateStatus(order_id)}
                 onCancel={() => setIsShowModal(false)}
               >
                 <div className="flex items-center justify-center">
@@ -175,12 +170,10 @@ const detail = async (id: string) => {
               <button
                 className={`text-[14px] text-white bg-[#53D94F]
                 rounded-md px-4 py-2 m-3 float-right`}
-                onClick={() => updateStatus(orderID)}
+                onClick={() => updateStatus(order_id)}
               >
                 Confirm
               </button>
-              {/* <Divider></Divider>
-                  <button></button> */}
             </div>
           )}
           {role === Role.User && (
@@ -189,7 +182,7 @@ const detail = async (id: string) => {
                   className={`text-[14px] text-white ${
                     !received ? "bg-[#53D94F]" : "bg-[#E7E7E7]"
                   } rounded-md px-4 py-2 m-3 float-right`}
-                  onClick={() => updateStatus(orderID)}
+                  onClick={() => updateStatus(order_id)}
                   disabled={received}
                 >
                   Order Received

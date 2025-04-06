@@ -7,6 +7,7 @@ export interface NavItemProps {
 
 export interface UserProfileProps {
     userId: string | null;
+    role: string | null;
     name: string | null;
     logout: () => void;
 }

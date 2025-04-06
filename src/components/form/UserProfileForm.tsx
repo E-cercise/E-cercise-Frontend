@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Card,
@@ -10,14 +11,13 @@ import {
 } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
+import { motion, AnimatePresence } from "framer-motion";
 import { useToggleEditing } from "../../hook/useToggleEditing.ts";
 import { useFormAutoSync } from "../../hook/useFormAutoSync.ts";
-import "./UserProfileForm.css";
 import { UserGoal, UserTag } from "../../interfaces/UserProfile.ts";
-import React, { useEffect, useState } from "react";
 import { getChangedFields } from "../../helper/formHelper.ts";
 import {checkUserEmailExist} from "../../api/user_profile/CheckUserEmailExists.ts";
-import { motion, AnimatePresence } from "framer-motion";
+import "./UserProfileForm.css";
 
 
 interface UserProfileFormProps {
