@@ -67,16 +67,16 @@ const AdminDetailPage: React.FC = () => {
                 category: data.category,
                 description: data.description,
                 muscle_group_used: data.muscle_group_used || [],
-                features: (data.feature || []).map((f) => ({
+                features: (data.features || []).map((f) => ({
                     __id: f.id,
                     description: f.description,
                 })),
-                additional_fields: (data.additional_field || []).map((af) => ({
+                additional_fields: (data.additional_fields || []).map((af) => ({
                     __id: af.id,
                     key: af.key,
                     value: af.value,
                 })),
-                options: (data.option || []).map((opt) => {
+                options: (data.options || []).map((opt) => {
                     const primaryImg = opt.images.find((img) => img.is_primary);
                     const galleryImgs = opt.images.filter((img) => !img.is_primary);
                     return {
@@ -174,7 +174,7 @@ const AdminDetailPage: React.FC = () => {
                     id: f.__id ?? Math.random().toString(),
                     description: f.description,
                 })),
-                additional_field: values.additional_fields?.map((f) => ({
+                additional_fields: values.additional_fields?.map((f) => ({
                     id: f.__id ?? Math.random().toString(),
                     key: f.key,
                     value: f.value,

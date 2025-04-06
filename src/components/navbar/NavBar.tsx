@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Popover, Tag } from "antd";
+import { Input} from "antd";
 import {
   Link,
   useLocation,
@@ -7,12 +7,9 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { FiFilter } from "react-icons/fi";
-import { IoIosArrowDown } from "react-icons/io";
 import ECerciseLogo from "../../assets/navbar/E-Cercise-Logo.png";
 import ComparisonLogo from "../../assets/navbar/Comparison-Logo.png";
 import Cart from "../../assets/navbar/Cart.png";
-import { backAttributes, frontAttributes } from "../muscles/muscles";
 import "./NavBar.css";
 import { useAuth } from "../../hook/UseAuth.ts";
 import BottomNavBar from "./BottomNavBar.tsx";
@@ -20,27 +17,11 @@ import { Role } from "../../enum/Role.ts";
 import UserProfile from "./UserProfile.tsx";
 
 function NavBar() {
-  const [activePath, setActivePath] = useState<string>("");
-  const [, setShowPopOver] = useState<boolean>(false);
-  const [, setShowMusclesPopover] = useState<boolean>(false);
   const [tempKeyword, setTempKeyword] = useState<string>("");
-  // const [clickedMuscles, setClickedMuscles] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [clickedMuscles, setClickedMuscles] = useState<string[]>(
-    (searchParams.get("muscles") || "").split(",").filter(Boolean)
-  );
   const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
   const { userId, name, role, logout } = useAuth();
-
-  const handleMouseEnter = (id: any) => {
-    setActivePath(id);
-  };
-
-  const handleMouseLeave = () => {
-    setActivePath("");
-  };
 
   const handleKeywordOnChange = (keyword: string) => {
     setTempKeyword(keyword); // Store typed input but don't trigger search yet
@@ -68,37 +49,6 @@ function NavBar() {
     } else {
       setSearchParams(new URLSearchParams(sortedQuery));
     }
-  };
-
-  const handleShowPopOver = (value: boolean) => {
-    setShowPopOver(value);
-  };
-
-  const handleShowMusclesPopover = (value: boolean) => {
-    setShowMusclesPopover(value);
-  };
-
-  const handleClickedMuscles = (id: string) => {
-    const updated = clickedMuscles.includes(id)
-      ? clickedMuscles.filter((m) => m !== id)
-      : [...clickedMuscles, id];
-    setClickedMuscles(updated);
-  };
-
-  const handleApplyMusclesFilter = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("muscles", clickedMuscles.join(","));
-    newParams.set("page", "1");
-    const sortedQuery = sortParamsWithPageLast(newParams);
-    setSearchParams(new URLSearchParams(sortedQuery));
-  };
-
-  const clearAllClickedMuscles = () => {
-    setClickedMuscles([]);
-    const newParams = new URLSearchParams(searchParams);
-    newParams.delete("muscles");
-    newParams.set("page", "1");
-    setSearchParams(newParams);
   };
 
   const handleCartClick = () => {
@@ -163,196 +113,9 @@ function NavBar() {
           onChange={(e) => handleKeywordOnChange(e.target.value)}
           onSearch={() => {
             handleSearchClick();
-            // handleCurrentPage(1);
           }}
         />
-        {/* {isHomePage && (
-          <Popover
-            onOpenChange={() => handleShowMusclesPopover(true)}
-            placement="bottom"
-            content={
-              <div className="">
-                <div className="flex items-center space-x-2">
-                  <span className="">Filtered Muscles:</span>
-                  <div className="flex items-center flex-wrap w-[400px] space-x-2">
-                    {clickedMuscles.map((id: string) => {
-                      const frontIndex = frontAttributes.findIndex(
-                        (obj) => obj.id === id
-                      );
-                      const backIndex = backAttributes.findIndex(
-                        (obj) => obj.id === id
-                      );
 
-                      if (frontIndex > -1) {
-                        return (
-                          <Tag
-                            key={id}
-                            closable
-                            onClose={() => handleClickedMuscles(id)}
-                          >
-                            {frontAttributes[frontIndex].name}
-                          </Tag>
-                        );
-                      }
-
-                      if (backIndex > -1) {
-                        return (
-                          <Tag
-                            key={id}
-                            closable
-                            onClose={() => handleClickedMuscles(id)}
-                          >
-                            {backAttributes[backIndex].name}
-                          </Tag>
-                        );
-                      }
-
-                      return null;
-                    })}
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <svg
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="250px"
-                    height="400px"
-                    viewBox="0 0 600 980"
-                    xmlSpace="preserve"
-                  >
-                    <image
-                      href="src\assets\navbar\muscles-front-image.png"
-                      width="600"
-                      height="980"
-                    ></image>
-                    {frontAttributes.map((element, index) => {
-                      const id = `ft_${index + 1}`;
-                      return (
-                        <>
-                          <Popover title={element.name}>
-                            <path
-                              key={id}
-                              id={id}
-                              fill="#FF0000"
-                              stroke={"#ff8080"}
-                              vectorEffect="non-scaling-stroke"
-                              d={element.d}
-                              fillOpacity={
-                                activePath === id || clickedMuscles.includes(id)
-                                  ? "1"
-                                  : "0"
-                              }
-                              strokeOpacity="1"
-                              cursor="pointer"
-                              onMouseEnter={() => {
-                                handleMouseEnter(id);
-                                handleShowPopOver(true);
-                              }}
-                              onClick={() => {
-                                handleClickedMuscles(id);
-                              }}
-                              style={{
-                                fill:
-                                  activePath === id ||
-                                  clickedMuscles.includes(id)
-                                    ? "rgba(231, 89, 99, 0.5)"
-                                    : "rgb(253, 88, 88)",
-                              }}
-                            />
-                          </Popover>
-                        </>
-                      );
-                    })}
-                  </svg>
-                  <svg
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="250px"
-                    height="400px"
-                    viewBox="0 0 600 980"
-                    xmlSpace="preserve"
-                  >
-                    <image
-                      href="src\assets\navbar\muscles-back-image.png"
-                      width="600"
-                      height="980"
-                    ></image>
-                    {backAttributes.map((element, index) => {
-                      const id = `bk_${index + 1}`;
-                      return (
-                        <>
-                          <Popover title={element.name}>
-                            <path
-                              key={id}
-                              id={id}
-                              fill="#FF0000"
-                              stroke={"#ff8080"}
-                              vectorEffect="non-scaling-stroke"
-                              d={element.d}
-                              fillOpacity={
-                                activePath === id || clickedMuscles.includes(id)
-                                  ? "1"
-                                  : "0"
-                              }
-                              strokeOpacity="1"
-                              cursor="pointer"
-                              onMouseEnter={() => {
-                                handleMouseEnter(id);
-                                handleShowPopOver(true);
-                              }}
-                              onMouseLeave={() => {
-                                handleMouseLeave();
-                                handleShowPopOver(false);
-                              }}
-                              onClick={() => {
-                                handleClickedMuscles(id);
-                              }}
-                              style={{
-                                fill:
-                                  activePath === id ||
-                                  clickedMuscles.includes(id)
-                                    ? "rgba(231, 89, 99, 0.5)"
-                                    : "rgb(253, 88, 88)",
-                              }}
-                            />
-                          </Popover>
-                        </>
-                      );
-                    })}
-                  </svg>
-                </div>
-                <div className="flow-root w-full">
-                  <div className="float-right space-x-3">
-                    <Button onClick={() => clearAllClickedMuscles()}>
-                      Clear All
-                    </Button>
-                    <Button
-                      // onClick={() => handleMuscleGroup(clickedMuscles.join(","))}
-                      onClick={() => handleApplyMusclesFilter()}
-                    >
-                      Filter
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            }
-          >
-            <button
-              className={`flex items-center space-x-[3px] absolute right-[400px] text-[13px] font-bold bg-[#EAEAEA] rounded-md pl-3 w-[93px] h-8
-             hover:bg-[#d4d4d4] transition-colors duration-200 cursor-pointer`}
-              onMouseEnter={() => handleShowMusclesPopover(true)}
-              onMouseLeave={() => handleShowMusclesPopover(false)}
-            >
-              <div className="flex items-center space-x-[3px]">
-                <span>Filter</span>
-                <FiFilter />
-              </div>
-              <div className="flex items-center justify-center bg-[#878787] rounded-md w-[28px] h-[28px] ">
-                <IoIosArrowDown size={15} />
-              </div>
-            </button>
-          </Popover>
-        )} */}
         {role !== Role.Admin && (
           <>
             <Link

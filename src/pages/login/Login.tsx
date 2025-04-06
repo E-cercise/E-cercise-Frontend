@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Button, Divider, Form, Input} from "antd";
+import {Button, Divider, Form, Input, message} from "antd";
 import {Link, useNavigate} from "react-router-dom";
 import {fetchToken} from "../../api/auth/Login.ts";
 import "./Login.css";
@@ -28,10 +28,23 @@ function Login() {
             const tokenObject = await fetchToken(email, password);
             login(tokenObject.access_token);
             navigate("/");
-        } catch (err) {
-            console.error(err);
-            setShowIncorrectEmailPasswordMessage(true);
-            navigate("/login");
+        } catch (err: any) {
+            if (err.response) {
+                const errorMessage = err.response.data?.error?.toLowerCase() || "";
+
+                if (
+                    errorMessage.includes("does not exist") ||
+                    errorMessage.includes("invalid password")
+                ) {
+                    setShowIncorrectEmailPasswordMessage(true);
+                } else {
+                    message.error("Login failed: " + err.response.data?.error || "Unknown server error");
+                }
+            } else if (err.request) {
+                message.error("Network error: Could not reach server.");
+            } else {
+                message.error("Unexpected error: " + err.message);
+            }
         }
     };
 

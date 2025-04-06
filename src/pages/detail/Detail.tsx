@@ -87,7 +87,7 @@ function Detail() {
     try {
       const detail = await equipmentDetail(id);
       setDetail(detail);
-      const newOptions = detail.option.map((opt: Option, index: number) => ({
+      const newOptions = detail.options.map((opt: Option, index: number) => ({
         value: index,
         label: opt.name,
       }));
@@ -301,16 +301,6 @@ function Detail() {
                         <span className="text-[12px] font-bold">Model</span>
                         <span className="text-[12px]">{detail?.model}</span>
                       </div>
-                      {/* <div className="flex items-center space-x-3">
-                        <span className="text-[12px] font-bold">
-                          Special Feature
-                        </span>
-                        <span className="text-[12px]">
-                          {detail?.additional_field.length !== 0
-                            ? detail?.additional_field[0].value
-                            : ""}
-                        </span>
-                      </div> */}
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -456,7 +446,7 @@ function Detail() {
                     className="font-semibold"
                   >
                     <Descriptions column={2} size="small" bordered>
-                      {detail.additional_field.map((field, index) => (
+                      {detail.additional_fields.map((field, index) => (
                         <Descriptions.Item
                           key={index}
                           label={field.key}
@@ -472,7 +462,7 @@ function Detail() {
                 <div>
                   <span className="text-[12px] font-bold">About this item</span>
                   <ul className="list-disc ml-5">
-                    {detail?.feature.map((feature, index) => (
+                    {detail?.features.map((feature, index) => (
                       <li key={index} className="text-[12px]">
                         {feature.description}
                       </li>

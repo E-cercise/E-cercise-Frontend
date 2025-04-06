@@ -52,8 +52,8 @@ export interface EquipmentDetailResponse {
     muscle_group_used: string[];
     name: string;
     options: Option[];
-    feature: Feature[];
-    additional_field: AdditionalField[];
+    features: Feature[];
+    additional_fields: AdditionalField[];
 }
 
 export interface EquipmentDetailForComparison {

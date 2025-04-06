@@ -165,7 +165,7 @@ function Comparison() {
               <p><strong>Weight:</strong> {equipment1?.options[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
-                {equipment1?.additional_field?.map((field) => (
+                {equipment1?.additional_fields?.map((field) => (
                   <div key={field.id}>
                     <strong>{field.key}:</strong> {field.value}
                   </div>
@@ -203,7 +203,7 @@ function Comparison() {
               <p><strong>Weight:</strong> {equipment2?.options[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
-                {equipment2?.additional_field?.map((field) => (
+                {equipment2?.additional_fields?.map((field) => (
                   <div key={field.id}>
                     <strong>{field.key}:</strong> {field.value}
                   </div>
@@ -241,7 +241,7 @@ function Comparison() {
               <p><strong>Weight:</strong> {equipment3?.options[0]?.weight} kg</p>
               <Divider style={{ borderColor: "#8C8C8C" }} />
               <div className="mt-2 text-xs space-y-2">
-                {equipment3?.additional_field?.map((field) => (
+                {equipment3?.additional_fields?.map((field) => (
                   <div key={field.id}>
                     <strong>{field.key}:</strong> {field.value}
                   </div>

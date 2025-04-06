@@ -30,7 +30,7 @@ export const handleUpdateSubmitPartial = async (
     }
 
     // === Additional Fields ===
-    const originalAtts = originalData.additional_field || [];
+    const originalAtts = originalData.additional_fields || [];
     const updatedAtts = values.additional_fields || [];
 
     const updatedFields = updatedAtts.filter(field =>
@@ -64,16 +64,16 @@ export const handleUpdateSubmitPartial = async (
 
     // === Features ===
     const updatedFeatures = values.features?.filter(f => {
-        const orig = originalData.feature?.find(of => of.id === f.__id);
+        const orig = originalData.features?.find(of => of.id === f.__id);
         return orig && orig.description !== f.description;
     }) || [];
 
-    const deletedFeatures = (originalData.feature || []).filter(orig =>
+    const deletedFeatures = (originalData.features || []).filter(orig =>
         !values.features?.find(v => v.__id === orig.id)
     ).map(f => f.id);
 
     const createdFeatures = values.features?.filter(f =>
-        !originalData.feature?.some(orig => orig.id === f.__id)
+        !originalData.features?.some(orig => orig.id === f.__id)
     ).map(f => f.description) || [];
 
     if (updatedFeatures.length || deletedFeatures.length || createdFeatures.length) {
