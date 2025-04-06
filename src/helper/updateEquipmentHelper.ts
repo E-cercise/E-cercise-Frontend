@@ -77,18 +77,18 @@ export const handleUpdateSubmitPartial = async (
     ).map(f => f.description) || [];
 
     if (updatedFeatures.length || deletedFeatures.length || createdFeatures.length) {
-        payload.feature = {};
+        payload.features = {};
         if (updatedFeatures.length) {
-            payload.feature.updated = updatedFeatures.map(f => ({
+            payload.features.updated = updatedFeatures.map(f => ({
                 id: f.__id,
                 description: f.description
             }));
         }
         if (deletedFeatures.length) {
-            payload.feature.deleted = deletedFeatures;
+            payload.features.deleted = deletedFeatures;
         }
         if (createdFeatures.length) {
-            payload.feature.created = createdFeatures;
+            payload.features.created = createdFeatures;
         }
     }
 
@@ -183,15 +183,15 @@ export const handleUpdateSubmitPartial = async (
     ).map(opt => opt.id) || [];
 
     if (updatedOptions.length || createdOptions.length || deletedOptions.length) {
-        payload.option = {};
+        payload.options = {};
         if (updatedOptions.length) {
-            payload.option.updated = updatedOptions;
+            payload.options.updated = updatedOptions;
         }
         if (createdOptions.length) {
-            payload.option.created = createdOptions;
+            payload.options.created = createdOptions;
         }
         if (deletedOptions.length) {
-            payload.option.deleted = deletedOptions;
+            payload.options.deleted = deletedOptions;
         }
     }
 

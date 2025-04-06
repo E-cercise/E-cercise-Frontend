@@ -175,7 +175,7 @@ const AdminDetailPage: React.FC = () => {
                 ...originalData,
                 ...values,
                 category: categoryObj?.value || values.category,
-                feature: values.features.map((f) => ({
+                features: values.features.map((f) => ({
                     id: f.__id ?? Math.random().toString(),
                     description: f.description,
                 })),
@@ -195,14 +195,14 @@ const AdminDetailPage: React.FC = () => {
                             ? [
                                 {
                                     id: opt.primaryImage.fileID,
-                                    url: opt.primaryImage.thumbnail,
+                                    url: opt.primaryImage.thumbnail ?? "",
                                     is_primary: true,
                                 },
                             ]
                             : []),
                         ...(opt.galleryImages || []).map((g) => ({
                             id: g.fileID,
-                            url: g.thumbnail,
+                            url: g.thumbnail ?? "",
                             is_primary: false,
                         })),
                     ],
