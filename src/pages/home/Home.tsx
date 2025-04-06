@@ -215,13 +215,10 @@ const Home: React.FC = () => {
   };
 
   const renderEquipmentGrid = () => {
-    // if (!filteredEquipments?.equipments.equipments) return null;
+    if (!filteredEquipments?.equipments.equipments) return null;
 
-    const equipmentArray = filteredEquipments?.equipments?.equipments ?? [];
-
-    if (!Array.isArray(equipmentArray) || equipmentArray.length === 0) {
-      return renderNoResultsOrLoading();
-    }
+    const equipmentArray = filteredEquipments.equipments.equipments;
+    if (!Array.isArray(equipmentArray)) return null;
 
     const displayed = equipmentArray.slice(0, pageSize);
 
@@ -444,11 +441,8 @@ const Home: React.FC = () => {
         <div className={`w-full pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
           {role === Role.User &&
-            Array.isArray(
-              filteredEquipments?.recommendation_equipments?.equipments
-            ) &&
-            filteredEquipments.recommendation_equipments.equipments.length >
-              0 && (
+            Array.isArray(filteredEquipments?.equipments?.equipments) &&
+            filteredEquipments.equipments.equipments.length > 0 && (
               <React.Fragment>
                 <Divider orientation="left" orientationMargin={"left"}>
                   🔥 Recommended For You
