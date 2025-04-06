@@ -166,7 +166,7 @@ function NavBar() {
             // handleCurrentPage(1);
           }}
         />
-        {isHomePage && (
+        {/* {isHomePage && (
           <Popover
             onOpenChange={() => handleShowMusclesPopover(true)}
             placement="bottom"
@@ -352,7 +352,7 @@ function NavBar() {
               </div>
             </button>
           </Popover>
-        )}
+        )} */}
         {role !== Role.Admin && (
           <>
             <Link

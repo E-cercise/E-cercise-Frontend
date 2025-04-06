@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {LeftOutlined, RightOutlined} from "@ant-design/icons";
-import { Divider, Input, message, Pagination, Spin } from "antd";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Divider,
+  Input,
+  message,
+  Pagination,
+  Popover,
+  Spin,
+  Tag,
+} from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { filteredEquipment } from "../../api/equipment/FilteredEquipment.ts";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
@@ -15,6 +24,10 @@ import { Role } from "../../enum/Role.ts";
 import SearchIcon from "../../assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
+import {
+  backAttributes,
+  frontAttributes,
+} from "../../components/muscles/muscles.ts";
 
 const Home: React.FC = () => {
   const [equipmentId, setEquipmentId] = useState<number>(-1);
@@ -33,6 +46,14 @@ const Home: React.FC = () => {
   const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const [activeView, setActiveView] = useState<"front" | "back">("front");
+  const [activePath, setActivePath] = useState<string>("");
+  const [, setShowPopOver] = useState<boolean>(false);
+  const [, setShowMusclesPopover] = useState<boolean>(false);
+  const [clickedMuscles, setClickedMuscles] = useState<string[]>(
+    (searchParams.get("muscles") || "").split(",").filter(Boolean)
+  );
+
   const { role } = useAuth();
   const pageSize = 50;
   const headingText =
@@ -46,7 +67,6 @@ const Home: React.FC = () => {
       });
     }
   };
-
 
   const fetchEquipments = async () => {
     try {
@@ -73,6 +93,41 @@ const Home: React.FC = () => {
       console.error(err);
       message.error("Failed to fetch equipment details.");
     }
+  };
+
+  const handleMouseEnter = (id: any) => {
+    setActivePath(id);
+  };
+
+  const handleMouseLeave = () => {
+    setActivePath("");
+  };
+
+  const handleShowPopOver = (value: boolean) => {
+    setShowPopOver(value);
+  };
+
+  const handleClickedMuscles = (id: string) => {
+    const updated = clickedMuscles.includes(id)
+      ? clickedMuscles.filter((m) => m !== id)
+      : [...clickedMuscles, id];
+    setClickedMuscles(updated);
+  };
+
+  const handleApplyMusclesFilter = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("muscles", clickedMuscles.join(","));
+    newParams.set("page", "1");
+    const sortedQuery = sortParamsWithPageLast(newParams);
+    setSearchParams(new URLSearchParams(sortedQuery));
+  };
+
+  const clearAllClickedMuscles = () => {
+    setClickedMuscles([]);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("muscles");
+    newParams.set("page", "1");
+    setSearchParams(newParams);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -125,10 +180,13 @@ const Home: React.FC = () => {
     if (location.pathname === "/" && searchParams.toString() === "") {
       const newParams = new URLSearchParams();
       newParams.set("page", "1");
-      navigate({
-        pathname: "/",
-        search: `?${newParams.toString()}`,
-      }, { replace: true });
+      navigate(
+        {
+          pathname: "/",
+          search: `?${newParams.toString()}`,
+        },
+        { replace: true }
+      );
     }
   }, [location.pathname, searchParams, navigate]);
 
@@ -208,13 +266,148 @@ const Home: React.FC = () => {
     );
   };
 
+  console.log("clickedMuscles", clickedMuscles);
+
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <NavBar />
-      <div className="flex flex-grow">
-        <div className="flex-shrink-0 w-[200px] h-screen bg-zinc-800">
+      <div className="flex flex-grow overflow-hidden">
+        <div className="flex-shrink-0 w-[200px] bg-zinc-800 overflow-y-auto pb-5">
+          <div className="">
+            <div className="pt-3 px-3 space-y-3 mb-4">
+              <span className="text-white text-sm font-semibold">Muscle Group</span>
+
+              <div className={`flex flex-wrap gap-1 bg-[#D9D9D9] rounded-md p-2 ${clickedMuscles.length > 5 ? "overflow-auto h-[150px]" : ""}`}>
+                {clickedMuscles.map((id: string) => {
+                  const found = [...frontAttributes, ...backAttributes].find(
+                    (m) => m.id === id
+                  );
+
+                  return found ? (
+                    <Tag
+                      key={id}
+                      closable
+                      onClose={() => handleClickedMuscles(id)}
+                    >
+                      {found.name}
+                    </Tag>
+                  ) : null;
+                })}
+              </div>
+            </div>
+
+            <div className="flex justify-center space-x-3">
+              <Button size="small" onClick={() => setActiveView("front")}>
+                Front
+              </Button>
+              <Button size="small" onClick={() => setActiveView("back")}>
+                Back
+              </Button>
+            </div>
+
+            <div className="flex justify-center overflow-hidden rounded-md">
+              {activeView === "front" ? (
+                <svg width="170px" height="300px" viewBox="0 0 600 980">
+                  <image
+                    href="src\assets\navbar\muscles-front-image.png"
+                    width="600"
+                    height="980"
+                  />
+                  {frontAttributes.map((element, index) => {
+                    const id = `ft_${index + 1}`;
+                    return (
+                      <Popover title={element.name} key={id}>
+                        <path
+                          d={element.d}
+                          fill="#FF0000"
+                          fillOpacity={
+                            activePath === id || clickedMuscles.includes(id)
+                              ? "1"
+                              : "0"
+                          }
+                          strokeOpacity="1"
+                          stroke="#ff8080"
+                          onMouseEnter={() => {
+                            handleMouseEnter(id);
+                            handleShowPopOver(true);
+                          }}
+                          onMouseLeave={() => {
+                            handleMouseLeave();
+                            handleShowPopOver(false);
+                          }}
+                          onClick={() => handleClickedMuscles(id)}
+                          style={{
+                            fill:
+                              activePath === id || clickedMuscles.includes(id)
+                                ? "rgba(239, 68, 68, 0.7)"
+                                : "rgba(239, 68, 68, 0.3)",
+                          }}
+                          className="cursor-pointer"
+                        />
+                      </Popover>
+                    );
+                  })}
+                </svg>
+              ) : (
+                <svg width="170px" height="300px" viewBox="0 0 600 980">
+                  <image
+                    href="src\assets\navbar\muscles-back-image.png"
+                    width="600"
+                    height="980"
+                  />
+                  {backAttributes.map((element, index) => {
+                    const id = `bk_${index + 1}`;
+                    return (
+                      <Popover title={element.name} key={id}>
+                        <path
+                          d={element.d}
+                          fill="#FF0000"
+                          fillOpacity={
+                            activePath === id || clickedMuscles.includes(id)
+                              ? "1"
+                              : "0"
+                          }
+                          strokeOpacity="1"
+                          stroke="#ff8080"
+                          onMouseEnter={() => {
+                            handleMouseEnter(id);
+                            handleShowPopOver(true);
+                          }}
+                          onMouseLeave={() => {
+                            handleMouseLeave();
+                            handleShowPopOver(false);
+                          }}
+                          onClick={() => handleClickedMuscles(id)}
+                          style={{
+                            fill:
+                              activePath === id || clickedMuscles.includes(id)
+                                ? "rgba(239, 68, 68, 0.3)"
+                                : "rgb(253, 88, 88)",
+                          }}
+                          className="cursor-pointer"
+                        />
+                      </Popover>
+                    );
+                  })}
+                </svg>
+              )}
+            </div>
+
+            <div className="flex justify-center space-x-3">
+              <Button size="small" onClick={clearAllClickedMuscles}>
+                Clear
+              </Button>
+              <Button
+                size="small"
+                type="primary"
+                onClick={handleApplyMusclesFilter}
+              >
+                Apply
+              </Button>
+            </div>
+          </div>
           <div className="pt-3 px-3 space-y-3">
-            <span className="text-white text-sm">Price Range</span>
+            <span className="text-white text-sm font-semibold">Price Range</span>
             <div className="flex items-center w-full space-x-2">
               <Input
                 placeholder="฿ MIN"
@@ -240,57 +433,60 @@ const Home: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className={`w-full h-screen pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
+        <div className={`w-full pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
-          {role === Role.User && (filteredEquipments?.recommendation_equipments?.equipments?.length ?? 0) > 0 && (
+          {role === Role.User &&
+            (filteredEquipments?.recommendation_equipments?.equipments
+              ?.length ?? 0) > 0 && (
               <React.Fragment>
-                <Divider orientation="left" orientationMargin={"left"}>🔥 Recommended For You</Divider>
+                <Divider orientation="left" orientationMargin={"left"}>
+                  🔥 Recommended For You
+                </Divider>
                 <div className="relative w-full">
                   <button
-                      onClick={() => scrollByAmount(-300)}
-                      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                    onClick={() => scrollByAmount(-300)}
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
                   >
                     <LeftOutlined />
                   </button>
 
                   <button
-                      onClick={() => scrollByAmount(300)}
-                      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                    onClick={() => scrollByAmount(300)}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white border shadow-md rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-100"
                   >
                     <RightOutlined />
                   </button>
-                    <div
-                        ref={recommendationScrollRef}
-                        className="overflow-x-auto scrollbar-hide w-full"
-                    >
+                  <div
+                    ref={recommendationScrollRef}
+                    className="overflow-x-auto scrollbar-hide w-full"
+                  >
+                    <div className="flex gap-4 px-3 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400 w-max min-w-full">
+                      {(
+                        filteredEquipments?.recommendation_equipments
+                          ?.equipments ?? []
+                      ).map((equipment, index) => (
                         <div
-                            className="flex gap-4 px-3 py-4 bg-[#FFFBEA] rounded-md border border-yellow-400 w-max min-w-full"
+                          key={equipment.ID}
+                          className="bg-[#F3F3F3] rounded-md w-[180px] h-[350px] flex-shrink-0 shadow"
                         >
-                            {(filteredEquipments?.recommendation_equipments?.equipments ?? []).map(
-                                (equipment, index) => (
-                                    <div
-                                        key={equipment.ID}
-                                        className="bg-[#F3F3F3] rounded-md w-[180px] h-[350px] flex-shrink-0 shadow"
-                                    >
-                                        <EquipmentCard
-                                            equipment={equipment}
-                                            index={index}
-                                            equipmentId={equipmentId}
-                                            titleHover={titleHover}
-                                            setEquipmentId={setEquipmentId}
-                                            setTitleHover={setTitleHover}
-                                            role={role}
-                                            onAddToCart={(eqId) => handleAddToCart(eqId)}
-                                            isAddingToCart={addingToCartId === equipment.ID}
-                                        />
-                                    </div>
-                                )
-                            )}
+                          <EquipmentCard
+                            equipment={equipment}
+                            index={index}
+                            equipmentId={equipmentId}
+                            titleHover={titleHover}
+                            setEquipmentId={setEquipmentId}
+                            setTitleHover={setTitleHover}
+                            role={role}
+                            onAddToCart={(eqId) => handleAddToCart(eqId)}
+                            isAddingToCart={addingToCartId === equipment.ID}
+                          />
                         </div>
+                      ))}
                     </div>
+                  </div>
                 </div>
               </React.Fragment>
-          )}
+            )}
           {filteredEquipments?.equipments.equipments?.length ? (
             <>
               {renderEquipmentGrid()}
