@@ -1,7 +1,11 @@
 import {useParams} from "react-router-dom";
 import {Category, EquipmentDetailResponse,} from "../../interfaces/equipment/EquipmentDetail.ts";
 import React, {useEffect, useState} from "react";
-import {EquipmentFormValues} from "../../interfaces/equipment/EquipmentForm.ts";
+import {
+    AdditionalFieldForm,
+    EquipmentFeatureForm,
+    EquipmentFormValues, EquipmentImage, EquipmentOptionForm
+} from "../../interfaces/equipment/EquipmentForm.ts";
 import {Button, Card, Form, Modal, notification} from "antd";
 import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
 import {equipmentDetail} from "../../api/equipment/EquipmentDetail.ts";
@@ -67,18 +71,19 @@ const AdminDetailPage: React.FC = () => {
                 category: data.category,
                 description: data.description,
                 muscle_group_used: data.muscle_group_used || [],
-                features: (data.features || []).map((f) => ({
+                features: (data.features || []).map((f: any): EquipmentFeatureForm => ({
                     __id: f.id,
                     description: f.description,
                 })),
-                additional_fields: (data.additional_fields || []).map((af) => ({
+                additional_fields: (data.additional_fields || []).map((af: any): AdditionalFieldForm => ({
                     __id: af.id,
                     key: af.key,
                     value: af.value,
                 })),
-                options: (data.options || []).map((opt) => {
-                    const primaryImg = opt.images.find((img) => img.is_primary);
-                    const galleryImgs = opt.images.filter((img) => !img.is_primary);
+                options: (data.options || []).map((opt: any): EquipmentOptionForm => {
+                    const primaryImg = opt.images.find((img: any) => img.is_primary);
+                    const galleryImgs = opt.images.filter((img: any) => !img.is_primary);
+
                     return {
                         __id: opt.id,
                         name: opt.name,
@@ -92,7 +97,7 @@ const AdminDetailPage: React.FC = () => {
                                 is_primary: true,
                             }
                             : undefined,
-                        galleryImages: galleryImgs.map((g) => ({
+                        galleryImages: galleryImgs.map((g: any): EquipmentImage => ({
                             fileID: g.id,
                             thumbnail: g.url,
                             is_primary: false,

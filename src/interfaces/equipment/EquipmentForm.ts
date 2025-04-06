@@ -24,30 +24,35 @@ export interface EquipmentFormValues {
     category: string;
     description: string;
     muscle_group_used: string[];
-    features: {
-        __id?: string;
-        description: string;
-    }[];
-    additional_fields: {
-        __id?: string;
-        key: string;
-        value: string;
-    }[];
-    options: {
-        __id?: string;
-        name: string;
-        price: number;
-        weight: number;
-        available: number;
-        primaryImage?: {
-            fileID: string;
-            thumbnail?: string;
-            is_primary?: boolean;
-        };
-        galleryImages?: {
-            fileID: string;
-            thumbnail?: string;
-            is_primary?: boolean;
-        }[];
-    }[];
+    features: EquipmentFeatureForm[];
+    additional_fields: AdditionalFieldForm[];
+    options: EquipmentOptionForm[];
+}
+
+
+export interface EquipmentFeatureForm {
+    __id?: string;
+    description: string;
+}
+
+export interface AdditionalFieldForm {
+    __id?: string;
+    key: string;
+    value: string;
+}
+
+export interface EquipmentImage {
+    fileID: string;
+    thumbnail?: string;
+    is_primary?: boolean;
+}
+
+export interface EquipmentOptionForm {
+    __id?: string;
+    name: string;
+    price: number;
+    weight: number;
+    available: number;
+    primaryImage?: EquipmentImage;
+    galleryImages?: EquipmentImage[];
 }

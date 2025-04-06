@@ -49,7 +49,6 @@ const Home: React.FC = () => {
   const [activeView, setActiveView] = useState<"front" | "back">("front");
   const [activePath, setActivePath] = useState<string>("");
   const [, setShowPopOver] = useState<boolean>(false);
-  const [, setShowMusclesPopover] = useState<boolean>(false);
   const [clickedMuscles, setClickedMuscles] = useState<string[]>(
     (searchParams.get("muscles") || "").split(",").filter(Boolean)
   );
