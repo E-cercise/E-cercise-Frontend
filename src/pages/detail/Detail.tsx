@@ -16,10 +16,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import { equipmentDetail } from "../../api/equipment/EquipmentDetail.ts";
 import { addEquipmentToCart } from "../../api/cart/AddEquipmentToCart.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import Cart from "../../assets/detail/+ Cart.png";
-import FrontMuscle from "../../assets/navbar/muscles-front-image.png";
-import BackMuscle from "../../assets/navbar/muscles-back-image.png";
-import RightMark from "../../assets/detail/checkmark.png";
+import Cart from "/assets/detail/+ Cart.png";
+import FrontMuscle from "/assets/navbar/muscles-front-image.png";
+import BackMuscle from "/assets/navbar/muscles-back-image.png";
+import RightMark from "/assets/detail/checkmark.png";
 import {
   backAttributes,
   frontAttributes,

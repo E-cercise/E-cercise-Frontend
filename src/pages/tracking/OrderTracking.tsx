@@ -12,7 +12,7 @@ import { updateOrderStatus } from "../../api/order/UpdateOrderStatus.ts";
 import { Role } from "../../enum/Role.ts";
 import { splitString } from "../../helper/splitStringHelper.ts";
 import { OrderDetailResponse } from "../../interfaces/Order.ts";
-import QRPromptpay from "../../assets/tracking/image.png";
+import QRPromptpay from "/assets/tracking/image.png";
 import "./OrderTracking.css";
 
 const statusMap: Record<string, number> = {

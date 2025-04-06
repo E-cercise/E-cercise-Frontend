@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Button, Popover, Tag} from "antd";
 import {backAttributes, frontAttributes} from "../muscles/muscles";
-import MuscleFrontImage from "../../assets/navbar/muscles-front-image.png";
-import MuscleBackImage from "../../assets/navbar/muscles-back-image.png";
+import MuscleFrontImage from "/assets/navbar/muscles-front-image.png";
+import MuscleBackImage from "/assets/navbar/muscles-back-image.png";
 
 interface MuscleGroupFormProps {
     value?: string[];

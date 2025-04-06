@@ -21,7 +21,7 @@ import {
 } from "../../interfaces/equipment/EquipmentDetail.ts";
 import { useAuth } from "../../hook/UseAuth.ts";
 import { Role } from "../../enum/Role.ts";
-import SearchIcon from "../../assets/home/search.png";
+import SearchIcon from "/assets/home/search.png";
 import EquipmentCard from "../../components/home/EquipmentCard.tsx";
 import HeaderRow from "../../components/headerRow/HeaderRow.tsx";
 import {
@@ -315,7 +315,7 @@ const Home: React.FC = () => {
               {activeView === "front" ? (
                 <svg width="170px" height="300px" viewBox="0 0 600 980">
                   <image
-                    href="src\assets\navbar\muscles-front-image.png"
+                    href="/assets/navbar/muscles-front-image.png"
                     width="600"
                     height="980"
                   />
@@ -357,7 +357,7 @@ const Home: React.FC = () => {
               ) : (
                 <svg width="170px" height="300px" viewBox="0 0 600 980">
                   <image
-                    href="src\assets\navbar\muscles-back-image.png"
+                    href="/assets/navbar/muscles-back-image.png"
                     width="600"
                     height="980"
                   />

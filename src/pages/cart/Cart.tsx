@@ -7,7 +7,7 @@ import {deleteEquipmentInCart} from "../../api/cart/DeleteEquipmentInCart.ts";
 import {splitString} from "../../helper/splitStringHelper.ts";
 import {CartResponse} from "../../interfaces/Cart.ts";
 import NavBar from "../../components/navbar/NavBar.tsx";
-import CrossMark from "../../assets/cart/image 36.png";
+import CrossMark from "/assets/cart/image 36.png";
 
 function Cart() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
