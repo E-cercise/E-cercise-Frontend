@@ -1,0 +1,12 @@
+.control-arrow.control-next,
+.control-arrow.control-prev {
+    background-color: black;
+}
+
+.ant-select-selection-item {
+    font-size: 12px;
+}
+
+.ant-select-item.ant-select-item-option {
+    font-size: 12px;
+}

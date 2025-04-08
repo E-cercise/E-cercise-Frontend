@@ -1,0 +1,84 @@
+.ant-input[disabled],
+.ant-input-disabled {
+    background-color: transparent !important;
+    border: none !important;
+    color: #111827 !important; /* text-gray-900 */
+    padding-left: 0;
+    font-weight: 500;
+}
+
+
+/* More breathing room + minimal feel */
+.tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.ant-tag-checkable {
+    font-size: 13px;
+    padding: 5px 13px;
+    border-radius: 16px;
+    border: 1px solid #dcdcdc;
+    background-color: #ffffff;
+    color: #333;
+    transition: all 0.2s ease;
+    line-height: 1.4;
+}
+
+.ant-tag-checkable:hover {
+    background-color: #f3f4f6;
+    border-color: #c5c5c5;
+}
+
+.ant-tag-checkable-checked {
+    background-color: #e6f4ff !important;
+    color: #1677ff;
+    border-color: #91caff;
+    font-weight: 500;
+}
+
+/* Gender-specific tags */
+.custom-gender-tag {
+    padding: 5px 14px;
+    font-size: 13px;
+    border-radius: 16px;
+}
+
+.custom-gender-tag.male.ant-tag-checkable-checked {
+    background-color: #e6f0ff !important;
+    color: #3b82f6;
+    border-color: #a3c6ff;
+}
+
+.custom-gender-tag.female.ant-tag-checkable-checked {
+    background-color: #ffeaf4 !important;
+    color: #ec4899;
+    border-color: #f8b3d8;
+}
+
+.ant-typography + .ant-divider {
+    margin-top: 16px;
+}
+
+.ant-divider-horizontal {
+    margin: 24px 0 8px;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.text-gray-900 {
+    color: #111827;
+}
+
+.profile-label {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827; /* Tailwind's gray-900 */
+    margin-bottom: 4px;
+    display: block;
+}

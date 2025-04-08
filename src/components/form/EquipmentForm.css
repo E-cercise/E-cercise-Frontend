@@ -1,0 +1,19 @@
+.ant-form-item-label > label {
+    font-weight: 600 !important;
+}
+
+.ant-input,
+.ant-input-number-input,
+.ant-select-selection-item {
+    font-weight: 400 !important;
+}
+
+.ant-divider-inner-text {
+    font-weight: 600 !important;
+}
+
+.ant-form-item-explain-error,
+.ant-form-item-explain-connected,
+.ant-form-item-explain {
+    color: #ff4d4f !important; /* Ant Design standard red */
+}
