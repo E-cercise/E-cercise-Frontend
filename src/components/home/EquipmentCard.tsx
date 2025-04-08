@@ -48,7 +48,7 @@ const EquipmentCard: React.FC<EquipmentCardProps> = ({
 
       <div className="flex items-center space-x-1">
         <div className="cursor-pointer flex items-center space-x-1">
-          <div className="flex w-[80px] space-x-1">
+          <div className="flex w-[6vw] space-x-1">
             <FaStar color="#FFAA1D" />
             <FaStar color="#FFAA1D" />
             <FaStar color="#FFAA1D" />

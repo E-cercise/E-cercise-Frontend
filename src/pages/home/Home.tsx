@@ -269,7 +269,7 @@ const Home: React.FC = () => {
     <div className="flex flex-col h-screen">
       <NavBar />
       <div className="flex flex-grow overflow-hidden">
-        <div className="flex-shrink-0 w-[200px] bg-zinc-800 overflow-y-auto pb-5">
+        <div className="flex-shrink-0 w-[230px] bg-zinc-800 overflow-y-auto pb-5">
           <div className="">
             <div className="pt-3 px-3 space-y-3 mb-4">
               <span className="text-white text-sm font-semibold">
@@ -278,7 +278,7 @@ const Home: React.FC = () => {
 
               <div
                 className={`flex flex-wrap gap-1 bg-[#D9D9D9] rounded-md p-2 ${
-                  clickedMuscles.length > 5 ? "overflow-auto h-[150px]" : ""
+                  clickedMuscles.length > 5 ? "overflow-y-auto h-[150px]" : ""
                 }`}
               >
                 {clickedMuscles.map((id: string) => {
