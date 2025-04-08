@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {notification} from "antd";
 import {Link, useNavigate} from "react-router-dom";
-import "./SignUp.css";
+import "../../../public/assets/css/SignUp.css";
 import RegisterForm from "../../components/form/RegisterForm.tsx";
 import {UserGoal, UserTag} from "../../interfaces/UserProfile.ts";
 import {getGoals} from "../../api/goal/getGoal.ts";

@@ -29,7 +29,7 @@ import {
   EquipmentDetailResponse,
 } from "../../interfaces/equipment/EquipmentDetail.ts";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "./Detail.css";
+import "../../../public/assets/css/Detail.css";
 import { Option } from "../../interfaces/equipment/UpdateEquipment.ts";
 
 function Detail() {

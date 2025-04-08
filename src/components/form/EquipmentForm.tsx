@@ -20,7 +20,7 @@ import {
   EquipmentFormProps,
   EquipmentFormValues,
 } from "../../interfaces/equipment/EquipmentForm";
-import "./EquipmentForm.css";
+import "../../../public/assets/css/EquipmentForm.css";
 import { AdditionalField } from "../../interfaces/equipment/EquipmentDetail.ts";
 
 const EquipmentForm: React.FC<EquipmentFormProps> = ({

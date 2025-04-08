@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Button} from "antd";
-import "./NavBar.css";
+import "../../../public/assets/css/NavBar.css";
 import {NavItemProps} from "../../interfaces/Navbar.ts";
 
 const NavItem: React.FC<NavItemProps> = ({to, label, Icon, isActive}) => {

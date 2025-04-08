@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Steps, Tag, Typography,} from 'antd';
 import {UserGoal, UserTag} from '../../interfaces/UserProfile.ts';
-import './RegisterForm.css';
+import '../../../public/assets/css/RegisterForm.css';
 import {checkUserEmailExist} from "../../api/user_profile/CheckUserEmailExists.ts";
 
 const {Step} = Steps;

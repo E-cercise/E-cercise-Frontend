@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Button, Divider, Form, Input, message} from "antd";
 import {Link, useNavigate} from "react-router-dom";
 import {fetchToken} from "../../api/auth/Login.ts";
-import "./Login.css";
+import "../../../public/assets/css/Login.css";
 import {useAuth} from "../../hook/UseAuth.ts";
 
 function Login() {

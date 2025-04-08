@@ -17,7 +17,7 @@ import { useFormAutoSync } from "../../hook/useFormAutoSync.ts";
 import { UserGoal, UserTag } from "../../interfaces/UserProfile.ts";
 import { getChangedFields } from "../../helper/formHelper.ts";
 import {checkUserEmailExist} from "../../api/user_profile/CheckUserEmailExists.ts";
-import "./UserProfileForm.css";
+import "../../../public/assets/css/UserProfileForm.css";
 
 
 interface UserProfileFormProps {

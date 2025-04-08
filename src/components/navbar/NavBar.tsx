@@ -10,7 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import ECerciseLogo from "/assets/navbar/E-Cercise-Logo.png";
 import ComparisonLogo from "/assets/navbar/Comparison-Logo.png";
 import Cart from "/assets/navbar/Cart.png";
-import "./NavBar.css";
+import "../../../public/assets/css/NavBar.css";
 import { useAuth } from "../../hook/UseAuth.ts";
 import BottomNavBar from "./BottomNavBar.tsx";
 import { Role } from "../../enum/Role.ts";

@@ -13,7 +13,7 @@ import { Role } from "../../enum/Role.ts";
 import { splitString } from "../../helper/splitStringHelper.ts";
 import { OrderDetailResponse } from "../../interfaces/Order.ts";
 import QRPromptpay from "/assets/tracking/image.png";
-import "./OrderTracking.css";
+import "../../../public/assets/css/OrderTracking.css";
 
 // Define how each status maps to step index
 const statusMap: Record<string, number> = {
