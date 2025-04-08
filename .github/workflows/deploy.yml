@@ -30,9 +30,10 @@ jobs:
       - name: Build and push Docker image
         run: |
           IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/e-cercise-frontend
+          cd e-cercise-frontend
           docker build \
             --build-arg API_BASE_URL=${{ secrets.API_BASE_URL }} \
-            -t $IMAGE_NAME:$GITHUB_SHA ./e-cercise-frontend
+            -t $IMAGE_NAME:$GITHUB_SHA .
           docker push $IMAGE_NAME:$GITHUB_SHA
 
       - name: Deploy to Google Cloud Run with Secrets
