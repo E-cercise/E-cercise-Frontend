@@ -397,13 +397,18 @@ const Home: React.FC = () => {
             </div>
 
             <div className="flex justify-center space-x-3">
-              <Button size="small" onClick={clearAllClickedMuscles}>
+              <Button 
+                size="small" 
+                onClick={clearAllClickedMuscles}
+                className="text-[12px] rounded-md p-3"
+              >
                 Clear
               </Button>
               <Button
                 size="small"
                 type="primary"
                 onClick={handleApplyMusclesFilter}
+                className="bg-green-500 hover:bg-green-600 text-[12px] text-white rounded-md p-3"
               >
                 Apply
               </Button>
