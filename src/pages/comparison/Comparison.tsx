@@ -14,15 +14,9 @@ function Comparison() {
   const [selectedIDs, setSelectedIDs] = useState<string[]>(["", "", ""]);
   const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetailResponse[]>([]);
 
-  // Fetch categories
   const fetchEquipmentCategories = async () => {
     try {
       const data = await getEquipmentCategory();
-      // data.categories is presumably [
-      //   { label: "Dumbbell", value: "dumbbell" },
-      //   { label: "Barbell",  value: "barbell" },
-      //   ...
-      // ]
 
       setCategories(data.categories);
     } catch (err) {
@@ -30,7 +24,6 @@ function Comparison() {
     }
   };
 
-  // category change
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setEquipments([]);
@@ -42,7 +35,6 @@ function Comparison() {
   const fetchEquipmentInCategory = async (cat: string) => {
     try {
       const response = await equipmentInCategory(cat);
-      // Suppose response.equipments is array of objects with fields: name, ID, etc.
       const formattedEquipments = response.equipments?.map((e: any) => ({
         label: e.name,
         value: e.ID,
@@ -120,7 +112,7 @@ function Comparison() {
   const rows = [
     {
       label: "Image",
-      values: equipmentDetails.map((eq) => (
+      values: equipmentDetails.map((eq: any) => (
           <img
               key={eq.ID}
               src={eq.options[0]?.images[0]?.url || "placeholder.png"}
