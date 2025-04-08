@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {Input, Modal} from "antd";
+import {Input, Modal, message} from "antd";
 import {FaLocationDot} from "react-icons/fa6";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import {getUserProfile} from "../../api/user_profile/GetUserProfile.ts";
@@ -62,8 +62,8 @@ function Purchase() {
         }
         await createOrder(request)
         .then((response) => {
-          console.log("Order success:", response);
-          navigate("/order-tracking", {state: response.order_id});
+            message.info("order created successfully");
+           navigate(`/order/${ response.order_id}`);
         })
         .catch((err) => {
           console.error("Order failed:", err);
