@@ -24,7 +24,7 @@ const statusMap: Record<string, number> = {
 };
 
 // A little helper to get a user-facing message depending on role and status
-function getStatusMessage(role: Role | undefined, status: string | undefined) {
+function getStatusMessage(role: string | undefined, status: string | undefined) {
   // Just a handful of examples you can adjust freely
   if (!role || !status) return "";
 
@@ -157,7 +157,6 @@ function OrderTracking() {
     }
   }, [adminReceived, received, isShowModal]);
 
-  // We'll store a message based on the role + status
   const messageToShow = getStatusMessage(role, orderDetail?.order_status);
 
   return (
