@@ -15,6 +15,7 @@ import { OrderDetailResponse } from "../../interfaces/Order.ts";
 import QRPromptpay from "/assets/tracking/image.png";
 import "./OrderTracking.css";
 
+// Define how each status maps to step index
 const statusMap: Record<string, number> = {
   Placed: 0,
   Paid: 1,
@@ -23,44 +24,39 @@ const statusMap: Record<string, number> = {
   Received: 4,
 };
 
-// A little helper to get a user-facing message depending on role and status
-function getStatusMessage(role: string | null, status: string | undefined) {
-  // Just a handful of examples you can adjust freely
+function getInlineMessage(role: string | null, status: string | undefined) {
   if (!role || !status) return "";
 
   if (role === Role.User) {
     switch (status) {
       case "Placed":
-        return "Waiting for you to pay. Next status: Paid.";
+        return "Please complete payment to proceed.";
       case "Paid":
-        return "Payment received. Waiting for seller to ship your item.";
+        return "We have received your payment. Waiting for shipment.";
       case "Shipped out":
-        return "Your order is on the way! Next status: To Receive.";
+        return "Your order is currently in transit.";
       case "To Receive":
-        return "Package is close to delivery. You can confirm ‘Order Received’ once it arrives.";
-      case "Received":
-        return "Order complete. Thank you!";
+        return "Your package is close to arrival. Confirm once received.";
+        // After “Received,” typically no button is shown
       default:
         return "";
     }
   } else if (role === Role.Admin) {
     switch (status) {
       case "Placed":
-        return "User placed an order. Waiting for user to pay.";
+        return "User has placed an order. Waiting for payment.";
       case "Paid":
-        return "User paid successfully. Ready to ship. Next status: Shipped out.";
+        return "Order paid successfully. Ready to ship.";
       case "Shipped out":
-        return "Item is out for delivery. Next status: To Receive.";
+        return "Item is out for delivery.";
       case "To Receive":
-        return "User can confirm they received the product.";
-      case "Received":
-        return "Order is finished.";
+        return "User should confirm receipt soon.";
+        // After “Received,” typically no button is shown
       default:
         return "";
     }
   }
 
-  // fallback
   return "";
 }
 
@@ -71,8 +67,9 @@ function OrderTracking() {
   const [adminReceived, setAdminReceived] = useState<boolean>(true);
 
   const { order_id } = useParams();
-  const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
   const { role } = useAuth();
+
+  const currentStatusIndex = statusMap[orderDetail?.order_status || ""] ?? -1;
 
   const stepItems: StepProps[] = [
     {
@@ -126,19 +123,21 @@ function OrderTracking() {
     try {
       const response = await getOrderDetail(id);
       if (!response) return;
+
       const { order_status } = response;
       const isToReceive = order_status === "To Receive";
-      const isPaidOrShipped =
-          order_status === "Paid" || order_status === "Shipped out";
+      const isPaidOrShipped = order_status === "Paid" || order_status === "Shipped out";
+
       setReceived(!isToReceive);
       setAdminReceived(!isPaidOrShipped);
+
       setOrderDetail(response);
     } catch (error) {
       console.error("Failed to fetch order details:", error);
     }
   };
 
-  const updateStatus = (id: string | undefined) => {
+  const updateStatusHandler = (id: string | undefined) => {
     updateOrderStatus(id)
         .then((response) => {
           setIsShowModal(false);
@@ -155,15 +154,14 @@ function OrderTracking() {
     if (order_id) {
       detail(order_id);
     }
-  }, [adminReceived, received, isShowModal]);
-
-  const messageToShow = getStatusMessage(role, orderDetail?.order_status);
+  }, [adminReceived, received, isShowModal, order_id]);
 
   return (
       <div>
         <NavBar />
         <div className="w-full p-6 space-y-4">
           <div className="w-full bg-[#E7E7E7] rounded-md p-4 space-y-10">
+            {/* Order ID and Status up top */}
             <div className="flex items-center space-x-2 bg-[#F2EFEF] rounded-md p-2">
               <div className="flex items-center text-[12px] space-x-2">
                 <p className="font-bold">ORDER ID:</p>
@@ -172,73 +170,110 @@ function OrderTracking() {
               <div>|</div>
               <div className="flex items-center text-[12px] space-x-2">
                 <p className="font-bold">ORDER STATUS:</p>
-                <p className="font-bold text-[#00C331]">
-                  {orderDetail?.order_status}
-                </p>
+                <p className="font-bold text-[#00C331]">{orderDetail?.order_status}</p>
               </div>
             </div>
 
             <Steps labelPlacement="vertical" items={stepItems} />
 
-            {/* Message area for each role/status */}
-            {messageToShow && (
-                <div className="bg-[#FFF3F0] text-[#333] rounded-md py-2 px-4 my-2">
-                  {messageToShow}
-                </div>
-            )}
-
-            {/* Payment button, visible only for Users with 'Placed' */}
+            {/* For each role & status, we show the relevant message and the button on the same line */}
+            {/* 1) For user, 'Placed' => Pay Now */}
             {role === Role.User && orderDetail?.order_status === "Placed" && (
-                <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1 flex items-center justify-end">
+                <div className="h-[48px] bg-[#E7E7E7] rounded-md px-3 flex items-center justify-between">
+              <span className="text-[14px] text-gray-700">
+                {getInlineMessage(role, orderDetail?.order_status)}
+              </span>
                   <button
-                      className="text-[14px] text-white bg-[#1890ff] rounded-md px-4 py-2 m-3"
+                      className="text-[14px] text-white bg-[#1890ff] rounded-md px-4 py-2 m-1"
                       onClick={() => setIsShowModal(true)}
                   >
                     Pay Now
                   </button>
                   <Modal
-                      title="This is just a mock up of Promptpay"
+                      title="Promptpay Demo"
                       open={isShowModal}
-                      onOk={() => updateStatus(order_id)}
+                      onOk={() => updateStatusHandler(order_id)}
                       onCancel={() => setIsShowModal(false)}
                   >
                     <div className="flex items-center justify-center">
-                      <img src={QRPromptpay} alt="" className="w-[250px]" />
+                      <img src={QRPromptpay} alt="QR PromptPay" className="w-[250px]" />
                     </div>
                   </Modal>
                 </div>
             )}
 
-            {/* Admin confirm button, visible when Admin sees status 'Paid' or 'Shipped out' */}
-            {role === Role.Admin &&
-                (orderDetail?.order_status === "Paid" ||
-                    orderDetail?.order_status === "Shipped out") && (
-                    <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1 flex items-center justify-end">
-                      <button
-                          className="text-[14px] text-white bg-[#53D94F] rounded-md px-4 py-2 m-3"
-                          onClick={() => updateStatus(order_id)}
-                      >
-                        Confirm
-                      </button>
-                    </div>
-                )}
-
-            {/* 'Order Received' button for user */}
-            {role === Role.User && (
-                <div className="h-[68px] bg-[#F2EFEF] rounded-md py-1 flex items-center justify-end">
+            {/* 2) For Admin, 'Paid' => Confirm shipping; 'Shipped out' => Confirm next step, etc. */}
+            {role === Role.Admin && orderDetail?.order_status === "Paid" && (
+                <div className="h-[48px] bg-[#E7E7E7] rounded-md px-3 flex items-center justify-between">
+              <span className="text-[14px] text-gray-700">
+                {getInlineMessage(role, orderDetail?.order_status)}
+              </span>
                   <button
-                      className={`text-[14px] text-white ${
-                          !received ? "bg-[#53D94F]" : "bg-[#E7E7E7]"
-                      } rounded-md px-4 py-2 m-3`}
-                      onClick={() => updateStatus(order_id)}
-                      disabled={received}
+                      className="text-[14px] text-white bg-[#53D94F] rounded-md px-4 py-2 m-1"
+                      onClick={() => updateStatusHandler(order_id)}
+                  >
+                    Confirm
+                  </button>
+                </div>
+            )}
+
+            {role === Role.Admin && orderDetail?.order_status === "Shipped out" && (
+                <div className="h-[48px] bg-[#E7E7E7] rounded-md px-3 flex items-center justify-between">
+              <span className="text-[14px] text-gray-700">
+                {getInlineMessage(role, orderDetail?.order_status)}
+              </span>
+                  <button
+                      className="text-[14px] text-white bg-[#53D94F] rounded-md px-4 py-2 m-1"
+                      onClick={() => updateStatusHandler(order_id)}
+                  >
+                    Confirm
+                  </button>
+                </div>
+            )}
+
+            {role === Role.Admin && orderDetail?.order_status === "To Receive" && (
+                <div className="h-[48px] bg-[#E7E7E7] rounded-md px-3 flex items-center justify-between">
+              <span className="text-[14px] text-gray-700">
+                {getInlineMessage(role, orderDetail?.order_status)}
+              </span>
+                  <button
+                      className="text-[14px] text-white bg-[#53D94F] rounded-md px-4 py-2 m-1"
+                      onClick={() => updateStatusHandler(order_id)}
+                  >
+                    Confirm
+                  </button>
+                </div>
+            )}
+
+            {/* 3) For User, 'Paid' => waiting, 'Shipped out' => waiting, 'To Receive' => show Order Received button */}
+            {role === Role.User && orderDetail?.order_status === "Shipped out" && (
+                <div className="h-[48px] bg-[#E7E7E7] rounded-md px-3 flex items-center justify-between">
+              <span className="text-[14px] text-gray-700">
+                {getInlineMessage(role, orderDetail?.order_status)}
+              </span>
+                  {/* No special button, just a status message */}
+                </div>
+            )}
+
+            {role === Role.User && orderDetail?.order_status === "To Receive" && (
+                <div className="h-[48px] bg-[#E7E7E7] rounded-md px-3 flex items-center justify-between">
+              <span className="text-[14px] text-gray-700">
+                {getInlineMessage(role, orderDetail?.order_status)}
+              </span>
+                  <button
+                      className="text-[14px] text-white bg-[#53D94F] rounded-md px-4 py-2 m-1"
+                      onClick={() => updateStatusHandler(order_id)}
                   >
                     Order Received
                   </button>
                 </div>
             )}
+
+            {/* After 'Received', generally no button for both roles, so no extra bar. */}
+
           </div>
 
+          {/* Delivery Address + Product Ordered Section */}
           <div className="w-full flex bg-[#E7E7E7] rounded-md px-6 py-4 space-x-[20px]">
             <div className="w-[28vw] h-[30vh] bg-white space-y-2 rounded-md p-5">
               <h3 className="text-[17px] font-semibold">Delivery Address</h3>
@@ -252,6 +287,7 @@ function OrderTracking() {
                 </p>
               </div>
             </div>
+
             <div className="grow w-[500px] bg-white p-3 rounded-md space-y-2">
               <div className="flex h-[60px] bg-gray-300 rounded-md">
                 <div className="grow flex items-center justify-center w-[600px] font-bold text-[13px]">
