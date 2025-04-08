@@ -1,257 +1,253 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Divider, message, Select } from "antd";
+import { message, Select } from "antd";
 import NavBar from "../../components/navbar/NavBar.tsx";
 import { equipmentInCategory } from "../../api/equipment/EquipmentsInCategory.ts";
 import { allEquipmentsDetail } from "../../api/equipment/AllEquipmentsDetail.ts";
 import { EquipmentDetailResponse } from "../../interfaces/equipment/EquipmentDetail.ts";
-import {getEquipmentCategory} from "../../api/equipment/EquipmentCategory.ts";
-
-interface Equipment {
-  ID: string;
-  image_path: string;
-  muscle_group_used: string[];
-  name: string;
-  price: number;
-}
+import { getEquipmentCategory } from "../../api/equipment/EquipmentCategory.ts";
 
 function Comparison() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<{ label: string; value: string }[]>([]);
   const [category, setCategory] = useState<string>("dumbbell");
-  const [equipments, setEquipments] = useState<{ label: string; value: string; }[]>([]);
-  const [selectedID1, setSelectedID1] = useState<string>("");
-  const [selectedID2, setSelectedID2] = useState<string>("");
-  const [selectedID3, setSelectedID3] = useState<string>("");
-  const [equipment1, setEquipment1] = useState<EquipmentDetailResponse>();
-  const [equipment2, setEquipment2] = useState<EquipmentDetailResponse>();
-  const [equipment3, setEquipment3] = useState<EquipmentDetailResponse>();
+  const [equipments, setEquipments] = useState<{ label: string; value: string }[]>([]);
+  const [selectedIDs, setSelectedIDs] = useState<string[]>(["", "", ""]);
+  const [equipmentDetails, setEquipmentDetails] = useState<EquipmentDetailResponse[]>([]);
 
-  const handleCategoryChange = (value: string) => {
-    setCategory(value);
-  };
-
-  const handleSelectChange = (slot: number, newValue: string) => {
-    if (slot === 1) {
-        if (newValue === selectedID2) {
-            setSelectedID1(selectedID2);
-            setSelectedID2(selectedID1);
-        } else if (newValue === selectedID3) {
-            setSelectedID1(selectedID3);
-            setSelectedID3(selectedID1);
-        } else {
-            setSelectedID1(newValue);
-        }
-    } else if (slot === 2) {
-        if (newValue === selectedID1) {
-            setSelectedID2(selectedID1);
-            setSelectedID1(selectedID2);
-        } else if (newValue === selectedID3) {
-            setSelectedID2(selectedID3);
-            setSelectedID3(selectedID2);
-        } else {
-            setSelectedID2(newValue);
-        }
-    } else if (slot === 3) {
-        if (newValue === selectedID1) {
-            setSelectedID3(selectedID1);
-            setSelectedID1(selectedID3);
-        } else if (newValue === selectedID2) {
-            setSelectedID3(selectedID2);
-            setSelectedID2(selectedID3);
-        } else {
-            setSelectedID3(newValue);
-        }
-    }
-};
-
+  // Fetch categories
   const fetchEquipmentCategories = async () => {
-    getEquipmentCategory()
-      .then((data) => {
-        setCategories(data.categories);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      const data = await getEquipmentCategory();
+      // data.categories is presumably [
+      //   { label: "Dumbbell", value: "dumbbell" },
+      //   { label: "Barbell",  value: "barbell" },
+      //   ...
+      // ]
+
+      setCategories(data.categories);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
   };
 
-  const fetchEquipmentInCategory = async (category: string) => {
+  // category change
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setEquipments([]);
+    setSelectedIDs(["", "", ""]);
+    setEquipmentDetails([]);
+  };
+
+  // fetch equipment in category
+  const fetchEquipmentInCategory = async (cat: string) => {
     try {
-      const response = await equipmentInCategory(category);
-      const formattedEquipments = response.equipments?.map(
-        (equipment: Equipment) => ({
-          label: equipment.name,
-          value: equipment.ID,
-        })
-      );
+      const response = await equipmentInCategory(cat);
+      // Suppose response.equipments is array of objects with fields: name, ID, etc.
+      const formattedEquipments = response.equipments?.map((e: any) => ({
+        label: e.name,
+        value: e.ID,
+      })) || [];
+
       setEquipments(formattedEquipments);
-      if (formattedEquipments && formattedEquipments.length >= 3) {
-        setSelectedID1(formattedEquipments[0].value);
-        setSelectedID2(formattedEquipments[1].value);
-        setSelectedID3(formattedEquipments[2].value);
+
+      // If we want to auto-select the first 3:
+      if (formattedEquipments.length >= 3) {
+        setSelectedIDs([
+          formattedEquipments[0].value,
+          formattedEquipments[1].value,
+          formattedEquipments[2].value,
+        ]);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching equipments:", err);
       message.error("Failed to load equipment list.");
     }
   };
 
+  // fetch equipment details
   const fetchAllEquipmentsDetail = async (equipmentIDs: string) => {
     try {
       const response = await allEquipmentsDetail(equipmentIDs);
-      setEquipment1(response.equipments[0]);
-      setEquipment2(response.equipments[1]);
-      setEquipment3(response.equipments[2]);
+      setEquipmentDetails(response.equipments);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching equipment details:", err);
     }
   };
 
+  // swap logic for selectedIDs
+  const handleSelectChange = (index: number, newValue: string) => {
+    const updated = [...selectedIDs];
+    if (updated.includes(newValue)) {
+      const existingIndex = updated.indexOf(newValue);
+      [updated[existingIndex], updated[index]] = [updated[index], updated[existingIndex]];
+    } else {
+      updated[index] = newValue;
+    }
+    setSelectedIDs(updated);
+  };
+
+  // effect hooks
   useEffect(() => {
     fetchEquipmentCategories();
-    if (equipments.length === 0) {
-      fetchEquipmentInCategory(category);
+  }, []);
+
+  useEffect(() => {
+    // each time category changes, fetch new items
+    fetchEquipmentInCategory(category);
+  }, [category]);
+
+  useEffect(() => {
+    // if all 3 selectedIDs are non-empty, fetch their details
+    if (selectedIDs.every((id) => id)) {
+      fetchAllEquipmentsDetail(selectedIDs.join(","));
     }
-    if (selectedID1 && selectedID2 && selectedID3) {
-      const idString = `${selectedID1},${selectedID2},${selectedID3}`;
-      fetchAllEquipmentsDetail(idString);
-    }
-  }, [category, selectedID1, selectedID2, selectedID3]);
+  }, [selectedIDs]);
+
+  // build table rows
+  const allAdditionalKeys = Array.from(
+      new Set(equipmentDetails.flatMap((eq) => eq.additional_fields.map((f) => f.key)))
+  );
+
+  const getPrice = (eq: EquipmentDetailResponse) => {
+    const p = eq.options[0]?.price;
+    return p ? `฿${p.toFixed(2)}` : "N/A";
+  };
+  const getWeight = (eq: EquipmentDetailResponse) => {
+    const w = eq.options[0]?.weight;
+    return w ? `${w} kg` : "N/A";
+  };
+
+  const rows = [
+    {
+      label: "Image",
+      values: equipmentDetails.map((eq) => (
+          <img
+              key={eq.ID}
+              src={eq.options[0]?.images[0]?.url || "placeholder.png"}
+              alt={eq.name}
+              className="w-32 h-32 object-contain mx-auto"
+          />
+      )),
+    },
+    {
+      label: "Name",
+      values: equipmentDetails.map((eq) => eq.name),
+    },
+    {
+      label: "Brand",
+      values: equipmentDetails.map((eq) => eq.brand || "N/A"),
+    },
+    {
+      label: "Model",
+      values: equipmentDetails.map((eq) => eq.model || "N/A"),
+    },
+    {
+      label: "Material",
+      values: equipmentDetails.map((eq) => eq.material || "N/A"),
+    },
+    {
+      label: "Option",
+      values: equipmentDetails.map((eq) => eq.options[0]?.name || "N/A"),
+    },
+    {
+      label: "Price",
+      values: equipmentDetails.map((eq) => getPrice(eq)),
+    },
+    {
+      label: "Weight",
+      values: equipmentDetails.map((eq) => getWeight(eq)),
+    },
+    // Additional fields
+    ...allAdditionalKeys.map((key) => ({
+      label: key,
+      values: equipmentDetails.map(
+          (eq) => eq.additional_fields.find((f) => f.key === key)?.value || "N/A"
+      ),
+    })),
+  ];
 
   return (
-    <div>
-      <NavBar />
-      <div className="flex flex-col items-center space-y-5">
-        <p className="text-[22px] font-bold pt-5">Compare Equipments</p>
-        <Select
-          defaultValue="dumbbell"
-          onChange={(value: any) => {
-            handleCategoryChange(value);
-            setEquipments([]);
-          }}
-          className="w-[220px] h-[48px]"
-          options={categories}
-        />
-        <Link to="/">
-          <p className="text-[#0B8AE5]">Shop Equipments {">"}</p>
-        </Link>
-        <div className="flex justify-center space-x-[80px] pb-8">
-          <div className="flex flex-col items-center space-y-5">
-            <Select
-              value={selectedID1}
-              className="w-[220px] h-[48px]"
-              options={equipments}
-              onChange={(value) => handleSelectChange(1, value)}
-            />
-            <div className="flex flex-col justify-center h-[200px]">
-              <img
-                src={equipment1?.options[0].images[0].url}
-                alt=""
-                className="w-[200px]"
+      <div className="min-h-screen bg-gray-50">
+        <NavBar />
+        <div className="max-w-7xl mx-auto p-4">
+          {/* Title */}
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold mb-1">Compare Equipment</h1>
+            <p className="text-gray-600">
+              Select a category and up to three items to compare features
+            </p>
+          </div>
+
+          {/* Category & Link */}
+          <div className="flex items-center justify-between bg-white p-4 rounded shadow mb-6">
+            <div className="flex items-center space-x-2">
+              <span className="text-gray-700">Category:</span>
+              <Select
+                  value={category}
+                  onChange={handleCategoryChange}
+                  className="w-[220px]"
+                  // Pass categories directly if they are already in { label, value } form
+                  options={categories}
               />
             </div>
-            <Divider style={{ borderColor: "#8C8C8C" }} />
-            <Link to={`/equipment/${selectedID1}`}>
-              <button className="bg-[#0B8AE5] text-[15px] text-white w-[140px] px-2 py-[2px] rounded-xl">
-                See more details
-              </button>
+            <Link
+                to="/"
+                className="text-blue-600 hover:underline transition-colors duration-300"
+            >
+              &larr; Shop Equipment
             </Link>
-            <div className="w-[260px] text-center text-sm">
-              <p className="font-bold">{equipment1?.name}</p>
-              <p><strong>Brand:</strong> {equipment1?.brand}</p>
-              <p><strong>Weight:</strong> {equipment1?.model}</p>
-              <p><strong>Material:</strong> {equipment1?.material}</p>
-              <p><strong>Option:</strong> {equipment1?.options[0]?.name}</p>
-              <p><strong>Price:</strong> ฿{equipment1?.options[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong> {equipment1?.options[0]?.weight} kg</p>
-              <Divider style={{ borderColor: "#8C8C8C" }} />
-              <div className="mt-2 text-xs space-y-2">
-                {equipment1?.additional_fields?.map((field) => (
-                  <div key={field.id}>
-                    <strong>{field.key}:</strong> {field.value}
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
-          <div className="flex flex-col items-center space-y-5">
-            <Select
-              value={selectedID2}
-              className="w-[220px] h-[48px]"
-              options={equipments}
-              onChange={(value) => handleSelectChange(2, value)}
-            />
-            <div className="flex flex-col justify-center h-[200px]">
-              <img
-                src={equipment2?.options[0].images[0].url}
-                alt=""
-                className="w-[200px]"
-              />
-            </div>
-            <Divider style={{ borderColor: "#8C8C8C" }} />
-            <Link to={`/equipment/${selectedID2}`}>
-              <button className="bg-[#0B8AE5] text-[15px] text-white w-[140px] px-2 py-[2px] rounded-xl">
-                See more details
-              </button>
-            </Link>
-            <div className="w-[260px] text-center text-sm">
-              <p className="font-bold">{equipment2?.name}</p>
-              <p><strong>Brand:</strong> {equipment2?.brand}</p>
-              <p><strong>Model:</strong> {equipment2?.model}</p>
-              <p><strong>Material:</strong> {equipment2?.material}</p>
-              <p><strong>Option:</strong> {equipment2?.options[0]?.name}</p>
-              <p><strong>Price:</strong> ฿{equipment2?.options[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong> {equipment2?.options[0]?.weight} kg</p>
-              <Divider style={{ borderColor: "#8C8C8C" }} />
-              <div className="mt-2 text-xs space-y-2">
-                {equipment2?.additional_fields?.map((field) => (
-                  <div key={field.id}>
-                    <strong>{field.key}:</strong> {field.value}
-                  </div>
-                ))}
-              </div>
-            </div>
+
+          {/* Equipment Selectors */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {[0, 1, 2].map((index) => (
+                <div
+                    key={index}
+                    className="bg-white p-4 rounded shadow flex flex-col items-center"
+                >
+                  <Select
+                      value={selectedIDs[index]}
+                      onChange={(value) => handleSelectChange(index, value)}
+                      className="w-full mb-3"
+                      placeholder={`Select Equipment ${index + 1}`}
+                      // This is an array of { label, value } for each piece of equipment
+                      options={equipments}
+                  />
+                  {equipmentDetails[index] && (
+                      <Link to={`/equipment/${selectedIDs[index]}`}>
+                        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-300">
+                          See More Details
+                        </button>
+                      </Link>
+                  )}
+                </div>
+            ))}
           </div>
-          <div className="flex flex-col items-center space-y-5">
-            <Select
-              value={selectedID3}
-              className="w-[220px] h-[48px]"
-              options={equipments}
-              onChange={(value) => handleSelectChange(3, value)}
-            />
-            <div className="flex flex-col justify-center h-[200px]">
-              <img
-                src={equipment3?.options[0].images[0].url}
-                alt=""
-                className="w-[200px]"
-              />
-            </div>
-            <Divider style={{ borderColor: "#8C8C8C" }} />
-            <Link to={`/equipment/${selectedID3}`}>
-              <button className="bg-[#0B8AE5] text-[15px] text-white w-[140px] px-2 py-[2px] rounded-xl">
-                See more details
-              </button>
-            </Link>
-            <div className="w-[260px] text-center text-sm">
-              <p className="font-bold">{equipment3?.name}</p>
-              <p><strong>Brand:</strong> {equipment3?.brand}</p>
-              <p><strong>Model:</strong> {equipment3?.model}</p>
-              <p><strong>Material:</strong> {equipment3?.material}</p>
-              <p><strong>Option:</strong> {equipment3?.options[0]?.name}</p>
-              <p><strong>Price:</strong> ฿{equipment3?.options[0]?.price?.toFixed(2)}</p>
-              <p><strong>Weight:</strong> {equipment3?.options[0]?.weight} kg</p>
-              <Divider style={{ borderColor: "#8C8C8C" }} />
-              <div className="mt-2 text-xs space-y-2">
-                {equipment3?.additional_fields?.map((field) => (
-                  <div key={field.id}>
-                    <strong>{field.key}:</strong> {field.value}
-                  </div>
-                ))}
+
+          {/* Comparison Table */}
+          {equipmentDetails.length === 3 && (
+              <div className="bg-white rounded shadow p-4 overflow-x-auto">
+                <table className="min-w-full border-collapse">
+                  <tbody>
+                  {rows.map((row, rowIndex) => (
+                      <tr
+                          key={row.label}
+                          className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                      >
+                        <td className="p-3 text-gray-600 text-left">{row.label}</td>
+                        {row.values.map((val, idx) => (
+                            <td key={idx} className="p-3 text-center text-gray-800">
+                              {val}
+                            </td>
+                        ))}
+                      </tr>
+                  ))}
+                  </tbody>
+                </table>
               </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
-    </div>
   );
 }
 
