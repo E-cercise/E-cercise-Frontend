@@ -215,7 +215,9 @@ const Home: React.FC = () => {
   };
 
   const renderEquipmentGrid = () => {
-    if (!filteredEquipments?.equipments.equipments) return null;
+    if (!filteredEquipments?.equipments.equipments) {
+      return null;
+    }
 
     const equipmentArray = filteredEquipments.equipments.equipments;
     if (!Array.isArray(equipmentArray)) return null;
