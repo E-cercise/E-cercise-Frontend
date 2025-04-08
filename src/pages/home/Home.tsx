@@ -300,10 +300,24 @@ const Home: React.FC = () => {
             </div>
 
             <div className="flex justify-center space-x-3">
-              <Button size="small" onClick={() => setActiveView("front")}>
+              <Button 
+                size="small"
+                style={{
+                  backgroundColor: activeView === "front" ? "#333" : "#eee",
+                  color: activeView === "front" ? "white" : "#111"
+                }}
+                onClick={() => setActiveView("front")}
+              >
                 Front
               </Button>
-              <Button size="small" onClick={() => setActiveView("back")}>
+              <Button 
+                size="small"
+                style={{
+                  backgroundColor: activeView === "back" ? "#333" : "#eee",
+                  color: activeView === "back" ? "white" : "#111"
+                }}
+                onClick={() => setActiveView("back")}
+              >
                 Back
               </Button>
             </div>
