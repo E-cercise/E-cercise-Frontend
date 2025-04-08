@@ -56,7 +56,7 @@ const Home: React.FC = () => {
   const { role } = useAuth();
   const pageSize = 50;
   const headingText =
-    role === Role.Admin ? "All Equipments" : "Sport Gym Equipment";
+    role === Role.Admin ? "All Equipments" : searchKeyword ? `Search result for '${searchKeyword}'` : "Sport Gym Equipment";
   const recommendationScrollRef = useRef<HTMLDivElement>(null);
   const scrollByAmount = (amount: number) => {
     if (recommendationScrollRef.current) {
@@ -459,7 +459,7 @@ const Home: React.FC = () => {
         </div>
         <div className={`w-full pt-1 pb-3 pl-3 pr-3 overflow-y-auto`}>
           <HeaderRow role={role} title={headingText} />
-          {role === Role.User &&
+          {role === Role.User && searchKeyword === "" &&
             Array.isArray(filteredEquipments?.equipments?.equipments) &&
             filteredEquipments.equipments.equipments.length > 0 && (
               <React.Fragment>
